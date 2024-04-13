@@ -33,6 +33,7 @@ foreach($fields as $fd => $row){
 	$extra = $row['extra'];
 	$extra['class'] = 'form-control';
 //	$extra['placeholder'] = $row['label'];
+	$forID = $extra['id'];
 	
 	//chek nilai NULL atau tidak
 	$nilai = (is_null($val[$fd]))?"":$val[$fd];
@@ -60,7 +61,7 @@ foreach($fields as $fd => $row){
 	}
 ?>
 	<div class="row mb-3">
-		<label class="col-sm-3 col-form-label" for="<?php echo $fd;?>"><?php echo $row['label'];?></label>
+		<label class="col-sm-3 col-form-label" for="<?php echo $forID;?>"><?php echo $row['label'];?></label>
 		<div class="col-sm-9"><?=$formInput?></div>	    
 	</div>
 
@@ -73,16 +74,33 @@ foreach($fields as $fd => $row){
 <?= validation_list_errors() ?>
 <?= $this->endSection() ?>
 
-<?php  if(isset($addONJs)){
-	$this->section('pageScripts');
-?>
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-<script> 
-	$(document).ready(function() {
-		<?= $addONJs ?>
-	});			
-</script>
-<?php
-	$this->endSection();
-}
-?>
+<?php  if(isset($addONJs)||isset($useCKeditor)){ ?>
+	<?php $this->section('pageScripts'); ?>
+
+	<?php  if(isset($addONJs)){ ?>
+		<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+		<script> 
+			$(document).ready(function() {
+				<?= $addONJs ?>
+			});			
+		</script>
+	<?php }	?>
+
+	<?php  if(isset($useCKeditor)){ ?>
+		<script src="https://cdn.ckeditor.com/ckeditor5/41.2.0/classic/ckeditor.js"></script>
+		<style>
+			.ck-editor__editable_inline{
+				min-height: 200px;
+			}
+		</style>
+		<script>
+			ClassicEditor
+				.create( document.querySelector( '#editor' ) )
+				.catch( error => {
+					console.error( error );
+				} );
+		</script>
+	<?php } ?>
+
+	<?php $this->endSection(); ?>
+<?php } ?>

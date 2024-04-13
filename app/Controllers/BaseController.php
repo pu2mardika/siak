@@ -181,7 +181,7 @@ abstract class BaseController extends Controller
 		//test_result($this->data['settingApp']);
 		
 		$this->theme	=$myconfig->themeDir .setting()->get('MyApp.theme').'/';
-		$this->layout   =$this->theme.'layout';
+		$this->layout   = $this->theme.'layout';
 		
 		$this->data['theme'] = $this->theme;
 		$this->data['layout'] = $this->layout;

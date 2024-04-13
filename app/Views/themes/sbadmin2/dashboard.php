@@ -1,6 +1,5 @@
 <?= $this->extend($layout) ?>
 <?= $this->section('main') ;?>
-WILLIH
 <?= $this->endSection() ?>
 
 <?php  if(isset($addONJs)){

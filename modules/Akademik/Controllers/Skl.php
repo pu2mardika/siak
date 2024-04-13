@@ -1,191 +1,171 @@
 <?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-require_once('Kurikulum.php');
-class Skl extends Kurikulum
+
+namespace Modules\Akademik\Controllers;
+
+use App\Controllers\BaseController;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Events\Events;
+use Config\Services;
+use Config\MyApp;
+use Modules\Akademik\Models\SklModel;
+use Modules\Akademik\Models\ProdiModel;
+
+class Skl extends BaseController
 {
-	private $field;
+    public  $keys='';
+    protected $dconfig;
+	protected $session;
+	protected $theme;
+	protected $model;
+	protected $prodi_model ;
+
     function __construct() {
         parent::__construct();
-		$this->auth->restrict();
-		//$this->simplival->cek(7);
-        $this->load->model(array('akademik/mod_skl','akademik/mod_prodi','akademik/mod_curriculum'));
-		$this->field=array('id_skl', 'id_curriculum', 'grade', 'subgrade', 'skl', 'grade_name', 'state');
+        $this->dconfig = config(\Modules\Akademik\Config\Skl::class);
+        $this->session = \Config\Services::session();
+		$this->model = new SklModel;	
+        $this->curr_model = new KurikulumModel;
+		$this->data['site_title'] = 'Halaman Skl';
+		$this->data['fields'] 	  = $this->dconfig->fields;
+		$this->data['key']		  = $this->dconfig->primarykey;
+		$this->data['allowimport']		  = $this->dconfig->importallowed;
+       // $this->addStyle (base_url().'/css/personal.css');
+		//$this->addStyle ('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+		helper(['cookie', 'form']);
     }
+	
+	function index()
+	{
+	
+		$kurikulum 	= $this->model->findAll();
+		$data = $this->data;
+		$data['title']		= "Manajemen Skl";
+		$data['rsdata']		= $kurikulum;
+		$data['msg'] 		= "";
+        $data['isplainText'] = TRUE;
+		$data['opsi'] 		= $this->dconfig->opsi;
+        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+		$data['actions']	= $this->dconfig->actions;
+		$data['addOnACt']= $this->dconfig->addOnACt;
+		echo view($this->theme.'datalist',$data);
+    }
+	
+	
+	function addView()
+	{
+		$this->cekHakAkses('create_data');
 		
-	function list_skl()
-	{
-		$offset = $this->uri->segment(4,0);
-		$banyak_ya=$this->mod_skl->get_num();		
-		$perpage=$this->config->item('perpage');
-		$data2=$this->fungsi->getAjaxPagination($banyak_ya,
-				$perpage,'akademik/akademik/skl/list_skl/',4,'#panel_editing');
-		$data['paging'] = $data2['paging'];
-		$data['banyak']=$banyak_ya;
-		$data['skl'] = $this->mod_skl->get_paging($perpage,$offset);
-		$data['dt_prodi'] = $this->mod_prodi->get_prodi_dropdown();
-		$this->load->view('akademik/skl/panel_skl',$data);
+		$data	=$this->data;
+		$data['title']	= "Tambah Data Skl";
+		$fields = $this->dconfig->fields;
+		$data['error'] = [];// validation_list_errors();
+		$data['fields'] = $fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+		$data['rsdata'] = [];
+        $data['useCKeditor'] = true;
+		echo view($this->theme.'form',$data);
 	}
-	
-	function skl_list_by_cur($idx)
-	{
-		$this->auth->restrict();
-		$ids=(is_array($idx))?$this->uri->segment(3,0):$idx;
-		$id=$this->kriptograf->paramDecrypt($ids,$this->keys);
-		$data['Data'] = $this->mod_skl->get_skl_by_curr($id)->result_array();
-		//$data['curr']= $this->mod_curriculum->get_curriculum_by_id($id);
-		$data['keys']=$this->keys;
-		$data['token']=$this->token;
-		//'grade', 'subgrade', 'skl', 'state'
-		$fhead=array('grade'=>15, 'subgrade'=>15,'skl'=>50);
-		$data['fhead']=$fhead;
-		$this->load->view('akademik/skl/list_skl',$data);
-	}
-	
-	function v_trash()
-	{
-		$offset = $this->uri->segment(4,0);
-		$banyak_ya=$this->mod_skl->get_num();		
-		$perpage=$this->config->item('perpage');
-		$data2=$this->fungsi->getAjaxPagination($banyak_ya,
-				$perpage,'akademik/skl/v_trash/',4,'#panel_editing');
-		$data['paging'] = $data2['paging'];
-		$data['banyak']=$banyak_ya;
-		$data['curr'] = $this->mod_skl->view_trash($perpage,$offset);
-		$data['dt_prodi'] = $this->mod_prodi->get_prodi_dropdown();
-		$this->load->view('akademik/skl/trash_panel',$data);
-	}
-	
-	function addskl()
-	{
-		$this->auth->restrict();
-		//$this->simplival->hak('master',1);
-		$ids=$this->uri->segment(3,0);
-		$this->form_validation->set_rules('grade', 'lang:grade', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('subgrade', 'lang:subgrade', 'trim|required|xss_clean');
-		$id=$this->kriptograf->paramDecrypt($ids,$this->keys);
-		$this->simplival->setFields($this->field);
-		$data=$this->simplival->acceptData($this->field);
-		if ($this->form_validation->run()) {
-			$this->_create_skl($ids,$data);
-		}else{
-			//$data['cmb_prodi'] = $this->mod_prodi->active_prodi_dropdown();
-			$Data['subtitle']=$this->lang->line('curr_add_skl');
-			$Data['options']=$this->lang->line('norm_state_arr');
-			$curr= $this->mod_curriculum->get_curriculum_by_id($id);
-			//tentukan grade : `l_duration`, `curr_system`
-			$g=0;$G=array();
-			for($g=1; $g<=$curr['l_duration'];$g++)
-			{
-				$G[$g]=$this->lang->line('curr_grade')."&nbsp;".$g;
-			}
-			$Data['grade']=$G;
-			//tentukan subgrade
-			$g=0; $S=array();
-			for($g=1; $g<=$curr['curr_system'];$g++)
-			{
-				$S[$g]=$this->lang->line('curr_subgrade')."&nbsp;".$g;
-			}
-			$Data['subgrade']=$S;
-			$Data['keys']=$this->keys;
-			$Data['ids']=$ids;
-			$Data['target']="#xcv".$this->token;
-			$Data['action']="akademik/addskl/{$ids}";
-			$Data['token']=$this->token;
-			$Data['skl']=$data;//array('grade'=>"", 'subgrade'=>"", 'skl'=>"");
-			$Data['formview']='akademik/skl/frm_skl';
-			$Data['data']=$Data;
-			$this->load->view('admin/nform_modal',$Data);
-			//$this->load->view('akademik/skl/frm_skl',$data);
-		}
-	}
-	
-	function _create_skl($ids,$data)
-	{
-		
-		$field=array('id_skl', 'id_curriculum', 'grade', 'subgrade', 'skl', 'state', 'grade_name');
-		
-	//	$ids=$this->input->post('curr_id');
-		$data['id_curriculum']=$this->kriptograf->paramDecrypt($ids,$this->keys);
-		$data['id_skl']=$data['id_curriculum'].$data['grade'].$data['subgrade'];
-		//cek id_skl
-		//test_result($data);
-		//$data['id_skl']=$idk;	
-		if($this->mod_skl->add_skl($data))
-		{
-			$msgclass='alert-success';
-			$message=$this->lang->line('common_saving_success');
-		}else{
-			$msgclass='alert-warning';
-			$message=$this->lang->line('common_saving_error');
-		}
-		$this->session->set_flashdata('msgclass',$msgclass);
-		$this->session->set_flashdata('message',$message);
-		//$act_y ='location.reload()';
-		$message .="akademik/skl_list_by_cur/".$ids;
-		$act_y ='show("akademik/skl_list_by_cur/'.$ids.'","#x-add")';
-		echo alert($message,$act_y);
-		//echo $this->fungsi->page_refresh();
-		//$this->list_skl();			
-		//echo $this->uri->uri_string();
-	}
-	
-	function edit()
-	{
-		//'id_skl', 'curr_id', 'id_prodi', 'skl', 'state'
-		
-		//$this->form_validation->set_rules('curr_id', 'lang:curr_id', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('skl', 'lang:skl_skl', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('id_prodi', 'lang:prodi', 'trim|required|xss_clean');
-		
-		$ids = $this->uri->segment(4,0);
-		$this->simplival->hak('master',1);
-		$keys=$this->config->item('dynamic_key');
-		$id=$this->kriptograf->paramDecrypt($ids,$keys);
-		
-		if ($this->form_validation->run()) {
-			$this->update($id);
-		}else{
-			//$data['ids'] = $id;
-			$data['skl'] = $this->mod_skl->get_skl_by_id($id);
-			$data['cmb_prodi'] = $this->mod_prodi->active_prodi_dropdown();
-			$this->load->view('akademik/skl/frm_skl_edit',$data);
-		}
-	}
-	
-	function update($id)
-	{
-		$field=array('skl', 'id_prodi','state');		
-		$data['errors'] = array();
-		$this->simplival->setFields($field);
-		$data=$this->simplival->acceptData($field);
-				
-		if($this->mod_skl->update_skl($id,$data))
-		{
-			$this->session->set_flashdata('message',$this->lang->line('mhs_updated'));
-		}
-		$pages=$this->session->userdata('page');
-		$this->fungsi->load_ajax($pages,'#panel_editing');
-	}
-	
-	function delete($ids){
-		$keys=$this->config->item('dynamic_key');
-		$id=$this->kriptograf->paramDecrypt($ids,$keys);
-		$this->mod_skl->disable_skl($id);
-		$this->session->set_flashdata('message','Profile deleted');
-		$$pages=$this->session->userdata('page');
-		$this->fungsi->load_ajax($pages,'#panel_editing');
-	}
-	
-	function togle_sts($ids,$val){
-		$keys=$this->config->item('dynamic_key');
-		$id=$this->kriptograf->paramDecrypt($ids,$keys);
-		$sts=$this->kriptograf->paramDecrypt($val,$keys);
-		$this->mod_skl->togle_state($id,$sts);
-		$pages=$this->session->userdata('page');
-		$this->fungsi->load_ajax($pages,'#panel_editing');
-	}	
-	
-}
 
-/* End of file curriculum.php */
-/* Location: ./application/controllers/akademik/skl.php */
+	function addAction(): RedirectResponse
+	{
+		$rules = $this->dconfig->roles;	
+		if ($this->validate($rules)) {
+			$data = $this->request->getPost();
+			$data['id']=$data['id_prodi'];
+			$Sklmodel = new SklModel();
+			$Skl= new \Modules\Akademik\Entities\Skl();
+			$Skl->fill($data);
+			$simpan = $Sklmodel->insert($Skl,false);
+			if($simpan){
+				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
+			}else{
+				$this->session->setFlashdata('warning','Data gagal disimpan');
+			}
+			return redirect()->to(base_url('kurikulum'));
+		}else{
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+		}
+	}
+	
+	function updateView($ids)
+	{
+		$this->cekHakAkses('update_data');
+		$id = decrypt($ids); 
+		 
+		$data=$this->data;
+		$data['title']	= "Update Data Skl";
+		$data['error'] = validation_list_errors();
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+		$rs =  $this->model->find($id)->toarray();
+		$data['rsdata'] = $rs;
+        $data['useCKeditor'] = true;
+		echo view($this->theme.'form',$data);
+	}
+	
+	function updateAction($ids): RedirectResponse
+	{
+		$id = decrypt($ids); 
+		$roles = $rules = $this->dconfig->roles;
+		
+		if ($this->validate($roles)) {
+			
+			//$this->model->update($id, $data);
+			$data = $this->request->getPost();
+			$model = new SklModel();
+
+			$rsdata = new \Modules\Akademik\Entities\Skl();
+			$rsdata->fill($data);
+			$simpan = $model->update($id, $rsdata);
+			
+			if($simpan){
+				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
+			}else{
+				$this->session->setFlashdata('warning','Data gagal disimpan');
+			}
+			
+			return redirect()->to(base_url('prodi'));
+		}else{
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+		}
+	}
+
+	function delete($ids){
+		$id = decrypt($ids); 
+		$Sklmodel = new SklModel();
+		$Sklmodel->delete($id);
+		// masuk database
+		$this->session->setFlashdata('sukses','Data telah dihapus');
+		return redirect()->to(base_url('prodi'));
+	}
+
+	function detView($ids)
+	{
+		$this->cekHakAkses('update_data');
+		$id = decrypt($ids); 
+		
+		$data=$this->data;
+		$data['title']	= "Detail Skl";
+
+		$rs =  $this->model->find($id)->toarray();
+
+		$RESUME['descrip_field'] = $this->dconfig->resume_descrip_field;
+		$RESUME['AddOnFields'] 	 = $this->dconfig->res_addON_fields;
+		$RESUME['data'] 		 = $rs;
+		$RESUME['subtitle']		 = $rs['curr_name'];
+
+		//TABS SECTION
+		$TABS['subject'] = ['title'=>'Data Subject','active'=>1, 'data'=>[]];
+		$TABS['skl']     = ['title'=>'Data SKL','active'=>0, 'data'=>[]];
+
+		$data['tabs']	 = $TABS;
+		$data['resume']  = $RESUME;
+		$data['opsi'] 	 = $this->dconfig->opsi;
+        
+		$data['rsdata'] = $rs;
+		echo view($this->theme.'dataViewCell',$data);
+	}
+}

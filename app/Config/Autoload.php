@@ -43,6 +43,7 @@ class Autoload extends AutoloadConfig
         APP_NAMESPACE => APPPATH, // For custom app namespace
         'Config'      => APPPATH . 'Config',
         'Modules'     		=> ROOTPATH. 'modules',
+        'Modules\Akademik'  => ROOTPATH. 'modules/akademik',
         'Modules\Siswa' 	=> ROOTPATH. 'modules/siswa',
         'Modules\Tendik' 	=> ROOTPATH. 'modules/tendik',
         'Modules\Account' 	=> ROOTPATH. 'modules/accounting',

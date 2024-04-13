@@ -1,3 +1,5 @@
+<?= $this->extend($layout) ?>
+  <?= $this->section('main') ?>
 <?php
 //test_result($rsdata['attributes']);
 $val = $rsdata;
@@ -39,3 +41,4 @@ foreach($fields as $fd => $row){
 	<button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
 	</div>
 </div>
+<?=$this->endSection() ?>

@@ -16,54 +16,18 @@ function encrypt($plainText){
 	$ciphertext = $encrypter->encrypt($plainText);
 	return bin2hex($ciphertext);
 }
+
 function decrypt($ciphertext){
 	$encrypter = \Config\Services::encrypter();
 	$plainText = $encrypter->decrypt(hex2bin($ciphertext));
 	return $plainText;
 }
 
-/**
-* OBJEK to ARRAY
-* @param {object} $tgl
-* 
-* @return
-*/
-function object_to_array($object) {
-    if(is_object($object)) {
-        $object = get_object_vars($object);
-    }
-    if(is_array($object)) {
-        return array_map(__FUNCTION__, $object);
-    } else {
-        return $object;
-    }
-}
 
-/**
-* Format tanggal sesuai dengan bahasa yang digunakan
-* @param string $tgl (format "Y-m-d")
-* 
-* @return
-*/
-function format_tgl($tgl) {
-	$CI =& get_instance();
-	$d=substr($tgl,8,2);
-	$m=substr($tgl,5,2);
-	$y=substr($tgl,0,4);
-	$q_bln=$CI->lang->line('month_names');
-	
-	$tgl_ind=$d." ".$q_bln[$m]." ".$y;
-	return $tgl_ind;
-}
-
-function tgl2indo($tgl) {
-	$CI =& get_instance();
-	$d=substr($tgl,8,2);
-	$m=substr($tgl,5,2);
-	$y=substr($tgl,0,4);
-	
-	$tgl_ind=$d."-".$m."-".$y;
-	return $tgl_ind;
+function hari($n)
+{
+	$day= ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+	return $day[$n];
 }
 /**
 * convert tanggal dari format standar ke unix_timestamp
@@ -105,6 +69,11 @@ function unix2Ind($timestamp, $format="d M Y")
 {
 	helper('date');
 	return nice_date(unix_to_human($timestamp),$format);
+}
+
+function formatTgl($tgl, $format="d-m-Y")
+{
+	return date($format, strtotime($tgl));
 }
 
 function format_npwp($npwp)
@@ -359,7 +328,23 @@ function register($tgl)
 		$d = $tg[2]; $y = $tg[0];
 	}
 	$t=date("Y") - $y;
-	return $T[$t].$B[$m][rand(0,1)].$d.$J[date('G')].strtoupper(random_string('alnum',3));
+	return $t.$B[$m][rand(0,1)].$d.$J[date('G')].strtoupper(random_string('alnum',2)); //format: TT[M]DD[J]XX
+}
+
+function regID($tgl)
+{
+	$tg=preg_split("/(\/|-)/i",$tgl);
+	
+	//test_result($tg);
+	$d = $tg[0]; 
+	$m = (int) $tg[1];
+	$y = $tg[2];
+	
+	if(strlen($tg[0])===4){
+		$d = $tg[2]; $y = $tg[0];
+	}
+	$t=$y-2000;
+	return $t.$tg[1].random_string('numeric',2).$d.date('hi').random_string('numeric',2);
 }
 
 /**
@@ -393,6 +378,59 @@ function nextTgl($time_sekarang, $n, $format="d F Y",$ofset=1)
 	return date($format, strtotime("+$N days", $time_sekarang));
 }
 
+function getTgl($tgl)
+{
+	if ($tgl == '0000-00-00 00:00:00' || !$tgl) {
+		return false;
+	}
+	$exp = explode (' ', $tgl);
+	//$exp_tgl = explode ('-', $exp[0]);
+	return $exp[0];
+}
+/**
+* 
+* @param {object} $TglLahir
+* @param {object} $tglSekarang
+* @param {object} $type (0, 1, 2)
+* 
+* @return
+*/
+function getAge($TglLahir, $tglSekarang=0, $type=0)
+{
+	$tanggal_lahir = new DateTime($TglLahir);
+    $sekarang = new DateTime("today");
+    
+    if( ! $tglSekarang == 0){$sekarang = new DateTime($tglSekarang);}
+    	
+    if ($tanggal_lahir > $sekarang) { 
+    $thn = "0";
+    $bln = "0";
+    $tgl = "0";
+    }
+    $thn = $sekarang->diff($tanggal_lahir)->y;
+    $bln = $sekarang->diff($tanggal_lahir)->m;
+    $tgl = $sekarang->diff($tanggal_lahir)->d;
+    
+    $hasil[0] = $thn." tahun";
+    $hasil[1] = $thn." tahun ".$bln." bulan";
+    $hasil[2] = $thn." tahun ".$bln." bulan ".$tgl." hari";
+    if($type > 2){return "ERROR TYPE";}
+    return $hasil[$type];
+}
+
+/**
+* 
+* @param {object} $tgl
+* @param {object} int
+* 
+* @return
+*/
+function overdue($tgl, $tenor)
+{
+	$n = "+".$tenor." month";
+	$ovd = date("Y-m-d", strtotime($n, strtotime($tgl)));
+	return $ovd;
+}
 
 /**
 * BEBERAPA func YANG DIAMBIL DARI METHODE LAMA
@@ -547,4 +585,94 @@ if ( ! function_exists('nice_date'))
 		// It's probably a valid-ish date format already
 		return date($format, strtotime($bad_date));
 	}
+}
+
+function colExcel():array
+{
+	$col=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+	   'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN','AO','AP','AQ','AR','AS','AT','AU','AV','AW','AX','AY','AZ',
+	   'BA','BB','BC','BD','BE','BF','BG','BH','BI','BJ','BK','BL','BM','BN','BO','BP','BQ','BR','BS','BT','BU','BV','BW','BX','BY','BZ',
+	   'CA','CB','CC','CD','CE','CF','CG','CH','CI','CJ','CK','CL','CM','CN','CO','CP','CQ','CR','CS','CT','CU','CV','CW','CX','CY','CZ',
+	   'DA','DB','DC','DD','DE','DF','DG','DH','DI','DJ','DK','DL','DM','DN','DO','DP','DQ','DR','DS','DT','DU','DV','DW','DX','DY','DZ'
+	   ];
+	return $col;
+}
+
+if( ! function_exists('penyebut'))
+{
+	function penyebut($nilai) {
+		$nilai = abs($nilai);
+		$huruf = array("", "satu", "dua", "tiga", "empat", "lima", "enam", "tujuh", "delapan", "sembilan", "sepuluh", "sebelas");
+		$temp = "";
+		if ($nilai < 12) {
+			$temp = " ". $huruf[$nilai];
+		} else if ($nilai <20) {
+			$temp = penyebut($nilai - 10). " belas";
+		} else if ($nilai < 100) {
+			$temp = penyebut($nilai/10)." puluh". penyebut($nilai % 10);
+		} else if ($nilai < 200) {
+			$temp = " seratus" . penyebut($nilai - 100);
+		} else if ($nilai < 1000) {
+			$temp = penyebut($nilai/100) . " ratus" . penyebut($nilai % 100);
+		} else if ($nilai < 2000) {
+			$temp = " seribu" . penyebut($nilai - 1000);
+		} else if ($nilai < 1000000) {
+			$temp = penyebut($nilai/1000) . " ribu" . penyebut($nilai % 1000);
+		} else if ($nilai < 1000000000) {
+			$temp = penyebut($nilai/1000000) . " juta" . penyebut($nilai % 1000000);
+		} else if ($nilai < 1000000000000) {
+			$temp = penyebut($nilai/1000000000) . " milyar" . penyebut(fmod($nilai,1000000000));
+		} else if ($nilai < 1000000000000000) {
+			$temp = penyebut($nilai/1000000000000) . " trilyun" . penyebut(fmod($nilai,1000000000000));
+		}     
+		return $temp;
+	}
+	
+}
+
+function terbilang($nilai) {
+	if($nilai<0) {
+		$hasil = "minus ". trim(penyebut($nilai));
+	} else {
+		$hasil = trim(penyebut($nilai));
+	}     		
+	return $hasil;
+}
+
+function getAuth($otorisator)
+{
+	$group_name = setting('MyApp.bod')['group_name'];
+	$jabatan = setting('MyApp.bod')['group_comp'];
+	
+	$dbod = [];
+	foreach ($otorisator as $k => $el)
+	{
+		$dbod[$k]['jabatan'] = $jabatan[$k];
+		foreach($el as $comp)
+		{
+			$dbod[$k][$comp] = setting('MyApp.'.$k.$comp);
+		}
+	}
+	return $dbod;
+}
+
+//konversi gambar ke basa_64
+function getImg($path_img)
+{
+	$path = base_url($path_img);// 'images/your_img.png' Modify this part (your_img.png  
+	$type = pathinfo($path, PATHINFO_EXTENSION);
+	$data = file_get_contents($path);
+	$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+	return $base64;
+}
+
+//MENGHITUNG BUNGA
+
+function rateFlat($pokok,$rate,$tenor)
+{
+	$Bunga = $pokok * $tenor * $rate / 100;
+	$hasil['bunga'] = $Bunga / $tenor;
+	$hasil['pokok'] = $pokok / $tenor;
+	$hasil['total']	= $hasil['pokok'] + $hasil['bunga'];
+	return $hasil; 
 }

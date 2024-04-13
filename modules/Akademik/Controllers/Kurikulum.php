@@ -1,196 +1,171 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed');
-require_once('Prodi.php');
-class Kurikulum extends Prodi
-{	//public $keys;
-	private $field =array();
+<?php
+
+namespace Modules\Akademik\Controllers;
+
+use App\Controllers\BaseController;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Events\Events;
+use Config\Services;
+use Config\MyApp;
+use Modules\Akademik\Models\KurikulumModel;
+use Modules\Akademik\Models\ProdiModel;
+
+class Kurikulum extends BaseController
+{
+    public  $keys='';
+    protected $dconfig;
+	protected $session;
+	protected $theme;
+	protected $model;
+	protected $prodi_model ;
+
+    function __construct() {
+        parent::__construct();
+        $this->dconfig = config(\Modules\Akademik\Config\Kurikulum::class);
+        $this->session = \Config\Services::session();
+		$this->model = new KurikulumModel;	
+        $this->prodi_model = new ProdiModel;
+		$this->data['site_title'] = 'Halaman Kurikulum';
+		$this->data['fields'] 	  = $this->dconfig->fields;
+		$this->data['key']		  = $this->dconfig->primarykey;
+		$this->data['allowimport']		  = $this->dconfig->importallowed;
+        $this->addStyle (base_url().'/css/personal.css');
+		$this->addStyle ('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+		helper(['cookie', 'form']);
+    }
 	
-	function __construct()
+	function index()
 	{
-		parent::__construct();
-		$this->load->model(array('akademik/mod_curriculum','akademik/mod_prodi','akademik/mod_comp_nilai'),TRUE);
-		$this->lang->load('akademik/kurikulum');
-		$this->field=array('id_curriculum', 'id_prodi', 'curr_name', 'issued', 'curr_desc', 'l_duration', 'curr_system', 'state');
+	
+		$kurikulum 	= $this->model->findAll();
+		$data = $this->data;
+		$data['title']		= "Manajemen Kurikulum";
+		$data['rsdata']		= $kurikulum;
+		$data['msg'] 		= "";
+        $data['isplainText'] = TRUE;
+		$data['opsi'] 		= $this->dconfig->opsi;
+        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+		$data['actions']	= $this->dconfig->actions;
+		$data['addOnACt']= $this->dconfig->addOnACt;
+		echo view($this->theme.'datalist',$data);
+    }
+	
+	
+	function addView()
+	{
+		$this->cekHakAkses('create_data');
 		
+		$data	=$this->data;
+		$data['title']	= "Tambah Data Kurikulum";
+		$fields = $this->dconfig->fields;
+		$data['error'] = [];// validation_list_errors();
+		$data['fields'] = $fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+		$data['rsdata'] = [];
+        $data['useCKeditor'] = true;
+		echo view($this->theme.'form',$data);
 	}
-	
-	function curriculum()
+
+	function addAction(): RedirectResponse
 	{
-		$this->session->set_userdata('page',$this->uri->uri_string());
-		$this->load->view('akademik/kurikulum/panel_curr', array('list'=>Modules::run('akademik/list_curr')));
-	}
-	
-	function list_curr()
-	{
-		$offset =($this->uri->segment(2,0)=='list_curriculum')?$this->uri->segment(3,0):0;
-		$banyak_ya=$this->mod_curriculum->get_num();		
-		$perpage=$this->config->item('perpage');
-		$data2=$this->fungsi->getAjaxPagination($banyak_ya,
-				$perpage,'akademik/list_curriculum/',3,'#x_result');
-		$data['paging'] = $data2['paging'];
-		$data['banyak']=$banyak_ya;
-		$data['keys']=$this->keys;
-		$data['curr'] = $this->mod_curriculum->get_paging($perpage,$offset);
-		$this->load->view('akademik/kurikulum/list_curr',$data);
-	}
-	
-	function cur_archive()
-	{
-		$offset = $this->uri->segment(3,0);
-		$banyak_ya=$this->mod_curriculum->get_num();		
-		$perpage=$this->config->item('perpage');
-		$data2=$this->fungsi->getAjaxPagination($banyak_ya,
-				$perpage,'akademik/kurikulumiculum/v_trash/',3,'#panel_editing');
-		$data['paging'] = $data2['paging'];
-		$data['jml_jur']=$banyak_ya;
-		$data['curr'] = $this->mod_curriculum->view_trash($perpage,$offset);
-		$this->load->view('akademik/kurikulum/trash_panel',$data);
-	}
-	
-	function dtlcurr()
-	{
-		$ids = $this->uri->segment(3,0);
-		//$this->simplival->hak('master',1);
-		$keys=$this->config->item('dynamic_key');
-		$id=$this->kriptograf->paramDecrypt($ids,$this->keys);
-					
-		//$data['ids'] = $id;
-		$data['curriculum'] = $this->mod_curriculum->get_curriculum_by_id($id);
-		$data['curr_system_list'] = $this->lang->line("curr_system_list");
-		$data['cmb_prodi'] = $this->mod_prodi->active_prodi_dropdown();
-		$data['ids']=$ids;
-		$data['token']=$this->token;
-		$data['options'] = $this->lang->line('norm_state_arr');
-		$data['dskl']=Modules::run('akademik/skl_list_by_cur',$ids);
-		$data['dcomp']=Modules::run('akademik/comp_nilai',$ids);
-		$this->load->view('akademik/kurikulum/frm_curr_view',$data);
-	}
-	
-	function add_curr()
-	{
-		$this->form_validation->set_rules('curr_name', 'lang:curr_name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('curr_desc', 'lang:curr_desc', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('issued', 'lang:issued', 'trim|required|xss_clean');
-		
-		//$this->simplival->hak('master',1);
-	
-		$field=$this->field;
-		$this->simplival->setFields($field);
-		$data=$this->simplival->acceptData($field);
-		
-		if ($this->form_validation->run()) {
-			$this->_create_curriculum($data);
+		$rules = $this->dconfig->roles;	
+		if ($this->validate($rules)) {
+			$data = $this->request->getPost();
+			$data['id']=$data['id_prodi'];
+			$Kurikulummodel = new KurikulumModel();
+			$Kurikulum= new \Modules\Akademik\Entities\Kurikulum();
+			$Kurikulum->fill($data);
+			$simpan = $Kurikulummodel->insert($Kurikulum,false);
+			if($simpan){
+				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
+			}else{
+				$this->session->setFlashdata('warning','Data gagal disimpan');
+			}
+			return redirect()->to(base_url('kurikulum'));
 		}else{
-			$Data['issued']=now();
-			$Data['cmb_prodi'] = $this->mod_prodi->active_prodi_dropdown();
-			$Data['options']=$options=$this->lang->line('norm_state_arr');
-			$Data['ls_options']=$options=$this->lang->line('curr_system_list');
-			$Data['curriculum'] =$data;
-			$Data['formview']='akademik/kurikulum/frm_curr';
-			$Data['keys']=$this->keys;
-			$this->load->view('admin/nform',$Data);
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
 	
-	private function _create_curriculum($data)
+	function updateView($ids)
 	{
-		$tgl=$this->input->post('issued');//format data 'd-m-Y'
-		$issued=ind_to_unix($tgl);
-		$yy=date('y',$issued);
-		$rdnum=random_string('numeric',1);
-		$idk=sprintf("%02d",$data['id_prodi']).$yy.$rdnum;
-		
-		$data['id_curriculum']=$idk;
-		$data['issued']=$issued;//date('Y-m-d');
-		
-		if($this->mod_curriculum->add_curriculum($data))
-		{
-			$this->session->set_flashdata('msgclass','alert-success');
-			$this->session->set_flashdata('message',$this->lang->line('common_saving_success'));
-		}else{
-			$this->session->set_flashdata('msgclass','alert-warning');
-			$this->session->set_flashdata('message',$this->lang->line('common_saving_error'));
-		}
-		//echo $this->fungsi->page_refresh();
-		$this->curriculum();
+		$this->cekHakAkses('update_data');
+		$id = decrypt($ids); 
+		 
+		$data=$this->data;
+		$data['title']	= "Update Data Kurikulum";
+		$data['error'] = validation_list_errors();
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+		$rs =  $this->model->find($id)->toarray();
+		$data['rsdata'] = $rs;
+        $data['useCKeditor'] = true;
+		echo view($this->theme.'form',$data);
 	}
 	
-	function editcur()
+	function updateAction($ids): RedirectResponse
 	{
-		//'id_curriculum', 'id_prodi', 'curr_name', 'issued', 'curr_desc', 'l_duration', 'curr_system', 'state'
-		$this->form_validation->set_rules('curr_name', 'lang:curr_name', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('curr_desc', 'lang:curr_desc', 'trim|required|xss_clean');
-		$this->form_validation->set_rules('issued', 'lang:issued', 'trim|required|xss_clean');
+		$id = decrypt($ids); 
+		$roles = $rules = $this->dconfig->roles;
 		
-		$ids = $this->uri->segment(3,0);
-		//$this->simplival->hak('master',1);
-		$id=$this->kriptograf->paramDecrypt($ids,$this->keys);
-		
-		if ($this->form_validation->run()) {
-			$this->_update($id);
+		if ($this->validate($roles)) {
+			
+			//$this->model->update($id, $data);
+			$data = $this->request->getPost();
+			$model = new KurikulumModel();
+
+			$rsdata = new \Modules\Akademik\Entities\Kurikulum();
+			$rsdata->fill($data);
+			$simpan = $model->update($id, $rsdata);
+			
+			if($simpan){
+				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
+			}else{
+				$this->session->setFlashdata('warning','Data gagal disimpan');
+			}
+			
+			return redirect()->to(base_url('prodi'));
 		}else{
-			//$data['ids'] = $id;
-			$data['curriculum'] = $this->mod_curriculum->get_curriculum_by_id($id);
-			$data['cmb_prodi'] = $this->mod_prodi->active_prodi_dropdown();
-			$data['options']=$options=$this->lang->line('norm_state_arr');
-			$data['ls_options']=$options=$this->lang->line('curr_system_list');
-			$data['formview']='akademik/kurikulum/frm_curr';
-			$this->load->view('admin/nform',$data);
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
-	
-	private function _update($id)
+
+	function delete($ids){
+		$id = decrypt($ids); 
+		$Kurikulummodel = new KurikulumModel();
+		$Kurikulummodel->delete($id);
+		// masuk database
+		$this->session->setFlashdata('sukses','Data telah dihapus');
+		return redirect()->to(base_url('prodi'));
+	}
+
+	function detView($ids)
 	{
-		//'id_curriculum', 'curr_name', 'issued', 'curr_desc', 'state'
-		$field=$this->field;		
-		$data['errors'] = array();
-		$this->simplival->setFields($field);
-		$data=$this->simplival->acceptData($field);
-		$tgl=$this->input->post('issued');//format data 'd-m-Y'
-		$data['issued']=ind_to_unix($tgl);//date('Y-m-d');
-		$data['id_curriculum']=$id;//date('Y-m-d');
-				
-		if($this->mod_curriculum->update_curriculum($id,$data))
-		{
-			$this->session->set_flashdata('msgclass','alert-success');
-			$this->session->set_flashdata('message',$this->lang->line('common_saving_success'));
-		}else{
-			$this->session->set_flashdata('msgclass','alert-warning');
-			$this->session->set_flashdata('message',$this->lang->line('common_saving_error'));
-		}
-		//echo $this->fungsi->page_refresh();
-		$this->curriculum();
+		$this->cekHakAkses('update_data');
+		$id = decrypt($ids); 
+		
+		$data=$this->data;
+		$data['title']	= "Detail Kurikulum";
+
+		$rs =  $this->model->find($id)->toarray();
+
+		$RESUME['descrip_field'] = $this->dconfig->resume_descrip_field;
+		$RESUME['AddOnFields'] 	 = $this->dconfig->res_addON_fields;
+		$RESUME['data'] 		 = $rs;
+		$RESUME['subtitle']		 = $rs['curr_name'];
+
+		//TABS SECTION
+		$TABS['subject'] = ['title'=>'Data Subject','active'=>1, 'data'=>[]];
+		$TABS['skl']     = ['title'=>'Data SKL','active'=>0, 'data'=>[]];
+
+		$data['tabs']	 = $TABS;
+		$data['resume']  = $RESUME;
+		$data['opsi'] 	 = $this->dconfig->opsi;
+        
+		$data['rsdata'] = $rs;
+		echo view($this->theme.'dataViewCell',$data);
 	}
-	
-	function delcur($ids){
-		$ids = $this->uri->segment(3,0);
-		$id=$this->kriptograf->paramDecrypt($ids,$this->keys);
-		if($this->input->post('hkey')){
-			$this->mod_curriculum->disable_curriculum($id);
-			$this->list_curr();
-		}else{
-			//tampilkan dialogbox
-			$ps=$this->mod_curriculum->get_curriculum_by_id($id);
-			$ps=$ps->row_array();
-			$data['hkey']=$ids;
-			$data['subtitle']=$this->lang->line('rem').' : '.$ps['curr_name'];
-			$data['msg_title']=$this->lang->line('common_remove_msg');
-			//$data['msg'][]=$ps['nm_prodi'];
-			$data['msg'][]=$ps['curr_desc'];
-			$this->load->view('admin/konfirm_modal',$data);
-		}
-	}
-	
-	function cur_tsts($ids,$val){
-		$keys=$this->config->item('dynamic_key');
-		$id=$this->kriptograf->paramDecrypt($ids,$keys);
-		$sts=$this->kriptograf->paramDecrypt($val,$keys);
-		$this->mod_curriculum->togle_state($id,$sts);
-		$this->fungsi->load_ajax('akademik/kurikulumiculum/list_curriculum','#panel_editing');
-	}	
-	
-	function testtt()
-	{
-		echo "ADA APA YA...";
-	}
-	
 }

@@ -10976,6 +10976,16 @@ form.user .btn-user {
   width: 12.5rem;
 }
 
+.field-icon {
+  position: absolute;
+  top: 50%;
+  right: 15px;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.9);
+  }
+
 @-webkit-keyframes noise-anim {
   0% {
     clip: rect(49px, 9999px, 40px, 0);

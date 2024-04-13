@@ -1,4 +1,4 @@
-  <?= $this->extend($layout) ?>
+<?= $this->extend($layout) ?>
   <?= $this->section('main') ?>
    
 	<div class="card-header">
@@ -7,26 +7,36 @@
 	
 	<div class="card-body">
 		<?php
-		$datalist = current_url().'dtlist';
+		$Acction = current_url(); 
+		$allowAdd =TRUE;
+		$allowAct =TRUE;
+		
+		if(isset($act)){$Acction = $act ;}
+		if(isset($allowADD)){$allowAdd = $allowADD;}
+		if(isset($allowACT)){$allowAct = $allowACT;}
+			
+		$datalist = $Acction.'dtlist';
 		$hfield=[];
 		helper ('html');
-			echo btn_label([
-				'attr' => ['class' => 'btn btn-success btn-xs'],
-				'url' => current_url() . '/add',
-				'icon' => 'fa fa-plus',
-				'label' => 'Tambah Data'
-			]);
+			if($allowAdd){
+				echo btn_label([
+					'attr' => ['class' => 'btn btn-success btn-xs'],
+					'url' => $Acction . '/add',
+					'icon' => 'fa fa-plus',
+					'label' => 'Tambah Data'
+				]);
+			}
 			if($allowimport){
 				echo btn_label([
 					'attr' => ['class' => 'btn btn-primary btn-xs'],
-					'url' => current_url(). '/import',
+					'url' => $Acction . '/import',
 					'icon' => 'fa fa-file-excel-o',
 					'label' => 'Import dari Excel'
 				]);
 			}
 			echo btn_label([
 				'attr' => ['class' => 'btn btn-light btn-xs'],
-				'url' => current_url(),
+				'url' => $Acction,
 				'icon' => 'fa fa-arrow-circle-left',
 				'label' => 'List Data'
 			]);
@@ -34,7 +44,7 @@
 		<hr/>
 		  
 	    <table id="table-result" class="table table-striped table-bordered" width="100%" cellspacing="0" 
-	    data-order='[[ 1, "asc" ]]' data-page-length='25'>
+	    data-order='[[ 0, "asc" ]]' data-page-length='25'>
 	    	<thead class="thead-dark">
 				<tr>
 					<?php 
@@ -50,43 +60,75 @@
 							echo '<th width="'.$l.'%"><div align="center">'.$row['label'].'</div></th>';
 						}
 					}		
+					if($allowAct){
 					?>
 					<th width="9%"><div align="center">Aksi</div></th>
+					<?php } ?>
 				</tr> 
 			</thead>
 			<tbody>
 		 <?php
 			//$encrypter = \Config\Services::encrypter();
-		
-		//$ciphertext = $encrypter->encrypt($plainText);
+			
 			$no=0;
 			foreach ($rsdata as $data){
 			$no++;
 			$ids=  $data->$key;
+		
+			if(isset($isplainText)){$ids = encrypt($ids) ;}
 		?>
 				<tr>
 					<?php 
 					foreach($hfield as $hc){
+						$Algn = 'left';
+						
 						$dtval = $data->$hc;
 						if($fields[$hc]['type']=='date')
 						{
 							if(isset($ori)){$dtval = unix2Ind($data->$hc,'d-m-Y');}
 						}
 						if(in_array($hc, $hasopt)){$dtval = $opsi[$hc][$data->$hc];}
-						echo '<td class="nowrapped" align="left">'.$dtval.'</td>';
+						
+						if (is_integer($dtval)||is_float($dtval)||is_double($dtval)) {
+							$Algn = "right";$dtval = format_angka($dtval);
+						}
+						echo '<td class="nowrapped" align="'.$Algn.'" valign="top">'.$dtval.'</td>';
 					}
-					$deturl = (isset($detail_url))?$detail_url:current_url()."/detail";
+					$deturl = (isset($detail_url))?$detail_url:$Acction."/detail";
+					
+					if($allowAct){
 					?>
 					
-					<td class="nowrapped" align="center">
+					<td class="nowrapped" align ="center" >
 					<?php if($actions['detail']){?>
 					<a id="<?=$ids ?>" class="btndetail" href="<?php echo $deturl.'/'.$ids; ?>"><i class="fa fa-list-alt"></i></a>	
 					<?php } if($actions['edit']){?>
-					<a href='<?php echo current_url().'/edit/'.$ids; ?>' title="Edit"><i class="fa fa-edit"></i></a> 
+					<a href='<?php echo $Acction .'/edit/'.$ids; ?>' title="Edit"><i class="fa fa-edit"></i></a> 
 					<?php } if($actions['delete']){?>
-					<a href='<?php echo current_url().'/hapus/'.$ids; ?>' onclick="confirmation(event)" title="Hapus"><i class="fa fa-trash"></i></a> 
+					<a href='<?php echo $Acction .'/hapus/'.$ids; ?>' onclick="confirmation(event)" title="Hapus"><i class="fa fa-trash"></i></a> 
 					<?php } ?>
+					<?php
+					if(isset($addOnACt)){
+						foreach($addOnACt as $act)
+						{
+							echo "<a href='".base_url().$act['src'].$ids."' title='".$act['label']."'><i class='fa fa-".$act['icon']."'></i></a> ";
+						}
+					}
+					
+					if(isset($condActDet))
+						{
+							$url = $condActDet[$data->state];
+							foreach($url as $act)
+							{
+							//	$id= $ids;
+								$href = ($act['src']=="#")?"#":base_url().$act['src'].$ids;
+								echo "<a href='".$href."' title='".$act['label']."' ".
+									 $act['attr']."><i class='fa fa-".$act['icon']."'></i></a> ";
+							}
+						}
+					?>
 					</td>
+					<?php } ?>
 				</tr>
 			
 		 <?php
@@ -95,21 +137,35 @@
 		  ?>
 		  	</tbody>
 		</table>
+		
+		<?php
+		  if(isset($resume)){
+		  	$dfield = $resume['field'];
+		  	
+		  	echo '<div class="card w-50 "><div class="card-body"><h5 class="card-titler">Keterangan:</h5>';
+		  	echo "<table class='table table-sm'>";
+		  	foreach($resume['data'] as $k => $R)
+		  	{
+		  		echo "<tr><td>".$dfield[$k]['label']."</td>";
+		  		echo "<td align='".$dfield[$k]['perataan']."'>".$R."</td></tr>";
+		  	}
+		  	echo '</table></div></div>';
+		  }
+		  ?>
 	  </div>
+	  
 	  <div id="idviews">
 	  	<div class="modal fade" id="vdetail" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
 		  <div id="dtviews"  class="modal-dialog">
 		  </div>
 		</div>
 	  </div>
+	 
  
  <?= $this->endSection() ?>
  
  <?= $this->section('pageScripts') ?>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-
-	<?php if($session->getFlashdata('sukses')) { ?>
+    <?php if($session->getFlashdata('sukses')) { ?>
 	<script>
 	  swal("Berhasil", "<?php echo $session->getFlashdata('sukses'); ?>","success")
 	</script>
@@ -130,27 +186,17 @@
 	<script>
 		$(document).ready(function() {
 		   $('#table-result').DataTable({
-		      "dom": 'Bflrtip',
-		      "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"],
+		      "dom": 'Bfltip',
+		      "buttons": ["copy", "csv", "excel", "pdf", "print"],
 		      "responsive": true, 
 		      "paging": true,
 		      "lengthMenu": [[5, 20, 25, 50, 100, 250, 500, -1], [5, 20, 25, 50, 100, 250, 500, "All"]],
 		      "lengthChange": true, 
 		      "autoWidth": false, 
 		      "scrollX": true,
+		      "sort":true,
 		    });
 		  
-		  /*   
-		    $('.btndetail').click(function(){
-		    	var k = $(this).prop('id');
-		    	var ur = "/<?php echo strtolower($current_module['nama_module']);?>";
-			//	load('lognilai/shwpd/'+k,'#x_result');
-		    	show(ur+'/detail/'+k,'#dtviews');
-		    	$('#vdetail').modal({
-				  	keyboard: false
-				}).modal('show');
-		    });
-		  */  
 		    $('#vdetail').on('hidden.bs.modal', function (e) {
 			  // do clear data on dtviews
 			  $('#dtviews').html = "";

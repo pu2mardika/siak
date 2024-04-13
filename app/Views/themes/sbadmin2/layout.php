@@ -21,9 +21,12 @@
     <!-- Custom styles for this template -->
     <link href="<?=base_url('themes/sbadmin2/css/sb-admin-2.min.css')?>" rel="stylesheet">
     <!-- Custom styles for this page -->
-    <link href="<?=base_url('themes/sbadmin2/vendor/datatables/dataTables.bootstrap4.min.css?')?>" rel="stylesheet">
+    
     <link href="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.3/b-2.3.5/b-html5-2.3.5/b-print-2.3.5/datatables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css" rel="stylesheet"/>
     <!-- Dynamic styles -->
+    <?= $this->renderSection('pageStyles') ?>
 	<?php
 	if (@$styles) {
 		foreach($styles as $file) {
@@ -161,6 +164,11 @@
 	//	setTimeout("preventBack()", 0);
 		window.onunload=function(){null};
 	</script>
+	<script>
+	    if ( window.history.replaceState ) {
+	  //      window.history.replaceState( null, null, window.location.href );
+	    }
+	</script>
 	<?= $this->renderSection('pageStyles') ?>
 </head>
 
@@ -175,7 +183,7 @@
 			
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?=base_url()?>">
-                <img src="<?=base_url().'/images/' . $settingApp->logo_app?>" width="100px"/>
+                <img src="<?=base_url().'/images/' . setting()->get('MyApp.logo')?>" width="100px"/>
             </a>
 			 
             <!-- Divider -->
@@ -195,7 +203,7 @@
             <!-- Sidebar Message -->
             <div class="sidebar-card d-none d-lg-flex">
                 <img class="sidebar-card-illustration mb-2" src="<?= base_url()?>/themes/sbadmin2/img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong><?=$site_title?></strong> <?=$settingApp->company_tagline?></p>
+                <p class="text-center mb-2"><strong><?=$site_title?></strong> <?=setting()->get('MyApp.companyTagline')?></p>
                 <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro"></a>
             </div>
 
@@ -415,7 +423,7 @@
             <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
-                        <span><?=str_replace('{{YEAR}}', date('Y'), $settingApp->footer_app)?></span>
+                        <span><?=str_replace('{{YEAR}}', date('Y'), setting()->get('MyApp.footer'))?></span>
                     </div>
                 </div>
             </footer>
@@ -466,15 +474,14 @@
     <script src="<?=base_url('themes/sbadmin2/vendor/datatables/jquery.dataTables.min.js')?>"></script>
     <script src="<?=base_url('themes/sbadmin2/vendor/datatables/dataTables.bootstrap4.min.js')?>"></script>
     -->
- 
-	<!--
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
-	-->
+	
 	<script src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.13.3/b-2.3.5/b-html5-2.3.5/b-print-2.3.5/datatables.min.js"></script>
 	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	
 	<?=  $this->renderSection('pageScripts') ?>
-	 
 	<?php
 	if (@$scripts) {
 		foreach($scripts as $file) {
@@ -492,6 +499,7 @@
     <!--<script src="<?=base_url('themes/sbadmin2/js/demo/datatables-demo.js')?>"></script>-->
 	<script src="<?=base_url('js/app.js')?>"></script>
 	<script src="<?=base_url('js/jquery.form.js'); ?>"></script>
+	<script src="<?=base_url('js/jquery.easy-autocomplete.min.js'); ?>"></script>
 	
 </body>
 
