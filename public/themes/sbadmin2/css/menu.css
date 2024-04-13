@@ -1,0 +1,73 @@
+/* MENU */
+.sidebar ul,
+.sidebar li {
+	float: none;
+}
+.account-wrapper {
+	float: none;
+}
+.account-wrapper>ul>li {
+	list-style: none;
+	float: left;
+	position: relative;
+}
+.account-wrapper>ul>li>a {
+	display: block;
+	padding: 15px 20px;
+}
+.sidebar li>a {
+	display: block;
+	padding: 15px 20px;
+	color: #aab9c7;
+	margin-right: 0;
+}
+.account-menu-container {
+	position: relative;
+	width: 100%;
+	background: #3d474e;
+}
+.sidebar .menu:hover {
+	background: none;
+}
+.sidebar .menu:hover>a {
+	color: #95a2ab;
+}
+
+/* SUBMENU */
+
+.sidebar .submenu li{
+	float: none;
+}
+.sidebar .submenu a{
+	display: block;
+    margin: 0;
+    padding: 10px 30px 10px 20px;
+}
+.sidebar .submenu a:hover{
+	/* color: #FFFFFF; */
+}
+
+ul.list-circle {
+	list-style: circle;
+}
+ul.list-circle li{
+	margin-left: 25px;
+}
+
+.sidebar ul>li:hover,
+.sidebar ul>li.tree-open {
+	
+	/* background: #687090; */
+}
+.sidebar ul>li.highlight {
+	background: #0d97e8;
+}
+.sidebar li:hover>a,
+.sidebar ul>li.highlight>a,
+.sidebar ul>li.tree-open>a{
+	/* color: #FFFFFF; */
+}
+
+.sidebar .highlight {
+	background: #30374b;
+}
