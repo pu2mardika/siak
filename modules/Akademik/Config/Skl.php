@@ -6,44 +6,34 @@ use CodeIgniter\Config\BaseConfig;
 
 class Skl extends BaseConfig
 {
-     public $opsi = [
-        'curr_system'=> [1=>"Paket", 2=>"Semester", 3=>"Catur Wulan", 4=>"Quarter"],
-    ];
+     public $opsi = [];
 
     /**
 	* ---------------------------------------------------------------------
-	* FIELD NAME : 'curr_id', 'id_prodi', 'curr_name', 'curr_desc', 'issued', 
-	*              'l_duration', 'curr_system', 'instance_rpt', 'ch_level', 'state',
+	* FIELD NAME : 'grade, subgrade, grade_name, skl, curr_id',
 	* ---------------------------------------------------------------------
 	* @var array
 	* 
 	*/
 	public array $fields = [
-		'id_prodi'		=> ['label' => 'Program Studi','width'=>0,'extra'=>['id' => 'idprodi','class' => '', 'required' => true],'type'=>'dropdown', ], 
-		'curr_name'		=> ['label' => 'Nama Kurikulum','width'=>20,'extra'=>['id' => 'nama','class' => '', 'required' => true],'type'=>'text'], 
-		'curr_desc'		=> ['label' => 'Deskripsi/SKL','width'=>40,'extra'=>['id' => 'editor','class' => ''],'type'=>'textarea', ], 
-		'issued'		=> ['label' => 'Tgl Mulai Berlaku','width'=>0,'extra'=>['id' => 'tmt','class' => '', 'required' => true],'type'=>'date', ], 
-        'l_duration'	=> ['label' => 'Lama Belajar','width'=>8,'extra'=>['id' => 'durasi','class' => '', 'required' => true],'type'=>'number', ], 
-		'curr_system'	=> ['label' => 'Sistem Kurikulum','width'=>10,'extra'=>['id' => 'cursytem','class' => '', 'required' => true],'type'=>'dropdown', ],
-		'instance_rpt'	=> ['label' => 'Akronim Kurikulum','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true],'type'=>'text'],  
+		'grade'		=> ['label' => 'Level','width'=>5,'extra'=>['id' => 'grade','class' => '', 'required' => true],'type'=>'text', ], 
+		'subgrade'	=> ['label' => 'Sub Level','width'=>5,'extra'=>['id' => 'subgrad','class' => '', 'required' => true],'type'=>'text'], 
+		'grade_name'=> ['label' => 'Sub Level','width'=>5,'extra'=>['id' => 'subgrad','class' => '', 'required' => true],'type'=>'text'], 
+		'skl'		=> ['label' => 'Standar Kompetensi','width'=>40,'extra'=>['id' => 'editor','class' => ''],'type'=>'textarea', ], 
+		'curr_id'	=> ['label' => 'Kurikulum','width'=>0,'extra'=>['id' => 'tmt','class' => '', 'required' => true],'type'=>'dropdown',],  
 	];
 
-	public string $resume_descrip_field = 'curr_desc';
+	public string $resume_descrip_field = '';
 
 	public array $res_addON_fields = [  //MAKS: 3 FIELDS
-		'issued'		=>['label' => 'TMT', 'type'=>'text'], 
-		'l_duration'	=>['label' => 'Lama Belajar', 'type'=>'text'], 
-		'curr_system'	=>['label' => 'Sistem Kurikulum', 'type'=>'dropdown']
 	];
     
 	public array $roles = [
-        'id_prodi'   	=> ['label' => 'Nama Prodi', 'rules' =>'required'],
-		'curr_name'   	=> ['label' => 'Nama Kurikulum', 'rules' =>'required'],
-		'curr_desc'  	=> ['label' => 'Deskripsi/SKL', 'rules' =>'required'],
-		'issued'   		=> ['label' => 'Tgl Mulai Berlaku', 'rules' =>'required'],
-        'l_duration'   	=> ['label' => 'Lama Belajar', 'rules' =>'required'],
-		'curr_system'  	=> ['label' => 'Sistem Kurikulum', 'rules' =>'required'],
-		'instance_rpt' 	=> ['label' => 'Akronim Kurikulum', 'rules' =>'required'],
+        'grade'   	=> ['label' => 'Nama Prodi', 'rules' =>'required'],
+		'subgrade'   	=> ['label' => 'Level', 'rules' =>'required'],
+		'grade_name'  	=> ['label' => 'Sub Level', 'rules' =>'required'],
+		'skl'   		=> ['label' => 'Standar Kompetensi/Capaian Hasil', 'rules' =>'required'],
+        'curr_id'   	=> ['label' => 'Kurikulum', 'rules' =>'required'],
 	];  
 
 	public string $primarykey = 'id';
@@ -71,10 +61,10 @@ class Skl extends BaseConfig
 	];
 	
 	public array $addOnACt = [
-		'spk' => ['icon'=>'file-word','src'=>'kurikulum/detail/', 'label'=>'Detail'],
+		//'spk' => ['icon'=>'file-word','src'=>'kurikulum/detail/', 'label'=>'Detail'],
 	];
 	
 	public array $detAddOnACt = [
-		'print' => ['icon'=>'print','src'=>'payment/cetak/', 'label'=>'Cetak', 'btn_type'=>'success'],
+		//'print' => ['icon'=>'print','src'=>'skl/cetak/', 'label'=>'Cetak', 'btn_type'=>'success'],
 	];
 }
