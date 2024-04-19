@@ -60,9 +60,9 @@ class Prodi extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> false,
-		'edit'		=> true,
-		'delete'	=> true,
+	//	'detail' 	=> ['icon'=>'list-alt','src'=>'prodi/detail/', 'label'=>'Detail', 'extra'=>''],
+		'edit' 		=> ['icon'=>'edit','src'=>'prodi/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'prodi/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	
 	public array $addOnACt = [

@@ -62,17 +62,17 @@ class Kurikulum extends BaseConfig
 	* ---------------------------------------------------------------------
 	* action boolean
 	* ---------------------------------------------------------------------
-	* 
+	* onclick="confirmation(event)"
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> false,
-		'edit'		=> true,
-		'delete'	=> true,
+		'detail' 	=> ['icon'=>'th-list','src'=>'kurikulum/detail/', 'label'=>'Detail', 'extra'=>''],
+		'edit' 		=> ['icon'=>'edit','src'=>'kurikulum/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'kurikulum/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	
 	public array $addOnACt = [
-		'spk' => ['icon'=>'file-word','src'=>'kurikulum/detail/', 'label'=>'Detail'],
+		//'detail' => ['icon'=>'th-list','src'=>'kurikulum/detail/', 'label'=>'Detail'],
 	];
 	
 	public array $detAddOnACt = [

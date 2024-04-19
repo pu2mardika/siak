@@ -122,52 +122,67 @@ class Siswa extends BaseController
 		echo view($this->theme.'vdetail',$data);
 	}
 	
-	function tambah()
+	function addView()
 	{
 		$this->cekHakAkses('create_data');
-		$rules = $this->dconfig->roles;
-		//$this->simplival->hak('master',1);
-		
-		if ($this->validate($rules)) {
-			$this->_simpandata();
-		}else{
-			$data=$this->data;
-			$data['title']	= "Tambah Data Siswa";
-			$data['error'] = validation_list_errors();
-			$data['fields'] = $this->dconfig->fields;
-			$data['opsi'] 	= $this->dconfig->opsi;
-			$data['rsdata'] = [];
-			//test_result($data);
-			echo view($this->theme.'form',$data);
-		}
+		$data=$this->data;
+		$data['title']	= "Tambah Data Siswa";
+		$data['error']  = [];
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$data['rsdata'] = [];
+		echo view($this->theme.'form',$data);
 	}
 	
 	
-	private function _simpandata()
+	function addAction(): RedirectResponse
 	{
-		$data = $this->request->getPost();
-		$siswamodel = new SiswaModel();
-
-		$siswa= new \Modules\Siswa\Entities\siswa();
-		$siswa->fill($data);
-		$simpan = $siswamodel->insert($siswa);
-		if($simpan){
-			$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
+		$rules = $this->dconfig->roles;	
+		if ($this->validate($rules)) {
+			$data = $this->request->getPost();
+			$siswamodel = new SiswaModel();
+			$siswa= new \Modules\Siswa\Entities\siswa();
+			$siswa->fill($data);
+			$simpan = $siswamodel->insert($siswa);
+			if($simpan){
+				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
+			}else{
+				$this->session->setFlashdata('warning','Data gagal disimpan');
+			}
+			return redirect()->to(base_url('siswa'));
 		}else{
-			$this->session->setFlashdata('warning','Data gagal disimpan');
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
-		return redirect()->to(base_url('siswa'));
 	}
 	
-	function update($ids)
+	function updateView($ids)
 	{
 		$this->cekHakAkses('update_data');
 		$id = decrypt($ids); 
+		 
+		$data=$this->data;
+		
 		$roles = $rules = $this->dconfig->roleEdit;
 		
+		$data=$this->data;
+		$data['title']	= "Update Data Siswa";
+		$data['error'] = validation_list_errors();
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$rs =  $this->model->find($id);
+		$tglLahir = $rs->tgllahir;
+		$rsdata = $rs->toarray();
+		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
+		$rsdata['tgllahir']=$tglLahir->toDateString();
+		$data['rsdata'] = $rsdata; 
+		echo view($this->theme.'form',$data);
+	}
+	
+	function updateAction($ids): RedirectResponse
+	{
+		$id = decrypt($ids); 
+		$roles = $rules = $this->dconfig->roles;
 		if ($this->validate($roles)) {
-			
-			//$this->model->update($id, $data);
 			$data = $this->request->getPost();
 			$model = new SiswaModel();
 
@@ -180,25 +195,12 @@ class Siswa extends BaseController
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
-			
 			return redirect()->to(base_url('siswa'));
 		}else{
-			$data=$this->data;
-			$data['title']	= "Update Data Siswa";
-			$data['error'] = validation_list_errors();
-			$data['fields'] = $this->dconfig->fields;
-			$data['opsi'] 	= $this->dconfig->opsi;
-			$rs =  $this->model->find($id);
-			$tglLahir = $rs->tgllahir;
-			$rsdata = $rs->toarray();
-			//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-			$rsdata['tgllahir']=$tglLahir->toDateString();
-			$data['rsdata'] = $rsdata;
-		//	show_result($rsdata);
-			echo view($this->theme.'form',$data);
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
+		
 	}
-	
 	function delete($ids){
 		$id = decrypt($ids); 
 		$siswamodel = new SiswaModel();

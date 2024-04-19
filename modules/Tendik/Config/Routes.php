@@ -8,7 +8,8 @@ $routes->group("tendik", ["namespace" => "\Modules\Tendik\Controllers"], functio
     // other page - URL: /student/other-method
 	$routes->get("dtlist", "Tendik::dtlist");
 	$routes->post("dtlist", "Tendik::dtlist");
-	$routes->add("add", "Tendik::tambah");
+	$routes->get("add", "Tendik::addView");
+	$routes->post("add", "Tendik::addAction");
 	$routes->get("hapus/(:any)", "Tendik::delete/$1");
 	$routes->get("import", "Tendik::fromxlsx");
 	$routes->post("import", "Tendik::fromxlsx");

@@ -127,7 +127,7 @@ class Kurikulum extends BaseController
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
 			
-			return redirect()->to(base_url('prodi'));
+			return redirect()->to(base_url('kurikulum'));
 		}else{
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
@@ -156,11 +156,30 @@ class Kurikulum extends BaseController
 		$RESUME['AddOnFields'] 	 = $this->dconfig->res_addON_fields;
 		$RESUME['data'] 		 = $rs;
 		$RESUME['subtitle']		 = $rs['curr_name'];
-
+		
+		$data['breadcrumb'][$rs['curr_name']] = "#";
 		//TABS SECTION
-		$TABS['subject'] = ['title'=>'Data Subject','active'=>1, 'data'=>[]];
-		$TABS['skl']     = ['title'=>'Data SKL','active'=>0, 'data'=>[]];
-
+		
+		$TABS['subject'] = ['title'=>'Data Subject','active'=>1, 'vcell'=>"TEST SUBJECT"];
+		
+		//CEK Skl
+		$sklModel = new \Modules\Akademik\Models\SklModel();
+		$dtview['isplainText']  = TRUE;
+		$dtview['strdelimeter'] =setting('Skl.arrDelimeter');
+		$dtview['fields'] =setting('Skl.fieldcels');
+		$dtview['id'] 	  = $id;
+		$dtview['act'] 	  = 'skl';
+		$dtview['key']	  = setting('Skl.primarykey');
+		$dtview['opsi']	  = $this->model->getLevel($id);
+		$dtview['rsdata'] = $sklModel->where('currId',$id)->findAll();
+		$dtview['title']  = "Daftar Capaian Pembelajaran";
+		$dtview['actions']= setting('Skl.actions');
+		$dtview['addOnACt'] = setting('Skl.addOnACt');
+		
+		$vcall = view_cell('\Modules\Akademik\Libraries\Akademik::show', ['theme'=>$this->theme, 'dtview'=>$dtview]); 
+		
+		$TABS['skl']     = ['title'=>'Data SKL','active'=>0, 'vcell'=>$vcall];
+		
 		$data['tabs']	 = $TABS;
 		$data['resume']  = $RESUME;
 		$data['opsi'] 	 = $this->dconfig->opsi;

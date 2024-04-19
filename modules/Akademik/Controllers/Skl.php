@@ -9,7 +9,7 @@ use CodeIgniter\Events\Events;
 use Config\Services;
 use Config\MyApp;
 use Modules\Akademik\Models\SklModel;
-use Modules\Akademik\Models\ProdiModel;
+use Modules\Akademik\Models\KurikulumModel;
 
 class Skl extends BaseController
 {
@@ -18,7 +18,7 @@ class Skl extends BaseController
 	protected $session;
 	protected $theme;
 	protected $model;
-	protected $prodi_model ;
+	protected $skl_model ;
 
     function __construct() {
         parent::__construct();
@@ -40,50 +40,75 @@ class Skl extends BaseController
 	
 		$kurikulum 	= $this->model->findAll();
 		$data = $this->data;
-		$data['title']		= "Manajemen Skl";
-		$data['rsdata']		= $kurikulum;
-		$data['msg'] 		= "";
+		$data['title']		 = "Manajemen Skl";
+		$data['rsdata']		 = $kurikulum;
+		$data['msg'] 		 = "";
         $data['isplainText'] = TRUE;
-		$data['opsi'] 		= $this->dconfig->opsi;
-        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
-		$data['actions']	= $this->dconfig->actions;
-		$data['addOnACt']= $this->dconfig->addOnACt;
+		$data['opsi'] 		 = $this->dconfig->opsi;
+        $data['opsi']['currId'] 	= $this->curr_model->getDropdown();
+		$data['actions']	 = $this->dconfig->actions;
+		$data['addOnACt']    = $this->dconfig->addOnACt;
 		echo view($this->theme.'datalist',$data);
     }
 	
+	public function showList($currID){
+		$kurikulum 	= $sklModel->where('currId',$currID)->findAll();
+		$data['title']		 = "Manajemen Skl";
+		$data['rsdata']		 = $kurikulum;
+		$data['msg'] 		 = "";
+        $data['isplainText'] = TRUE;
+		$data['opsi'] 		 = $this->dconfig->opsi;
+        $data['opsi']['currId'] 	= $this->curr_model->getDropdown();
+		$data['actions']	 = $this->dconfig->actions;
+		$data['addOnACt']    = $this->dconfig->addOnACt;
+		echo view($this->theme.'cells/dlist',$data);
+	}
 	
-	function addView()
+	function addView($id=0)
 	{
 		$this->cekHakAkses('create_data');
-		
-		$data	=$this->data;
-		$data['title']	= "Tambah Data Skl";
 		$fields = $this->dconfig->fields;
+		$form = $this->theme.'form';
+		$data	=$this->data;
+		$data['useCKeditor'] = true;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$data['opsi']['currId'] = $this->curr_model->getDropdown();
+		if($id <> 0){
+			$fields 			= $this->dconfig->fields2;
+			$data['opsi'] 		= $this->curr_model->getLevel($id);
+			$data['hidden']		= ['currId'=>$id];
+			$form 				= $this->theme.'ajxform';
+			$data['useCKeditor']= true;
+			$data['rtarget']	= "#skl-content";
+		}
+		$data['title']	= "Tambah Data Skl";
 		$data['error'] = [];// validation_list_errors();
 		$data['fields'] = $fields;
-		$data['opsi'] 	= $this->dconfig->opsi;
-        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
 		$data['rsdata'] = [];
-        $data['useCKeditor'] = true;
-		echo view($this->theme.'form',$data);
+		echo view($form, $data);
 	}
-
-	function addAction(): RedirectResponse
+	
+	function addAction($id=0): RedirectResponse
 	{
 		$rules = $this->dconfig->roles;	
 		if ($this->validate($rules)) {
-			$data = $this->request->getPost();
-			$data['id']=$data['id_prodi'];
-			$Sklmodel = new SklModel();
+			$dataSkl = $this->request->getPost();
+			//$data['id']=$data['id_skl'];
+			//test_result($data);
+			$SklModel = new SklModel();
 			$Skl= new \Modules\Akademik\Entities\Skl();
-			$Skl->fill($data);
-			$simpan = $Sklmodel->insert($Skl,false);
+			$Skl->fill($dataSkl);
+			$simpan = $SklModel->insert($Skl,false);
 			if($simpan){
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
-			return redirect()->to(base_url('kurikulum'));
+			if($id == 0){
+				return redirect()->to(base_url('skl'));
+			}else{
+				return redirect()->to(base_url('skl/showList'));
+			}
 		}else{
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
@@ -92,18 +117,33 @@ class Skl extends BaseController
 	function updateView($ids)
 	{
 		$this->cekHakAkses('update_data');
-		$id = decrypt($ids); 
-		 
-		$data=$this->data;
+		$idn = decrypt($ids); 
+		
+		$id = explode(setting('Skl.arrDelimeter'),$idn); //$id[0]= id_skl, $id[1] = id curr
+		
+		$data   = $this->data;
+		$form   = $this->theme.'form';
+		$fields = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+        $data['opsi']['currId'] 	= $this->curr_model->getDropdown();
+        
+		if(count($id)>1){
+			$fields 			= $this->dconfig->fields2;
+			$data['opsi'] 		= $this->curr_model->getLevel($id[1]);
+			$data['hidden']		= ['currId'=>$id[1]];
+			$form 				= $this->theme.'ajxform';
+			$data['useCKeditor']= true;
+			$data['rtarget']	= "#skl-content";
+		} 
+		
 		$data['title']	= "Update Data Skl";
 		$data['error'] = validation_list_errors();
-		$data['fields'] = $this->dconfig->fields;
-		$data['opsi'] 	= $this->dconfig->opsi;
-        $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
-		$rs =  $this->model->find($id)->toarray();
+		$data['fields'] = $fields;
+		
+		$rs =  $this->model->find($id[0])->toarray();
 		$data['rsdata'] = $rs;
         $data['useCKeditor'] = true;
-		echo view($this->theme.'form',$data);
+		echo view($form,$data);
 	}
 	
 	function updateAction($ids): RedirectResponse
@@ -127,7 +167,7 @@ class Skl extends BaseController
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
 			
-			return redirect()->to(base_url('prodi'));
+			return redirect()->to(base_url('skl'));
 		}else{
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
@@ -139,33 +179,7 @@ class Skl extends BaseController
 		$Sklmodel->delete($id);
 		// masuk database
 		$this->session->setFlashdata('sukses','Data telah dihapus');
-		return redirect()->to(base_url('prodi'));
+		return redirect()->to(base_url('skl'));
 	}
-
-	function detView($ids)
-	{
-		$this->cekHakAkses('update_data');
-		$id = decrypt($ids); 
-		
-		$data=$this->data;
-		$data['title']	= "Detail Skl";
-
-		$rs =  $this->model->find($id)->toarray();
-
-		$RESUME['descrip_field'] = $this->dconfig->resume_descrip_field;
-		$RESUME['AddOnFields'] 	 = $this->dconfig->res_addON_fields;
-		$RESUME['data'] 		 = $rs;
-		$RESUME['subtitle']		 = $rs['curr_name'];
-
-		//TABS SECTION
-		$TABS['subject'] = ['title'=>'Data Subject','active'=>1, 'data'=>[]];
-		$TABS['skl']     = ['title'=>'Data SKL','active'=>0, 'data'=>[]];
-
-		$data['tabs']	 = $TABS;
-		$data['resume']  = $RESUME;
-		$data['opsi'] 	 = $this->dconfig->opsi;
-        
-		$data['rsdata'] = $rs;
-		echo view($this->theme.'dataViewCell',$data);
-	}
+	
 }

@@ -304,11 +304,12 @@ abstract class BaseController extends Controller
 			echo view('main/footer.php');
 		}
 	}
-	*/
+	
 	protected function view(string $view, array $data = [], array $options = []): string
     {
         return View($view, $data, $options);
     }
+	*/
 	
 	protected function _render(string $view, array $data = [], array $options = []): string
 	{

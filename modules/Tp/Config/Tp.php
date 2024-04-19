@@ -22,9 +22,9 @@ class Tp extends BaseConfig
 	* 
 	*/
 	public $fields = [
-		'deskripsi'		=> ['label' => 'Deskripsi','width'=>40, 'extra'=>['class' => '', 'required' => true],'type'=>'text'],
-		'awal'			=> ['label' => 'Awal Tahun Pelajaran','width'=>20,'extra'=>['class' => '', 'required' => true],'type'=>'date'], 
-		'akhir'			=> ['label' => 'Akhir Tahun Pelajaran','width'=>20,'extra'=>['class' => '', 'required' => true],'type'=>'date', ], 		 
+		'deskripsi'	=> ['label' => 'Deskripsi','width'=>40, 'extra'=>['id'=>'desc','class' => '', 'required' => true],'type'=>'text'],
+		'awal'		=> ['label' => 'Awal Tahun Pelajaran','width'=>20,'extra'=>['id'=>'txtawal','class' => '', 'required' => true],'type'=>'date'], 
+		'akhir'		=> ['label' => 'Akhir Tahun Pelajaran','width'=>20,'extra'=>['id'=>'txtakh','class' => '', 'required' => true],'type'=>'date', ], 		 
 	];
 	
 	/**
@@ -73,9 +73,9 @@ class Tp extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-	//	'detail'	=> true,
-		'edit'		=> true,
-		'delete'	=> true,
+		//'detail' 	=> ['icon'=>'list-alt','src'=>'tp/detail/', 'label'=>'Detail', 'extra'=>''],
+		'edit' 		=> ['icon'=>'edit','src'=>'tp/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'tp/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	
 	/**

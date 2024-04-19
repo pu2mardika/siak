@@ -10,10 +10,10 @@ class SklModel extends Model
     protected $table            = 'tblSkl';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = 'array';
+    protected $returnType       = \Modules\Akademik\Entities\Skl::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ['grade', 'subgrade', 'grade_name', 'deskripsi', 'currId'];
 
     // Dates
     protected $useTimestamps = false;
@@ -38,4 +38,13 @@ class SklModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+    
+    public function getSKL($parms)
+    {
+    	$builder = $this->db->table($this->table);
+		$builder->select('*');
+		$builder->where("currId = '{$parms}'");
+		$query = $builder->get()->getResultArray();
+		return $query;
+    }
 }

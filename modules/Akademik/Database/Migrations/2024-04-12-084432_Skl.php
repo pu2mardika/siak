@@ -54,15 +54,27 @@ class Skl extends Migration
             	'type' => 'varchar', 
             	'constraint' => 35,
             ],
-            'skl' => [
+            'deskripsi' => [
             	'type' => 'varchar', 
             	'constraint' => 255,
             ],
-            'curr_id'=> [
+            'currId'=> [
             	'type' => 'varchar', 
             	'constraint' => 20, 
             ],
-        ]
+            'created_at' => [
+		        'type'    => 'TIMESTAMP',
+		        'default' => new RawSql('CURRENT_TIMESTAMP'),
+		    ],
+		    'updated_at' => [
+		        'type'   => 'TIMESTAMP',
+		        'null' 	 => true,
+		    ],
+		    'deleted_at' => [
+		        'type'   => 'TIMESTAMP',
+		        'null' 	 => true,
+		    ],
+        ];
         
         $this->forge->addField($fields);
         $this->forge->addPrimaryKey('id');

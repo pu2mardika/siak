@@ -76,8 +76,8 @@
 			?>
 			<div class="<?= $class ?>" id="<?= $id ?>" role="tabpanel" aria-labelledby="<?= $id ?>-tab">
 				<div class="card">
-					<div class="card-body">
-						<?= $vl['title'] ?>
+					<div id="<?= $id ?>-content" class="card-body">
+						<?= $vl['vcell'] ?>
 					</div>
 				</div>
 			</div>
@@ -90,7 +90,7 @@
  <?= $this->endSection() ?>
  
  <?= $this->section('pageScripts') ?>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 	
 	<?php if($session->getFlashdata('sukses')) { ?>
@@ -131,29 +131,6 @@
 				</script>
 	<?php   }
 	   } ?>
-	
-	<script>
-		$(document).ready(function() {
-		   $('#table-result').DataTable({
-		      "dom": 'flrtip',
-		      "buttons": [],
-		      "responsive": true, 
-		      "paging": true,
-		      "lengthMenu": [[5, 20, 25, 50, 100, 250, 500, -1], [5, 20, 25, 50, 100, 250, 500, "All"]],
-		      "lengthChange": true, 
-		      "autoWidth": false, 
-		      "scrollX": true,
-		    });
-		  
-		    $('#vdetail').on('hidden.bs.modal', function (e) {
-			  // do clear data on dtviews
-			  $('#dtviews').html = "";
-			})
-			
-			<?php if(isset($addONJs)){ echo $addONJs ;} ?>
-			
-		});
-	</script>
   <?= $this->endSection() ?>
   
   

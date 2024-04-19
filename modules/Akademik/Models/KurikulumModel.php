@@ -39,4 +39,37 @@ class KurikulumModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+    
+    public function getDropdown()
+    {
+    	$data = $this->findAll();
+    	$dd=[];
+    	foreach($data as $val)
+    	{
+    		$dd[$val->id]=$val->curr_name;
+    	}
+    	return $dd;
+    }
+    
+    public function getLevel($currId)
+	{
+		$level=['grade'=>[],'subgrade'=>[]];
+		$curr = $this->find($currId)->toarray();
+    	if(count($curr)>0){
+    		$grade = $curr['l_duration'];
+    		$subgrade = $curr['curr_system'];
+    		
+    		//grade
+    		for($x=1; $x<=$grade; $x++){
+    			$G[$x] = 'Level/Grade-'.$x;
+    		}
+    		$level['grade'] = $G;
+    		$x=1;
+    		for($x=1; $x<=$subgrade; $x++){
+    			$S[$x] = 'Sub Level/Grade-'.$x;
+    		}
+    		$level['subgrade'] = $S;
+    	}
+		return $level;
+	}
 }

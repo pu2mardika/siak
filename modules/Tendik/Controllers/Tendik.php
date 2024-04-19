@@ -1,8 +1,11 @@
 <?php namespace Modules\Tendik\Controllers;
 
 use App\Controllers\BaseController;
-use Modules\Tendik\Models\TendikModel;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Events\Events;
 use Config\Services;
+use Modules\Tendik\Models\TendikModel;
 use CodeIgniter\Files\File;
 use Config\MyApp;
 //use Modules\Tendik\Config\Tendik;
@@ -109,12 +112,22 @@ class Tendik extends BaseController
 		echo view($this->theme.'vdetail',$data);
 	}
 	
-	function tambah()
+	function addView()
 	{
 		$this->cekHakAkses('create_data');
+		$data=$this->data;
+		$data['title']	= "Tambah Data Tendik";
+		$data['error']  = [];
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$data['rsdata'] = [];
+		//test_result($data);
+		echo view($this->theme.'form',$data);
+	}
+	
+	function addAction(): RedirectResponse
+	{
 		$rules = $this->dconfig->roles;
-		//$this->simplival->hak('master',1);
-		
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
 			$tendikmodel = new TendikModel();
@@ -129,14 +142,7 @@ class Tendik extends BaseController
 			}
 			return redirect()->to(base_url('tendik'));
 		}else{
-			$data=$this->data;
-			$data['title']	= "Tambah Data Tendik";
-			$data['error'] = validation_list_errors();
-			$data['fields'] = $this->dconfig->fields;
-			$data['opsi'] 	= $this->dconfig->opsi;
-			$data['rsdata'] = [];
-			//test_result($data);
-			echo view($this->theme.'form',$data);
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
 	
@@ -144,11 +150,30 @@ class Tendik extends BaseController
 	{
 		$this->cekHakAkses('update_data');
 		$id = decrypt($ids); 
+		$data=$this->data;
+		$data['title']	= "Update Data Tendik";
+		$data['error'] = validation_list_errors();
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$rs =  $this->model->find($id);
+		$tglLahir = $rs->tgllahir;
+		$tmt = $rs->tmt;
+		$rsdata = $rs->toarray();
+		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
+		$rsdata['tgllahir'] = $tglLahir->toDateString();
+		$rsdata['tmt']		= $tmt->toDateString();
+		$data['rsdata'] 	= $rsdata;
+	//	show_result($rsdata);
+		echo view($this->theme.'form',$data);
+	}
+	
+	function updateAction($ids): RedirectResponse
+	{
+		$id = decrypt($ids); 
+		$roles = $rules = $this->dconfig->roles;
 		$roles = $rules = $this->dconfig->roleEdit;
 		
 		if ($this->validate($roles)) {
-			
-			//$this->model->update($id, $data);
 			$data = $this->request->getPost();
 			$model = new TendikModel();
 
@@ -164,22 +189,8 @@ class Tendik extends BaseController
 			
 			return redirect()->to(base_url('tendik'));
 		}else{
-			$data=$this->data;
-			$data['title']	= "Update Data Tendik";
-			$data['error'] = validation_list_errors();
-			$data['fields'] = $this->dconfig->fields;
-			$data['opsi'] 	= $this->dconfig->opsi;
-			$rs =  $this->model->find($id);
-			$tglLahir = $rs->tgllahir;
-			$tmt = $rs->tmt;
-			$rsdata = $rs->toarray();
-			//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-			$rsdata['tgllahir'] = $tglLahir->toDateString();
-			$rsdata['tmt']		= $tmt->toDateString();
-			$data['rsdata'] 	= $rsdata;
-		//	show_result($rsdata);
-			echo view($this->theme.'form',$data);
-		}
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+		}		
 	}
 	
 	function delete($ids){

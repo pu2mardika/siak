@@ -12,13 +12,11 @@
  <removed value=";"/>
  <added value=""/>
  <lastopfiles>
-  <file name="C:\server\www\siak\modules\Akademik\Database\Migrations\2024-03-12-111533_Akademik.php"/>
-  <file name="C:\server\www\siak\modules\Akademik\Database\Migrations\2024-04-12-084432_Skl.php"/>
-  <file name="C:\server\www\siak\modules\Akademik\Controllers\Skl.php"/>
-  <file name="C:\server\www\siak\modules\Akademik\Config\Skl.php"/>
-  <file name="C:\server\www\siak\modules\Akademik\Config\Kurikulum.php"/>
+  <file name="C:\server\www\siak\modules\Tp\Entities\Tp.php"/>
+  <file name="C:\server\www\siak\modules\Siswa\Config\Routes.php"/>
   <file name="C:\server\www\siak\modules\Akademik\Controllers\Kurikulum.php"/>
-  <file name="C:\server\www\siak\modules\Akademik\Config\Routes.php"/>
+  <file name="C:\server\www\siak\modules\Siswa\Controllers\Siswa.php"/>
+  <file name="C:\server\www\siak\modules\Siswa\Config\Siswa.php"/>
   <lastactivefile name=""/>
  </lastopfiles>
  <todoblock>
@@ -638,5 +636,5 @@
   </todofile>
  </todoblock>
  <dbgurls/>
- <lasttime value="1712929763"/>
+ <lasttime value="1713532824"/>
 </project>

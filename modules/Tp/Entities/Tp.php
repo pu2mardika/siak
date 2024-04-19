@@ -42,7 +42,7 @@ class Tp extends Entity
 		//$config->driver = 'OpenSSL';
 
 		$encrypter = \Config\Services::encrypter($config);
-		$this->attributes['id']= base64_encode($encrypter->encrypt($this->attributes['thid']));
+		$this->attributes['id']= bin2hex($encrypter->encrypt($this->attributes['thid']));
 		return $this->attributes['id'];
 	}
     

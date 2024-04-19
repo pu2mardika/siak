@@ -100,13 +100,6 @@
 					?>
 					
 					<td class="nowrapped" align ="center" >
-					<?php if($actions['detail']){?>
-					<a id="<?=$ids ?>" class="btndetail" href="<?php echo $deturl.'/'.$ids; ?>"><i class="fa fa-list-alt"></i></a>	
-					<?php } if($actions['edit']){?>
-					<a href='<?php echo $Acction .'/edit/'.$ids; ?>' title="Edit"><i class="fa fa-edit"></i></a> 
-					<?php } if($actions['delete']){?>
-					<a href='<?php echo $Acction .'/hapus/'.$ids; ?>' onclick="confirmation(event)" title="Hapus"><i class="fa fa-trash"></i></a> 
-					<?php } ?>
 					<?php
 					if(isset($addOnACt)){
 						foreach($addOnACt as $act)
@@ -115,6 +108,14 @@
 						}
 					}
 					
+					if(isset($actions)){
+						foreach($actions as $btn => $act)
+						{
+							echo "<a href='".base_url().$act['src'].$ids."' ".$act['extra']." title='".$act['label']."'><i class='fa fa-".$act['icon']."'></i></a> ";
+							
+						}
+					}
+								
 					if(isset($condActDet))
 						{
 							$url = $condActDet[$data->state];

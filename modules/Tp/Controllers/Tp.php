@@ -1,8 +1,11 @@
 <?php namespace Modules\Tp\Controllers;
 
 use App\Controllers\BaseController;
-use Modules\Tp\Models\TpModel;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Events\Events;
 use Config\Services;
+use Modules\Tp\Models\TpModel;
 use CodeIgniter\Files\File;
 use Config\MyApp;
 //use Modules\Tp\Config\Tp;
@@ -108,11 +111,21 @@ class Tp extends BaseController
 		echo view($this->theme.'vdetail',$data);
 	}
 	
-	function tambah()
+	function addView()
 	{
 		$this->cekHakAkses('create_data');
+		$data=$this->data;
+		$data['title']	= "Tambah Data Tp";
+		$data['error']  = [];//validation_list_errors();
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$data['rsdata'] = [];
+		echo view($this->theme.'form',$data);
+	}
+	
+	function addAction(): RedirectResponse
+	{
 		$rules = $this->dconfig->roles;
-		//$this->simplival->hak('master',1);
 		
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
@@ -128,26 +141,36 @@ class Tp extends BaseController
 			}
 			return redirect()->to(base_url('tp'));
 		}else{
-			$data=$this->data;
-			$data['title']	= "Tambah Data Tp";
-			$data['error'] = validation_list_errors();
-			$data['fields'] = $this->dconfig->fields;
-			$data['opsi'] 	= $this->dconfig->opsi;
-			$data['rsdata'] = [];
-			//test_result($data);
-			echo view($this->theme.'form',$data);
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
 	
-	function update($ids)
+	function updateView($ids)
 	{
 		$this->cekHakAkses('update_data');
 		$id = decrypt($ids); 
 		$roles = $rules = $this->dconfig->roleEdit;
-		
+		$data=$this->data;
+		$data['title']	= "Update Data Tp";
+		$data['error'] = validation_list_errors();
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$rs =  $this->model->find($id);
+		$awal = $rs->awal;
+		$akhir = $rs->akhir;
+		$rsdata = $rs->toarray();
+		$rsdata['awal'] 	= $awal->toDateString();
+		$rsdata['akhir']	= $akhir->toDateString();
+		$data['rsdata'] 	= $rsdata;
+	//	show_result($rsdata);
+		echo view($this->theme.'form',$data);
+	}
+	
+	function updateAction($ids): RedirectResponse
+	{
+		$id = decrypt($ids); 
+		$roles = $rules = $this->dconfig->roles;
 		if ($this->validate($roles)) {
-			
-			//$this->model->update($id, $data);
 			$data = $this->request->getPost();
 			$model = new TpModel();
 
@@ -160,23 +183,9 @@ class Tp extends BaseController
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
-			
 			return redirect()->to(base_url('tp'));
 		}else{
-			$data=$this->data;
-			$data['title']	= "Update Data Tp";
-			$data['error'] = validation_list_errors();
-			$data['fields'] = $this->dconfig->fields;
-			$data['opsi'] 	= $this->dconfig->opsi;
-			$rs =  $this->model->find($id);
-			$awal = $rs->awal;
-			$akhir = $rs->akhir;
-			$rsdata = $rs->toarray();
-			$rsdata['awal'] 	= $awal->toDateString();
-			$rsdata['akhir']	= $akhir->toDateString();
-			$data['rsdata'] 	= $rsdata;
-		//	show_result($rsdata);
-			echo view($this->theme.'form',$data);
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
 	

@@ -17,7 +17,7 @@
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
-
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <!-- Custom styles for this template -->
     <link href="<?=base_url('themes/sbadmin2/css/sb-admin-2.min.css')?>" rel="stylesheet">
     <!-- Custom styles for this page -->
@@ -35,6 +35,7 @@
 	}
 
 	?>
+	
     <!-- Dynamic scripts -->
     <script type='text/javascript'>var base_url = '<?=base_url();?>'</script>
 	<?php
@@ -460,12 +461,16 @@
         </div>
     </div>
 	
-    <!-- Bootstrap core JavaScript-->
+    <!-- Bootstrap core JavaScript 
     <script src="<?=base_url('themes/sbadmin2/vendor/jquery/jquery.min.js')?>"></script>
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="<?=base_url('themes/sbadmin2/vendor/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
 
-    <!-- Core plugin JavaScript-->
+    <!-- Core plugin JavaScript
     <script src="<?=base_url('themes/sbadmin2/vendor/jquery-easing/jquery.easing.min.js')?>"></script>
+    -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
 
     <!-- Custom scripts for all pages-->
     <script src="<?=base_url('themes/sbadmin2/js/sb-admin-2.min.js')?>"></script>
@@ -499,8 +504,7 @@
     <!--<script src="<?=base_url('themes/sbadmin2/js/demo/datatables-demo.js')?>"></script>-->
 	<script src="<?=base_url('js/app.js')?>"></script>
 	<script src="<?=base_url('js/jquery.form.js'); ?>"></script>
-	<script src="<?=base_url('js/jquery.easy-autocomplete.min.js'); ?>"></script>
-	
+	<script src="<?=base_url('js/jquery.easy-autocomplete.min.js'); ?>"></script>	
 </body>
 
 </html>

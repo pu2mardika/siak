@@ -1,3 +1,3 @@
 <div>
-    <!-- Your HTML here -->
+    <?php show_result($data) ?>
 </div>

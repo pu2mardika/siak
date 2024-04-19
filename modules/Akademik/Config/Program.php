@@ -52,17 +52,17 @@ class Program extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> false,
-		'edit'		=> true,
-		'delete'	=> true,
+	//	'detail' 	=> ['icon'=>'list-alt','src'=>'program/detail/', 'label'=>'Detail', 'extra'=>''],
+		'edit' 		=> ['icon'=>'edit','src'=>'program/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'program/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	
 	public array $addOnACt = [
-		'spk' => ['icon'=>'file-word','src'=>'pinjaman/spk/', 'label'=>'Cetak SPK'],
+		//'spk' => ['icon'=>'file-word','src'=>'program/spk/', 'label'=>'Cetak SPK'],
 	];
 	
 	public array $detAddOnACt = [
-		'print' => ['icon'=>'print','src'=>'payment/cetak/', 'label'=>'Cetak', 'btn_type'=>'success'],
+		//'print' => ['icon'=>'print','src'=>'payment/cetak/', 'label'=>'Cetak', 'btn_type'=>'success'],
 	];
 	
 	public array $condAddOnACt = [

@@ -26,7 +26,7 @@ $Hidden = [];
 
 if(isset($hidden)){$Hidden = $hidden ;}
 	
-echo form_open(current_url(),'',$Hidden);
+echo form_open(current_url(),'class="was-validated"',$Hidden);
 
 foreach($fields as $fd => $row){
 	//CEK KONDISI FIELDS
@@ -42,7 +42,6 @@ foreach($fields as $fd => $row){
 	
 	if($input == 'form_dropdown'){
 		$option = $opsi[$fd];
-		//echo $input($fd,$option,set_select($fd,$val[$fd]),$extra);
 		$formInput = form_dropdown($fd,$option,$nilai,$extra);
 	}elseif($input == 'form_hidden'){
 		$data = [

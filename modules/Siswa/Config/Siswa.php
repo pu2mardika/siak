@@ -23,20 +23,20 @@ class Siswa extends BaseConfig
 	* 
 	*/
 	public $fields = [
-		'nik'			=> ['label' => 'NIK','width'=>12, 'extra'=>['class' => '', 'required' => true],'type'=>'text'], 
-		'idreg'			=> ['label' => 'No. Register','width'=>0,'extra'=>['class' => '', 'required' => true],'type'=>'text', ], 
-		'nama'			=> ['label' => 'Nama Lengkap','width'=>15,'extra'=>['class' => '', 'required' => true],'type'=>'text'], 
-		'nisn'			=> ['label' => 'NISN','width'=>0,'extra'=>['class' => '', 'required' => true],'type'=>'text'], 
-		'tempatlahir'	=> ['label' => 'Tempat Lahir','width'=>0,'extra'=>['class' => '', 'required' => true],'type'=>'text'], 
-		'tgllahir'		=> ['label' => 'Tanggal Lahir','width'=>0,'extra'=>['class' => '', 'required' => true],'type'=>'date'], 
-		'jk'			=> ['label' => 'Jenis Kelamin','width'=>0, 'extra'=>['class' => '', 'required' => true],'type'=>'dropdown'], 
-		'alamat'		=> ['label' => 'ALamat','width'=>0,'extra'=>['class' => '', 'style' => 'height: 100px','required' => true],'type'=>'textarea'], 
-		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['class' => '', 'required' => true],'type'=>'tel'], 
-		'nama_ayah'		=> ['label' => 'Nama Ayah','width'=>12, 'extra'=>['class' => '', 'required' => true],'type'=>'text'], 
-		'nama_ibu'		=> ['label' => 'Nama Ibu','width'=>0, 'extra'=>['class' => '', 'required' => true],'type'=>'text'], 
-		'alamat_ortu'	=> ['label' => 'Alamat Orang Tua','width'=>0, 'extra'=>['class' => '', 'required' => true],'type'=>'text'], 
-		'nohp_ayah'		=> ['label' => 'No. HP Ayah','width'=>8, 'extra'=>['class' => '', 'required' => true],'type'=>'tel'], 
-		'nohp_ibu'		=> ['label' => 'No. HP Ibu','width'=>0, 'extra'=>['class' => '', 'required' => true],'type'=>'tel'],
+		'nik'			=> ['label' => 'NIK','width'=>12, 'extra'=>['id'=>'noktp','class' => '', 'required' => true],'type'=>'text'], 
+		'idreg'			=> ['label' => 'No. Register','width'=>0,'extra'=>['id'=>'regid','class' => '', 'required' => true],'type'=>'text', ], 
+		'nama'			=> ['label' => 'Nama Lengkap','width'=>15,'extra'=>['id'=>'namasiswa','class' => '', 'required' => true],'type'=>'text'], 
+		'nisn'			=> ['label' => 'NISN','width'=>0,'extra'=>['id'=>'nisnx','class' => '', 'required' => true],'type'=>'text'], 
+		'tempatlahir'	=> ['label' => 'Tempat Lahir','width'=>0,'extra'=>['id'=>'tmptlhr','class' => '', 'required' => true],'type'=>'text'], 
+		'tgllahir'		=> ['label' => 'Tanggal Lahir','width'=>0,'extra'=>['id'=>'tgllhr','class' => '', 'required' => true],'type'=>'date'], 
+		'jk'			=> ['label' => 'Jenis Kelamin','width'=>0, 'extra'=>['id'=>'jks','class' => '', 'required' => true],'type'=>'dropdown'], 
+		'alamat'		=> ['label' => 'ALamat','width'=>0,'extra'=>['id'=>'adrs','class' => '', 'style' => 'height: 100px','required' => true],'type'=>'textarea'], 
+		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['id'=>'noph','class' => '', 'required' => true],'type'=>'tel'], 
+		'nama_ayah'		=> ['label' => 'Nama Ayah','width'=>12, 'extra'=>['id'=>'nm','class' => '', 'required' => true],'type'=>'text'], 
+		'nama_ibu'		=> ['label' => 'Nama Ibu','width'=>0, 'extra'=>['id'=>'nmibu','class' => '', 'required' => true],'type'=>'text'], 
+		'alamat_ortu'	=> ['label' => 'Alamat Orang Tua','width'=>0, 'extra'=>['id'=>'addrortu','class' => '', 'required' => true],'type'=>'text'], 
+		'nohp_ayah'		=> ['label' => 'No. HP Ayah','width'=>8, 'extra'=>['id'=>'hpayh','class' => '', 'required' => true],'type'=>'tel'], 
+		'nohp_ibu'		=> ['label' => 'No. HP Ibu','width'=>0, 'extra'=>['id'=>'hpibu','class' => '', 'required' => true],'type'=>'tel'],
 	];
 	
 	/**
@@ -85,9 +85,9 @@ class Siswa extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> true,
-		'edit'		=> true,
-		'delete'	=> true,
+		'detail' 	=> ['icon'=>'list-alt','src'=>'siswa/detail/', 'label'=>'Detail', 'extra'=>''],
+		'edit' 		=> ['icon'=>'edit','src'=>'siswa/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'siswa/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	//public $actiondetail = true; 
 	//public $actionedit   = true; 

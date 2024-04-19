@@ -78,9 +78,9 @@ class Rombel extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> true,
-		'edit'		=> true,
-		'delete'	=> true,
+		'detail' 	=> ['icon'=>'list-alt','src'=>'rombel/detail/', 'label'=>'Detail', 'extra'=>''],
+		'edit' 		=> ['icon'=>'edit','src'=>'rombel/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'rombel/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 		
 }

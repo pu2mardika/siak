@@ -24,4 +24,11 @@ class Kurikulum extends Entity
         $this->attributes["id"] = $idk ;
         return $this;
     } 
+    
+    public function getLama(){
+		$durasi = $this->attributes['l_duration'];
+		$satuan = $this->attributes['curr_system'];
+		$this->attributes['lama']= $durasi." ".$satuan;
+		return $this->attributes['lama'];
+	}
 }

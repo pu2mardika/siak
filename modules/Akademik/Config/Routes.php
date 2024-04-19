@@ -38,7 +38,9 @@ $routes->group("skl", ["namespace" => "\Modules\Akademik\Controllers"], function
 	$routes->get("/", "Skl::index");
 	$routes->add("add", "Skl::addView");
     $routes->post("add", "Skl::addAction");
+    $routes->add("add/(:any)", "Skl::addView/$1");
+    $routes->post("add/(:any)", "Skl::addAction/$1");
     $routes->get("edit/(:any)", "Skl::updateView/$1");
 	$routes->post("edit/(:any)", "Skl::updateAction/$1");
-	$routes->get("detail/(:any)", "Skl::detView/$1");
+	$routes->get("hapus/(:any)", "Skl::delete/$1");
 });

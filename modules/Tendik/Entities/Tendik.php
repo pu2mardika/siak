@@ -42,7 +42,7 @@ class Tendik extends Entity
 		//$config->driver = 'OpenSSL';
 
 		$encrypter = \Config\Services::encrypter($config);
-		$this->attributes['id']= base64_encode($encrypter->encrypt($this->attributes['nik']));
+		$this->attributes['id']= bin2hex($encrypter->encrypt($this->attributes['nik']));
 		return $this->attributes['id'];
 	}
     
