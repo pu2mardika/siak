@@ -1,5 +1,4 @@
 <?php
-
 namespace Modules\Akademik\Config;
 
 use CodeIgniter\Config\BaseConfig;
@@ -69,9 +68,8 @@ class Skl extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> false,
-		'edit'		=> true,
-		'delete'	=> true,
+		'edit' 		=> ['icon'=>'edit','src'=>'skl/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'skl/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	
 	public array $addOnACt = [

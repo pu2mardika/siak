@@ -44,7 +44,7 @@ $hfield=[];
 helper ('html');
 ?>
 <div class="table-responsive-sm">  
-	<table id="table-result" class="table table-striped table-bordered" cellspacing="0">
+	<table id="table-result" class="table table-striped table-bordered table-sm" cellspacing="0">
 	<thead class="thead-dark">
 			<tr>
 				<?php 
@@ -119,7 +119,7 @@ helper ('html');
 					{
 					?>	
 						<a role="button" title='<?= $act['label'] ?>' onclick="show('<?= $act['src'].$ids;?>','<?= $target ?>')">
-						<i class='fa fa-<?= $act['icon']?>'></i>TT</a>
+						<i class='fa fa-<?= $act['icon']?>'></i></a>
 				<?php
 					}
 				}

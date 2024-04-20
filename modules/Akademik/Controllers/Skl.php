@@ -51,17 +51,26 @@ class Skl extends BaseController
 		echo view($this->theme.'datalist',$data);
     }
 	
-	public function showList($currID){
-		$kurikulum 	= $sklModel->where('currId',$currID)->findAll();
-		$data['title']		 = "Manajemen Skl";
-		$data['rsdata']		 = $kurikulum;
-		$data['msg'] 		 = "";
-        $data['isplainText'] = TRUE;
-		$data['opsi'] 		 = $this->dconfig->opsi;
-        $data['opsi']['currId'] 	= $this->curr_model->getDropdown();
-		$data['actions']	 = $this->dconfig->actions;
-		$data['addOnACt']    = $this->dconfig->addOnACt;
-		echo view($this->theme.'cells/dlist',$data);
+	/**
+	* Diakses dari controller yang lain sebagai viewcell sehingga return nya adalah string.
+	* @param $currID
+	* 
+	* @return
+	*/
+	public function showList($currID):string
+	{ 
+		$id=(is_array($currID))?$currID['currId']:$currID;
+		$dtview['strdelimeter'] =setting('Skl.arrDelimeter');
+		$dtview['fields'] =setting('Skl.fieldcels');
+		$dtview['id'] 	  = $id;
+		$dtview['act'] 	  = 'skl';
+		$dtview['key']	  = setting('Skl.primarykey');
+		$dtview['opsi']	  = $this->curr_model->getLevel($id);
+		$dtview['rsdata'] = $this->model->where('currId',$id)->findAll();
+		$dtview['title']  = "Daftar Capaian Pembelajaran";
+		$dtview['actions']= setting('Skl.actions');
+		$dtview['addOnACt'] = setting('Skl.addOnACt');
+		return view($this->theme.'cells/dlist',$dtview);
 	}
 	
 	function addView($id=0)

@@ -160,23 +160,12 @@ class Kurikulum extends BaseController
 		$data['breadcrumb'][$rs['curr_name']] = "#";
 		//TABS SECTION
 		
+		//Subject
 		$TABS['subject'] = ['title'=>'Data Subject','active'=>1, 'vcell'=>"TEST SUBJECT"];
 		
 		//CEK Skl
-		$sklModel = new \Modules\Akademik\Models\SklModel();
-		$dtview['isplainText']  = TRUE;
-		$dtview['strdelimeter'] =setting('Skl.arrDelimeter');
-		$dtview['fields'] =setting('Skl.fieldcels');
-		$dtview['id'] 	  = $id;
-		$dtview['act'] 	  = 'skl';
-		$dtview['key']	  = setting('Skl.primarykey');
-		$dtview['opsi']	  = $this->model->getLevel($id);
-		$dtview['rsdata'] = $sklModel->where('currId',$id)->findAll();
-		$dtview['title']  = "Daftar Capaian Pembelajaran";
-		$dtview['actions']= setting('Skl.actions');
-		$dtview['addOnACt'] = setting('Skl.addOnACt');
-		
-		$vcall = view_cell('\Modules\Akademik\Libraries\Akademik::show', ['theme'=>$this->theme, 'dtview'=>$dtview]); 
+		//$vcall = view_cell('\Modules\Akademik\Libraries\Akademik::show', ['theme'=>$this->theme, 'dtview'=>$dtview]); 
+		$vcall = view_cell('\Modules\Akademik\Controllers\Skl::showList', ['currId'=>$id]); 
 		
 		$TABS['skl']     = ['title'=>'Data SKL','active'=>0, 'vcell'=>$vcall];
 		

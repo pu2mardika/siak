@@ -68,7 +68,7 @@ class Kurikulum extends BaseConfig
 	public $actions = [
 		'detail' 	=> ['icon'=>'th-list','src'=>'kurikulum/detail/', 'label'=>'Detail', 'extra'=>''],
 		'edit' 		=> ['icon'=>'edit','src'=>'kurikulum/edit/', 'label'=>'Detail', 'extra'=>''],
-		'delete'	=> ['icon'=>'trash','src'=>'kurikulum/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
+		'delete'	=> ['icon'=>'trash','src'=>'kurikulum/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	
 	public array $addOnACt = [

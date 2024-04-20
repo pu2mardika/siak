@@ -54,7 +54,7 @@ class Program extends BaseConfig
 	public $actions = [
 	//	'detail' 	=> ['icon'=>'list-alt','src'=>'program/detail/', 'label'=>'Detail', 'extra'=>''],
 		'edit' 		=> ['icon'=>'edit','src'=>'program/edit/', 'label'=>'Detail', 'extra'=>''],
-		'delete'	=> ['icon'=>'trash','src'=>'program/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
+		'delete'	=> ['icon'=>'trash','src'=>'program/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	
 	public array $addOnACt = [
