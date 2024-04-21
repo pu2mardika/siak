@@ -38,9 +38,9 @@ class Skl extends Migration
         
         $fields = [
             'id'=> [
-            	'type' => 'int', 
-            	'constraint' => 11,  
-            	'auto_increment' => true,
+            	'type' => 'varchar', 
+            	'constraint' => 22,
+            	'unique'     => true,
             ],
             'grade' => [
             	'type' => 'tinyint', 

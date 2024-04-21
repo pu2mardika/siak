@@ -40,11 +40,11 @@ class Kurikulum extends BaseConfig
 	public array $roles = [
         'id_prodi'   	=> ['label' => 'Nama Prodi', 'rules' =>'required'],
 		'curr_name'   	=> ['label' => 'Nama Kurikulum', 'rules' =>'required'],
-		'curr_desc'  	=> ['label' => 'Deskripsi/SKL', 'rules' =>'required'],
+		'curr_desc'  	=> ['label' => 'Deskripsi/SKL', 'rules' =>'required|max_length[250]'],
 		'issued'   		=> ['label' => 'Tgl Mulai Berlaku', 'rules' =>'required'],
         'l_duration'   	=> ['label' => 'Lama Belajar', 'rules' =>'required'],
 		'curr_system'  	=> ['label' => 'Sistem Kurikulum', 'rules' =>'required'],
-		'instance_rpt' 	=> ['label' => 'Akronim Kurikulum', 'rules' =>'required'],
+		'instance_rpt' 	=> ['label' => 'Akronim Kurikulum', 'rules' =>'required|max_length[6]|min_length[6]'],
 	];  
 
 	public string $primarykey = 'id';

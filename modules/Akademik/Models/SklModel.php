@@ -13,7 +13,7 @@ class SklModel extends Model
     protected $returnType       = \Modules\Akademik\Entities\Skl::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['grade', 'subgrade', 'grade_name', 'deskripsi', 'currId'];
+    protected $allowedFields    = ['id','grade', 'subgrade', 'grade_name', 'deskripsi', 'currId'];
 
     // Dates
     protected $useTimestamps = false;

@@ -120,7 +120,7 @@ class Akademik extends Migration
   			ADD CONSTRAINT `kurikulum_prodi` FOREIGN KEY (`id_prodi`) REFERENCES `tbl_prodi` (`id_prodi`) ON DELETE CASCADE ON UPDATE CASCADE;
 		 */
 		$fields=[
-            'curr_id'=> [
+            'id'=> [
             	'type' => 'varchar', 
             	'constraint' => 20, 
             	'unique'     => true,
@@ -177,7 +177,7 @@ class Akademik extends Migration
         ];
 
 		$this->forge->addField($fields);
-        $this->forge->addPrimaryKey('curr_id');
+        $this->forge->addPrimaryKey('id');
 		$this->forge->addKey('id_prodi');
 		$this->forge->addForeignKey('id_prodi', 'prodi', 'id_prodi','', 'CASCADE');
         $this->forge->createTable('curriculum', true, $attributes);

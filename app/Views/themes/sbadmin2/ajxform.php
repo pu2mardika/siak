@@ -94,7 +94,7 @@ if(isset($hidden)){$Hidden = $hidden ;}
     				setTimeout(function () {
                     location.reload();
                     self.$("#confirm-cancel").trigger("click");
-                }, 1000);              
+                }, 900);              
                 }
             };  
             $("#btn_ok").click(function(){

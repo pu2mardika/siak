@@ -45,7 +45,7 @@ class Skl extends BaseConfig
         'grade'   	=> ['label' => 'Level', 'rules' =>'required'],
 		'subgrade'  => ['label' => 'Sub Level', 'rules' =>'required'],
 		'grade_name'=> ['label' => 'Nama Level', 'rules' =>'required'],
-		'deskripsi' => ['label' => 'Standar Kompetensi/Capaian Hasil', 'rules' =>'required'],
+		'deskripsi' => ['label' => 'Standar Kompetensi/Capaian Hasil', 'rules' =>'required|max_length[250]'],
         'currId'   	=> ['label' => 'Kurikulum', 'rules' =>'required'],
 	];  
 

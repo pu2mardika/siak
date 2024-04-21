@@ -76,7 +76,7 @@ helper ('html');
 		$idx =  $data->$key;
 		$ids = $idx.$strdelimeter.$id;
 		
-		if(isset($isplainText)){$ids = encrypt($ids) ;}
+		if(isset($isplainText)){$ids = encrypt($ids); $idx =  encrypt($idx); }
 	?>
 			<tr>
 				<?php 
@@ -95,25 +95,29 @@ helper ('html');
 					}
 					echo '<td class="nowrapped" align="'.$Algn.'" valign="top">'.$dtval;
 					if(array_key_exists('hasChild',$fields[$hc])){
-						$target = "child".$idx;
+						$target = "child".$ids;
 						echo "<div id='".$target."'></div>";
 					}
 					echo '</td>';
 				}
-				$deturl = (isset($detail_url))?$detail_url:$Acction."/detail";
-				
+		
 				if($allowAct){
 				?>
 				
 				<td class="nowrapped" align ="center" >
-				<?php if($actions['detail']){?>
-				<a id="<?=$ids ?>" class="btndetail" href="<?php echo $deturl.'/'.$ids; ?>"><i class="fa fa-list-alt"></i></a>	
-				<?php } if($actions['edit']){?>
-				<a role="button" onclick="show('<?php echo $Acction.'/edit/'. $id;?>','#xcontent')" title="Edit"><i class="fa fa-edit"></i></a> 
-				<?php } if($actions['delete']){?>
-				<a href='<?php echo $Acction .'/hapus/'.$ids; ?>' onclick="confirmation(event)" title="Hapus"><i class="fa fa-trash"></i></a> 
-				<?php } ?>
-				<?php
+				<?php 
+				if(isset($actions)){
+					foreach($actions as $act)
+					{
+						if($act['extra']==''){
+							$event 	= "show('".$act['src'].$ids."','#xcontent')";
+							$button = '<a role="button" onclick="'.$event.'" title="'.$act['label'].'"><i class="fa fa-'.$act['icon'].'"></i></a>';
+						}else{
+							$button = "<a href='".base_url().$act['src'].$ids."' ".$act['extra']." title='".$act['label']."'><i class='fa fa-".$act['icon']."'></i></a> ";
+						}
+						echo $button;
+					}
+				} 
 				if(isset($addOnACt)){
 					foreach($addOnACt as $act)
 					{
@@ -139,9 +143,7 @@ helper ('html');
 				</td>
 				<?php } ?>
 			</tr>
-		
 	 <?php
-	 	
 	  }
 	  ?>
 	  	</tbody>

@@ -64,6 +64,7 @@ class Skl extends BaseController
 		$dtview['fields'] =setting('Skl.fieldcels');
 		$dtview['id'] 	  = $id;
 		$dtview['act'] 	  = 'skl';
+		$dtview['isplainText'] = TRUE;
 		$dtview['key']	  = setting('Skl.primarykey');
 		$dtview['opsi']	  = $this->curr_model->getLevel($id);
 		$dtview['rsdata'] = $this->model->where('currId',$id)->findAll();
@@ -102,6 +103,7 @@ class Skl extends BaseController
 		$rules = $this->dconfig->roles;	
 		if ($this->validate($rules)) {
 			$dataSkl = $this->request->getPost();
+			$dataSkl['id']=$dataSkl['currId'];
 			//$data['id']=$data['id_skl'];
 			//test_result($data);
 			$SklModel = new SklModel();
@@ -129,7 +131,7 @@ class Skl extends BaseController
 		$idn = decrypt($ids); 
 		
 		$id = explode(setting('Skl.arrDelimeter'),$idn); //$id[0]= id_skl, $id[1] = id curr
-		
+		//test_result($id);
 		$data   = $this->data;
 		$form   = $this->theme.'form';
 		$fields = $this->dconfig->fields;
