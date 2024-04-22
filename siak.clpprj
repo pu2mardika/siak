@@ -16,9 +16,14 @@
   <file name="C:\server\www\siak\modules\Akademik\Models\SubjectModel.php"/>
   <file name="C:\server\www\siak\modules\Akademik\Entities\Gmapel.php"/>
   <file name="C:\server\www\siak\modules\Akademik\Models\GmapelModel.php"/>
-  <file name="C:\server\www\siak\modules\Akademik\Controllers\Gmapel.php"/>
   <file name="C:\server\www\siak\modules\Akademik\Config\Subject.php"/>
   <file name="C:\server\www\siak\modules\Akademik\Config\Gmapel.php"/>
+  <file name="C:\server\www\siak\modules\Akademik\Controllers\Skl.php"/>
+  <file name="C:\server\www\siak\app\Views\themes\sbadmin2\cells\dlist.php"/>
+  <file name="C:\server\www\siak\modules\Akademik\Controllers\Subject.php"/>
+  <file name="C:\server\www\siak\modules\Akademik\Models\KurikulumModel.php"/>
+  <file name="C:\server\www\siak\modules\Accounting\Models\TmpGlModel.php"/>
+  <file name="C:\server\www\siak\modules\Akademik\Controllers\Kurikulum.php"/>
   <lastactivefile name=""/>
  </lastopfiles>
  <todoblock>
@@ -638,5 +643,5 @@
   </todofile>
  </todoblock>
  <dbgurls/>
- <lasttime value="1713705386"/>
+ <lasttime value="1713772816"/>
 </project>

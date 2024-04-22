@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Events\Events;
 use Config\Services;
 use Config\MyApp;
-use Modules\Akademik\Models\SklModel;
+use Modules\Akademik\Models\SubjectModel;
 use Modules\Akademik\Models\KurikulumModel;
 
 class Subject extends BaseController
@@ -22,11 +22,11 @@ class Subject extends BaseController
 
     function __construct() {
         parent::__construct();
-        $this->dconfig = config(\Modules\Akademik\Config\Skl::class);
+        $this->dconfig = config(\Modules\Akademik\Config\Subject::class);
         $this->session = \Config\Services::session();
-		$this->model = new SklModel;	
+		$this->model = new SubjectModel;	
         $this->curr_model = new KurikulumModel;
-		$this->data['site_title'] = 'Halaman Skl';
+		$this->data['site_title'] = 'Halaman Subject';
 		$this->data['fields'] 	  = $this->dconfig->fields;
 		$this->data['key']		  = $this->dconfig->primarykey;
 		$this->data['allowimport']		  = $this->dconfig->importallowed;
@@ -40,7 +40,7 @@ class Subject extends BaseController
 	
 		$kurikulum 	= $this->model->findAll();
 		$data = $this->data;
-		$data['title']		 = "Manajemen Skl";
+		$data['title']		 = "Manajemen Mata Pelajaran";
 		$data['rsdata']		 = $kurikulum;
 		$data['msg'] 		 = "";
         $data['isplainText'] = TRUE;
@@ -60,17 +60,17 @@ class Subject extends BaseController
 	public function showList($currID):string
 	{ 
 		$id=(is_array($currID))?$currID['currId']:$currID;
-		$dtview['strdelimeter'] =setting('Skl.arrDelimeter');
-		$dtview['fields'] =setting('Skl.fieldcels');
+		$dtview['strdelimeter'] =setting('Subject.arrDelimeter');
+		$dtview['fields'] = $this->dconfig->fields;
 		$dtview['id'] 	  = $id;
-		$dtview['act'] 	  = 'skl';
+		$dtview['aksi']	  = ['main'=>'gmapel', 'addOn'=>'subject'];
 		$dtview['isplainText'] = TRUE;
-		$dtview['key']	  = setting('Skl.primarykey');
+		$dtview['key']	  = setting('Subject.primarykey');
 		$dtview['opsi']	  = $this->curr_model->getLevel($id);
-		$dtview['rsdata'] = $this->model->where('currId',$id)->findAll();
-		$dtview['title']  = "Daftar Capaian Pembelajaran";
-		$dtview['actions']= setting('Skl.actions');
-		$dtview['addOnACt'] = setting('Skl.addOnACt');
+		$dtview['dtview'] = $this->model->getSubject($id);
+		$dtview['title']  = "Daftar Mata Pelajaran";
+		$dtview['actions']= setting('Subject.actions');
+		$dtview['addOnACt'] = setting('Subject.addOnACt');
 		return view($this->theme.'cells/dlist',$dtview);
 	}
 	
@@ -84,14 +84,14 @@ class Subject extends BaseController
 		$data['opsi'] 	= $this->dconfig->opsi;
 		$data['opsi']['currId'] = $this->curr_model->getDropdown();
 		if($id <> 0){
-			$fields 			= $this->dconfig->fields2;
+			$fields 			= $this->dconfig->fields;
 			$data['opsi'] 		= $this->curr_model->getLevel($id);
 			$data['hidden']		= ['currId'=>$id];
 			$form 				= $this->theme.'ajxform';
 			$data['useCKeditor']= true;
 			$data['rtarget']	= "#skl-content";
 		}
-		$data['title']	= "Tambah Data Skl";
+		$data['title']	= "Tambah Data Subject";
 		$data['error'] = [];// validation_list_errors();
 		$data['fields'] = $fields;
 		$data['rsdata'] = [];
@@ -102,14 +102,14 @@ class Subject extends BaseController
 	{
 		$rules = $this->dconfig->roles;	
 		if ($this->validate($rules)) {
-			$dataSkl = $this->request->getPost();
-			$dataSkl['id']=$dataSkl['currId'];
+			$dataSubject = $this->request->getPost();
+			$dataSubject['id']=$dataSubject['currId'];
 			//$data['id']=$data['id_skl'];
 			//test_result($data);
-			$SklModel = new SklModel();
-			$Skl= new \Modules\Akademik\Entities\Skl();
-			$Skl->fill($dataSkl);
-			$simpan = $SklModel->insert($Skl,false);
+			$SubjectModel = new SubjectModel();
+			$Subject= new \Modules\Akademik\Entities\Subject();
+			$Subject->fill($dataSubject);
+			$simpan = $SubjectModel->insert($Subject,false);
 			if($simpan){
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
 			}else{
@@ -130,7 +130,7 @@ class Subject extends BaseController
 		$this->cekHakAkses('update_data');
 		$idn = decrypt($ids); 
 		
-		$id = explode(setting('Skl.arrDelimeter'),$idn); //$id[0]= id_skl, $id[1] = id curr
+		$id = explode(setting('Subject.arrDelimeter'),$idn); //$id[0]= id_skl, $id[1] = id curr
 		//test_result($id);
 		$data   = $this->data;
 		$form   = $this->theme.'form';
@@ -147,7 +147,7 @@ class Subject extends BaseController
 			$data['rtarget']	= "#skl-content";
 		} 
 		
-		$data['title']	= "Update Data Skl";
+		$data['title']	= "Update Data Subject";
 		$data['error'] = validation_list_errors();
 		$data['fields'] = $fields;
 		
@@ -166,9 +166,9 @@ class Subject extends BaseController
 			
 			//$this->model->update($id, $data);
 			$data = $this->request->getPost();
-			$model = new SklModel();
+			$model = new SubjectModel();
 
-			$rsdata = new \Modules\Akademik\Entities\Skl();
+			$rsdata = new \Modules\Akademik\Entities\Subject();
 			$rsdata->fill($data);
 			$simpan = $model->update($id, $rsdata);
 			
@@ -186,8 +186,8 @@ class Subject extends BaseController
 
 	function delete($ids){
 		$id = decrypt($ids); 
-		$Sklmodel = new SklModel();
-		$Sklmodel->delete($id);
+		$Subjectmodel = new SubjectModel();
+		$Subjectmodel->delete($id);
 		// masuk database
 		$this->session->setFlashdata('sukses','Data telah dihapus');
 		return redirect()->to(base_url('skl'));

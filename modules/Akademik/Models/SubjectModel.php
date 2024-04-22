@@ -38,4 +38,41 @@ class SubjectModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+    
+    public function getSubject($currID){
+    	/**
+		* 
+		* @var 	$this->db->select('a.*, b.id_curriculum, b.parent_grup');
+		$this->db->from($this->tbl_subjects. " a");
+		$this->db->join($this->tbl_grup_mapel. " b","a.grup_id=b.grup_id","LEFT");
+		$this->db->order_by("a.grup_id", "ASC");
+		$this->db->order_by("a.item_order", "ASC");
+		* 
+		*/
+    	
+    	$builder = $this->db->table('subjects a');
+		$builder->select('a.*, b.curr_id, b.parent_grup, b.nm_grup')->join('grup_mapel b', 'a.grup_id = b.grup_id');
+		$builder->orderBy('a.grup_id', 'ASC');
+		$builder->orderBy('a.item_order', 'ASC');
+		$builder->where('b.curr_id', $currID);
+		$query = $builder->get()->getResultArray();
+		$Result = [];
+		if(count($query)>0){
+    		foreach($query as $dt)
+    		{
+    			$rs=$dt; 
+    			unset($rs['curr_id']);
+    			unset($rs['parent_grup']);
+    			unset($rs['nm_grup']);
+    			unset($rs['grup_id']);
+    			$R['gid']=$dt['grup_id'];
+    			$R['title']=$dt['nm_grup'];
+    			$R['rsdata']=$rs;
+    			$Result[$dt['grup_id']]=$R;
+    		}
+    	}else{
+    		$Result[0]['rsdata']=[];
+    	}
+		return $Result;
+    }
 }

@@ -7,7 +7,7 @@ use CodeIgniter\Config\BaseConfig;
 class Subject extends BaseConfig
 {
     public $opsi = [
-    	'form_nilai'=>[0=>"Nilai Tunggal", 1=>'Modular'];
+    	'form_nilai'=>[0=>"Nilai Tunggal", 1=>'Modular'],
     ];
 
     /**
