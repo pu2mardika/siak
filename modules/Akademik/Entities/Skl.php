@@ -10,7 +10,7 @@ class Skl extends Entity
     protected $dates   = ['created_at', 'updated_at', 'deleted_at'];
     protected $casts   = [];
     
-     function setId($prodi)
+    function setId($prodi)
     {
         $currId = $this->attributes['currId'];
         $grade = $this->attributes['grade'];

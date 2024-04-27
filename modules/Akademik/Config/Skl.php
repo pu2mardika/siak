@@ -68,8 +68,8 @@ class Skl extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'edit' 		=> ['icon'=>'edit','src'=>'skl/edit/', 'label'=>'Detail', 'extra'=>''],
-		'delete'	=> ['icon'=>'trash','src'=>'skl/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
+		'edit' 	 => ['icon'=>'edit','src'=>'skl/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete' => ['icon'=>'trash','src'=>'skl/hapus/', 'label'=>'Detail', 'extra'=>"onclick='AjaxConfirm(event)' data-target='skl-content'"],
 	];
 	
 	public array $addOnACt = [

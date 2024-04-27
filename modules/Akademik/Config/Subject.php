@@ -12,16 +12,16 @@ class Subject extends BaseConfig
 
     /**
 	* ---------------------------------------------------------------------
-	* FIELD NAME : 'subjectid', 'grup_id', 'subject_name', 'item_order', 'tot_skk', 'form_nilai'
+	* FIELD NAME : 'id', 'grup_id', 'subject_name', 'akronim', 'item_order', 'tot_skk', 'form_nilai'
 	* ---------------------------------------------------------------------
 	* @var array
 	* 
 	*/
 	public array $fields = [
-		'subjectid'		=> ['label' => 'Kode','width'=>0,'extra'=>['id' => 'sbjID','class' => '', 'required' => true,'minlength'=>4, 'maxlength'=>4, 'size'=>4],'type'=>'text', ], 
 		'grup_id'		=> ['label' => 'Level','width'=>0,'extra'=>['id' => 'grupID','class' => '', 'required' => true],'type'=>'dropdown'], 
 		'subject_name'	=> ['label' => 'Nama Mata Pelajaran','width'=>35,'extra'=>['id' => 'namaMP','class' => '', 'required' => true],'type'=>'text'], 
-		'item_order'	=> ['label' => 'No Urut','width'=>10,'extra'=>['id' => 'noUrt','class' => ''],'type'=>'text', ], 
+		'akronim'		=> ['label' => 'Akronim','width'=>10,'extra'=>['id' => 'sbjID','class' => '', 'required' => true,'minlength'=>4, 'maxlength'=>3, 'size'=>3],'type'=>'text', ], 
+		'item_order'	=> ['label' => 'No Urut','width'=>0,'extra'=>['id' => 'noUrt','class' => ''],'type'=>'text', ], 
 		'tot_skk'		=> ['label' => 'Jml SKK','width'=>10,'extra'=>['id' => 'skk','class' => '', 'required' => true],'type'=>'text',],  
 		'form_nilai'	=> ['label' => 'Format Nilai','width'=>15,'extra'=>['id' => 'frmnilai','class' => '', 'required' => true],'type'=>'dropdown',],  
 	];
@@ -32,14 +32,15 @@ class Subject extends BaseConfig
 	];
     
 	public array $roles = [
-        'grade'   	=> ['label' => 'Level', 'rules' =>'required|max_length[4]'],
-		'subgrade'  => ['label' => 'Sub Level', 'rules' =>'required'],
-		'grade_name'=> ['label' => 'Nama Level', 'rules' =>'required'],
-		'deskripsi' => ['label' => 'Standar Kompetensi/Capaian Hasil', 'rules' =>'required|max_length[250]'],
-        'currId'   	=> ['label' => 'Kurikulum', 'rules' =>'required'],
+        'akronim'   	=> ['label' => 'Kode/Akronim', 'rules' =>'required|max_length[3]'],
+		//'grup_id'  		=> ['label' => 'Level', 'rules' =>'required'],
+		'subject_name'	=> ['label' => 'Nama Mapel', 'rules' =>'required'],
+		'item_order' 	=> ['label' => 'No Urut', 'rules' =>'required'],
+        'tot_skk'   	=> ['label' => 'Total SKK', 'rules' =>'required'],
+        'form_nilai'   	=> ['label' => 'Format Nilai', 'rules' =>'required'],
 	];  
 
-	public string $primarykey = 'subjectid';
+	public string $primarykey = 'id';
 	
 	/**
 	* ---------------------------------------------------------------------
@@ -59,7 +60,7 @@ class Subject extends BaseConfig
 	*/
 	public $actions = [
 		'edit' 		=> ['icon'=>'edit','src'=>'subject/edit/', 'label'=>'Detail', 'extra'=>''],
-		'delete'	=> ['icon'=>'trash','src'=>'subject/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
+		'delete'	=> ['icon'=>'trash','src'=>'subject/hapus/', 'label'=>'Detail', 'extra'=>"onclick='AjaxConfirm(event)' data-target='mapel-content'"],
 	];
 	
 	public array $addOnACt = [

@@ -7,13 +7,13 @@ use CodeIgniter\Model;
 class SubjectModel extends Model
 {
     protected $DBGroup          = 'default';
-    protected $table            = 'subject';
+    protected $table            = 'subjects';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = \Modules\Akademik\Entities\Subject::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['subjectid', 'grup_id', 'subject_name', 'item_order', 'tot_skk', 'form_nilai'];
+    protected $allowedFields    = ['id', 'grup_id', 'subject_name', 'akronim', 'item_order', 'tot_skk', 'form_nilai'];
 
     // Dates
     protected $useTimestamps = false;
@@ -39,40 +39,37 @@ class SubjectModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
     
-    public function getSubject($currID){
-    	/**
-		* 
-		* @var 	$this->db->select('a.*, b.id_curriculum, b.parent_grup');
-		$this->db->from($this->tbl_subjects. " a");
-		$this->db->join($this->tbl_grup_mapel. " b","a.grup_id=b.grup_id","LEFT");
-		$this->db->order_by("a.grup_id", "ASC");
-		$this->db->order_by("a.item_order", "ASC");
-		* 
-		*/
-    	
+    public function getSubject($currID, $obj=FALSE){
+    	    	
     	$builder = $this->db->table('subjects a');
-		$builder->select('a.*, b.curr_id, b.parent_grup, b.nm_grup')->join('grup_mapel b', 'a.grup_id = b.grup_id');
+		$builder->select('a.*, b.curr_id')->join('grup_mapel b', 'a.grup_id = b.grup_id');
 		$builder->orderBy('a.grup_id', 'ASC');
 		$builder->orderBy('a.item_order', 'ASC');
 		$builder->where('b.curr_id', $currID);
-		$query = $builder->get()->getResultArray();
+		$query = $builder->get()->getResult();
 		$Result = [];
 		if(count($query)>0){
     		foreach($query as $dt)
     		{
-    			$rs=$dt; 
-    			unset($rs['curr_id']);
-    			unset($rs['parent_grup']);
-    			unset($rs['nm_grup']);
-    			unset($rs['grup_id']);
-    			$R['gid']=$dt['grup_id'];
-    			$R['title']=$dt['nm_grup'];
-    			$R['rsdata']=$rs;
-    			$Result[$dt['grup_id']]=$R;
+    			//$rs = ($obj)?(object)$dt:$dt;
+    			//$Result[$dt['grup_id']][]=$rs;
+    			$Result[$dt->grup_id][]=$dt;
     		}
-    	}else{
-    		$Result[0]['rsdata']=[];
     	}
 		return $Result;
+    }
+    
+    public function nextOrder($currID)
+    {
+    	$builder = $this->db->table('subjects a');
+		$builder->selectMax('a.item_order', 'order')->join('grup_mapel b', 'a.grup_id = b.grup_id');
+		$builder->where('b.curr_id', $currID);
+		$Q = $builder->get()->getRowArray();
+		$R = 0;
+		if(isset($Q)){
+    		$R = $Q['order']; 
+    	}
+    	//test_result($Q);
+		return $R + 1;
     }
 }

@@ -8,7 +8,7 @@ use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\Events\Events;
 use Config\Services;
 use Config\MyApp;
-use Modules\Akademik\Models\SklModel;
+use Modules\Akademik\Models\GmapelModel;
 use Modules\Akademik\Models\KurikulumModel;
 class Gmapel extends BaseController
 {
@@ -21,11 +21,11 @@ class Gmapel extends BaseController
 
     function __construct() {
         parent::__construct();
-        $this->dconfig = config(\Modules\Akademik\Config\Skl::class);
+        $this->dconfig = config(\Modules\Akademik\Config\Gmapel::class);
         $this->session = \Config\Services::session();
-		$this->model = new SklModel;	
+		$this->model = new GmapelModel;	
         $this->curr_model = new KurikulumModel;
-		$this->data['site_title'] = 'Halaman Skl';
+		$this->data['site_title'] = 'Halaman Gmapel';
 		$this->data['fields'] 	  = $this->dconfig->fields;
 		$this->data['key']		  = $this->dconfig->primarykey;
 		$this->data['allowimport']		  = $this->dconfig->importallowed;
@@ -37,12 +37,12 @@ class Gmapel extends BaseController
 	
 		$kurikulum 	= $this->model->findAll();
 		$data = $this->data;
-		$data['title']		 = "Manajemen Skl";
+		$data['title']		 = "Manajemen Grup Mata Pelajaran";
 		$data['rsdata']		 = $kurikulum;
 		$data['msg'] 		 = "";
         $data['isplainText'] = TRUE;
 		$data['opsi'] 		 = $this->dconfig->opsi;
-        $data['opsi']['currId'] 	= $this->curr_model->getDropdown();
+        $data['opsi']['curr_id'] 	= $this->curr_model->getDropdown();
 		$data['actions']	 = $this->dconfig->actions;
 		$data['addOnACt']    = $this->dconfig->addOnACt;
 		echo view($this->theme.'datalist',$data);
@@ -58,12 +58,12 @@ class Gmapel extends BaseController
 	{ 
 		$id=(is_array($currID))?$currID['curr_id']:$currID;
 		$dtview['strdelimeter'] =setting('Gmapel.arrDelimeter');
-		$dtview['fields'] =setting('Gmapel.fieldcels');
+		$dtview['fields'] =setting('Gmapel.fields');
 		$dtview['id'] 	  = $id;
 		$dtview['act'] 	  = 'skl';
 		$dtview['isplainText'] = TRUE;
 		$dtview['key']	  = setting('Gmapel.primarykey');
-		$dtview['opsi']	  = $this->curr_model->getLevel($id);
+		$dtview['opsi']['parent_grup'] = $this->model->getDropdown($id);
 		$dtview['rsdata'] = $this->model->where('currId',$id)->findAll();
 		$dtview['title']  = "Daftar Capaian Pembelajaran";
 		$dtview['actions']= setting('Gmapel.actions');
@@ -79,16 +79,16 @@ class Gmapel extends BaseController
 		$data	=$this->data;
 		$data['useCKeditor'] = false;
 		$data['opsi'] 	= $this->dconfig->opsi;
-		$data['opsi']['currId'] = $this->curr_model->getDropdown();
+		$data['opsi']['curr_id']     = $this->curr_model->getDropdown();
+		$data['opsi']['parent_grup'] = $this->model->getDropdown($id);
 		if($id <> 0){
-			$fields 			= $this->dconfig->fields2;
-			$data['opsi'] 		= $this->curr_model->getLevel($id);
-			$data['hidden']		= ['currId'=>$id];
+			unset($fields['curr_id']);
+			$data['hidden']		= ['curr_id'=>$id];
 			$form 				= $this->theme.'ajxform';
 			$data['useCKeditor']= true;
-			$data['rtarget']	= "#skl-content";
+			$data['rtarget']	= "#mapel-content";
 		}
-		$data['title']	= "Tambah Data Skl";
+		$data['title']	= "Tambah Grup Mata Pelajaran";
 		$data['error'] = [];// validation_list_errors();
 		$data['fields'] = $fields;
 		$data['rsdata'] = [];
@@ -99,23 +99,23 @@ class Gmapel extends BaseController
 	{
 		$rules = $this->dconfig->roles;	
 		if ($this->validate($rules)) {
-			$dataSkl = $this->request->getPost();
-			$dataSkl['id']=$dataSkl['currId'];
+			$dataGmapel = $this->request->getPost();
+			//$dataGmapel['id']=$dataGmapel['currId'];
 			//$data['id']=$data['id_skl'];
 			//test_result($data);
-			$SklModel = new SklModel();
-			$Skl= new \Modules\Akademik\Entities\Skl();
-			$Skl->fill($dataSkl);
-			$simpan = $SklModel->insert($Skl,false);
+			$GmapelModel = new GmapelModel();
+			$Gmapel= new \Modules\Akademik\Entities\Gmapel();
+			$Gmapel->fill($dataGmapel);
+			$simpan = $GmapelModel->insert($Gmapel,false);
 			if($simpan){
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
 			if($id == 0){
-				return redirect()->to(base_url('skl'));
+				return redirect()->to(base_url('gmapel'));
 			}else{
-				return redirect()->to(base_url('skl/showList'));
+				return redirect()->to(base_url('subject/showList'));
 			}
 		}else{
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
@@ -127,24 +127,23 @@ class Gmapel extends BaseController
 		$this->cekHakAkses('update_data');
 		$idn = decrypt($ids); 
 		
-		$id = explode(setting('Gmapel.arrDelimeter'),$idn); //$id[0]= id_skl, $id[1] = id curr
+		$id = explode(setting('Gmapel.arrDelimeter'),$idn); //$id[0]= grup_id, $id[1] = id curr
 		//test_result($id);
 		$data   = $this->data;
 		$form   = $this->theme.'form';
 		$fields = $this->dconfig->fields;
 		$data['opsi'] 	= $this->dconfig->opsi;
-        $data['opsi']['currId'] 	= $this->curr_model->getDropdown();
-        
+        $data['opsi']['curr_id']     = $this->curr_model->getDropdown();
+        $data['opsi']['parent_grup'] = $this->model->getDropdown($id[1]);
 		if(count($id)>1){
-			$fields 			= $this->dconfig->fields2;
-			$data['opsi'] 		= $this->curr_model->getLevel($id[1]);
-			$data['hidden']		= ['currId'=>$id[1]];
+			unset($fields['curr_id']);
+			$data['hidden']		= ['curr_id'=>$id[1]];
 			$form 				= $this->theme.'ajxform';
 			$data['useCKeditor']= true;
-			$data['rtarget']	= "#skl-content";
+			$data['rtarget']	= "#mapel-content";
 		} 
 		
-		$data['title']	= "Update Data Skl";
+		$data['title']	= "Update Data Grup Mata Pelajaran";
 		$data['error'] = validation_list_errors();
 		$data['fields'] = $fields;
 		
@@ -163,9 +162,9 @@ class Gmapel extends BaseController
 			
 			//$this->model->update($id, $data);
 			$data = $this->request->getPost();
-			$model = new SklModel();
+			$model = new GmapelModel();
 
-			$rsdata = new \Modules\Akademik\Entities\Skl();
+			$rsdata = new \Modules\Akademik\Entities\Gmapel();
 			$rsdata->fill($data);
 			$simpan = $model->update($id, $rsdata);
 			
@@ -182,11 +181,19 @@ class Gmapel extends BaseController
 	}
 
 	function delete($ids){
-		$id = decrypt($ids); 
-		$Sklmodel = new SklModel();
-		$Sklmodel->delete($id);
+		$idn = decrypt($ids); 
+		$id = explode(setting('Subject.arrDelimeter'),$idn); //$id[0]= subject id, $id[1] = id curr  
+		$Gmapelmodel = new GmapelModel();
+		$Gmapelmodel->delete($id[0]);
 		// masuk database
-		$this->session->setFlashdata('sukses','Data telah dihapus');
-		return redirect()->to(base_url('skl'));
+		//$this->session->setFlashdata('sukses','Data telah dihapus');
+		//return redirect()->to(base_url('skl'));
+		echo show_alert("Data Telah di Hapus","Sukses");
+		if($id == 0){
+			return redirect()->to(base_url('gmapel'));
+		}else{
+			$idx =  encrypt($id[1]);
+			return redirect()->to(base_url('kurikulum/detail/'.$idx));
+		}
 	}
 }

@@ -16,9 +16,9 @@ class Gmapel extends BaseConfig
 	* 
 	*/
 	public array $fields = [
-		'curr_id'		=> ['label' => 'Kode','width'=>0,'extra'=>['id' => 'currID','class' => '', 'required' => true],'type'=>'text', ], 
-		'nm_grup'	=> ['label' => 'Nama Mata Pelajaran','width'=>35,'extra'=>['id' => 'nmgrup','class' => '', 'required' => true],'type'=>'text'], 
-		'parent_grup'	=> ['label' => 'Format Nilai','width'=>15,'extra'=>['id' => 'parentg','class' => '', 'required' => true],'type'=>'dropdown',],  
+		'curr_id'	  => ['label' => 'Kurikulum','width'=>0,'extra'=>['id' => 'currID','class' => '', 'required' => true],'type'=>'dropdown', ], 
+		'nm_grup'	  => ['label' => 'Nama Grup Mapel','width'=>35,'extra'=>['id' => 'nmgrup','class' => '', 'required' => true],'type'=>'text'], 
+		'parent_grup' => ['label' => 'Parent','width'=>15,'extra'=>['id' => 'parentg','class' => '', 'required' => true],'type'=>'dropdown',],  
 	];
 
 	public string $resume_descrip_field = '';

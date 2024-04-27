@@ -1,55 +1,77 @@
 <?php
+helper ('html');
 $allowAct =TRUE;
 if(isset($allowACT)){$allowAct = $allowACT;}
-$hfield=[];
-helper ('html');
-$gact = $aksi['main'];
-$act  = (count($dtview)<=1))?$gact:$aksi['addOn'];	
+$Mact = $aksi['main']['uri'];
+$act_title = $aksi['main']['title'];
+$Adact  = $aksi['addOn']['uri'];	
+$Adact_title  = $aksi['addOn']['title'];	
 ?>
-<div class="accordion" id="accordion<?= $act.$id ?>">
+<div class="accordion" id="accordion<?= $Mact.$id ?>">
+	<div id="<?= $id ?>-content" class="card-body">
+		<h5><?= $title ?>
+			<span class="pull-right">
+				<a role="button" onclick="show('<?php echo $Mact."/add/".$id;?>','#xcontent')" title="Tambah <?= $act_title?>">
+			  		<i class="fa fa-plus-circle"></i>
+			    </a>
+			</span>
+		</h5>
 <?php 
-
+$i = 0;
 foreach($dtview as $A => $dt){
 	$rsdata = $dt['rsdata'];
+	$idg =  encrypt($A.$strdelimeter.$id);
+	$hfield=[];
 ?>
 	<div class="card">
 		<?php 
-		$i = 0;
+		
 		if(array_key_exists('title',$dt)){ 
-			$target = $act.$id.$A;
+			//$Mact = (is_array($act))?implode("",$act):$act;
+			
+			$target = $Mact.$id.$A;
 			$dt_target = "collapse".$target;
+			
+			//$colapseClass = ($i === 0)?"collapse show":"collapse";  $i++;
+			$colapseClass = "collapse show";  
+			$ariaexpanded =true;
+			$ariaexpanded ='aria-expanded="true';
+			if($i > 0){
+				$colapseClass = 'collapse';
+				$ariaexpanded ='aria-expanded="false';
+			}
+			$i++;
 		?>
 		<div class="card-header" id="heading<?= $target ?>">
 	      <h2 class="mb-0">
-	        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#<?= $dt_target?>" aria-expanded="true" aria-controls="<?= $dt_target?>">
+	        <button class="btn btn-link btn-block text-left" type="button" data-toggle="collapse" data-target="#<?= $dt_target?>" aria-expanded="<?= $ariaexpanded?>" aria-controls="<?= $dt_target?>">
 	          <?= $dt['title'] ?>
 	            <span class="pull-right">
-					<a role="button" onclick="show('<?php echo $gact."/add/".$id;?>','#xcontent')">
-				  		<i class="fa fa-plus-circle"></i>
+					<a role="button" onclick="show('<?= $Adact."/add/".$idg;?>','#xcontent')" title="Tambah <?= $Adact_title?>">
+				  		<i class="fa fa-calendar-plus-o"></i>
+				    </a>
+				    <a role="button" onclick="show('<?= $Mact."/edit/".$idg;?>','#xcontent')" title="Edit <?= $act_title?>">
+				  		<i class="fa fa-pencil-square-o"></i>
+				    </a>
+				    <a role="button" href="<?= base_url().$Mact."/hapus/".$idg;?>" onclick="confirmation(event)" title="Hapus <?= $act_title?>">
+				  		<i class="fa fa-trash-o"></i>
 				    </a>
 				</span>
-	        </button>
+			</button>
 	      </h2>
 	    </div>
 	    <?php 
-	    $colapseClass = ($i === 0)?"collapse show":"collapse";
-	    echo '<div id="'.$dt_target.'" class="collapse show" aria-labelledby="heading'.$target.'" data-parent="#accordion'.$act.$id.'">
-     		 <div class="card-body">';
+	    
+	    echo '<div id="'.$dt_target.'" class="'.$colapseClass.'" aria-labelledby="heading'.$target.'" data-parent="#accordion'.$Mact.$id.'">';
+     //	echo '<div class="card-body">';
 		}else{ ?>
 		<div>
-			<div id="<?= $id ?>-content" class="card-body">
-				<h5><?= $title ?>
-					<span class="pull-right">
-						<a role="button" onclick="show('<?php echo $act."/add/".$id;?>','#xcontent')">
-					  		<i class="fa fa-plus-circle"></i>
-					    </a>
-					</span>
-				</h5>
-			<?php } ?>
+		<?php } ?>
 				<div class="table-responsive-sm">  
 					<table id="table-result" class="table table-striped table-bordered table-sm" cellspacing="0">
 					<thead class="thead-dark">
 						<tr>
+							<th width="9%"><div align="center">No</div></th>
 							<?php 
 							$hasopt = [];
 							foreach($fields as $k =>$row){
@@ -75,11 +97,12 @@ foreach($dtview as $A => $dt){
 					foreach ($rsdata as $data){
 					$no++;
 					$idx =  $data->$key;
-					$ids = $idx.$strdelimeter.$id;
+					$ids = $idx.$strdelimeter.$id.$strdelimeter.$A;
 					
 					if(isset($isplainText)){$ids = encrypt($ids); $idx =  encrypt($idx); }
 				?>
 						<tr>
+							<td valign="top" align="center"><div align="center"><?= $no?></div></td>
 							<?php 
 							foreach($hfield as $hc){
 								$Algn = 'left';
@@ -147,10 +170,11 @@ foreach($dtview as $A => $dt){
 				  }
 				  ?>
 				  	</tbody>
-				</table>
+				</table><br>
 				</div>
 			</div>
 		</div>
-	</div>
+	
 <?php } ?>
+	</div>
 </div>

@@ -33,6 +33,7 @@ class MyApp extends BaseConfig
 	public $appName 	= 'SIAK';
 	public $theme 	 	= 'sbadmin2';
 	public $themeDir 	= 'themes/';
+	public $logo 		= 'logofinal.png';
 	
 	public $inputtype = [
 		'checkbox'	=>	'form_checkbox',

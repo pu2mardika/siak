@@ -75,7 +75,7 @@
 					}
 			?>
 			<div class="<?= $class ?>" id="<?= $id ?>" role="tabpanel" aria-labelledby="<?= $id ?>-tab">
-				<?= $vl['vcell'] ?>
+				<div class="card"><?= $vl['vcell'] ?></div>
 			</div>
     <?php } 
 		echo "</div>";

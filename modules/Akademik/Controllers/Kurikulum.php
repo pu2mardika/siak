@@ -162,13 +162,12 @@ class Kurikulum extends BaseController
 		
 		//Subject
 		$vcall = view_cell('\Modules\Akademik\Controllers\Subject::showList', ['currId'=>$id]); 
-		$TABS['subject'] = ['title'=>'Data Subject','active'=>1, 'vcell'=>$vcall];
+		$TABS['mapel'] = ['title'=>'Data Subject','active'=>1, 'vcell'=>$vcall];
 		
 		//CEK Skl
 		//$vcall = view_cell('\Modules\Akademik\Libraries\Akademik::show', ['theme'=>$this->theme, 'dtview'=>$dtview]); 
 		$vcall = view_cell('\Modules\Akademik\Controllers\Skl::showList', ['currId'=>$id]); 
 		$TABS['skl']     = ['title'=>'Data SKL','active'=>0, 'vcell'=>$vcall];
-		
 		
 		$data['tabs']	 = $TABS;
 		$data['resume']  = $RESUME;

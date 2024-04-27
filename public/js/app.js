@@ -92,6 +92,23 @@ function show_anim(page,div){
     return false;
 }
 
+function show_silent(page,div){
+    do_scroll(0);
+    var image_load = "<div class='ajax_loading'></div>";
+    $.ajax({
+      url: page,
+      beforeSend: function(){
+            $(div).html(image_load);
+        },
+      success: function(response){			
+        $(div).html(response);
+		$(div).slideDown(200);
+      },
+      dataType:"html"  		
+    });
+    return false;
+}
+
 function load(page,div){
 	do_scroll(0);
 	var site = base_url;
@@ -242,6 +259,16 @@ function bantuan(e){
 	}
 }
 
+//alert
+function notice(msg, ico)
+{
+	swal({
+	  title: "Oops........",
+	  text: msg,
+	  icon: ico,
+	})
+}
+
 // Sweet alert
 function confirmation(ev) {
 ev.preventDefault();
@@ -262,6 +289,33 @@ swal({
   } 
 });
 } 
+
+// Sweet Ajax alert
+function AjaxConfirm(ev) {
+ev.preventDefault();
+var urlToRedirect = ev.currentTarget.getAttribute('href'); //use currentTarget because the click may be on the nested i tag and not a tag causing the href to be empty
+var dtTarget = ev.currentTarget.getAttribute('data-target'); //use currentTarget because the click may be on the nested i tag and not a tag causing the href to be empty
+console.log(urlToRedirect); // verify if this is the right URL
+swal({
+  title: "Yakin Anda ingin menghapus data ini?",
+  text: "Data yang sudah dihapus tidak dapat dikembalikan",
+  icon: "warning",
+  buttons: true,
+  dangerMode: true,
+})
+.then((willDelete) => {
+  // redirect with javascript here as per your logic after showing the alert using the urlToRedirect value
+  if (willDelete) {
+    // Proses ke URL
+    //window.location.href = urlToRedirect;
+    show_silent(urlToRedirect, '#'+dtTarget);
+    setTimeout(function () {
+        location.reload();
+	}, 900);
+  } 
+});
+} 
+
 // register the handler :
 document.addEventListener('keyup', doc_keyUp, false); 
 $(document).ready(function () {

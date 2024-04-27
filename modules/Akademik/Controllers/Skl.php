@@ -10,6 +10,7 @@ use Config\Services;
 use Config\MyApp;
 use Modules\Akademik\Models\SklModel;
 use Modules\Akademik\Models\KurikulumModel;
+use Modules\Akademik\Models\MapelModel;
 
 class Skl extends BaseController
 {
@@ -61,16 +62,20 @@ class Skl extends BaseController
 	{ 
 		$id=(is_array($currID))?$currID['currId']:$currID;
 		$data['strdelimeter'] =setting('Skl.arrDelimeter');
-		$data['fields'] =setting('Skl.fieldcels');
+		$data['fields'] =setting('mapel.fieldCells');
 		$data['id'] 	  = $id;
-		$data['aksi']	  = ['main'=>'skl', 'addOn'=>'skl'];
+		$data['aksi']	  = ['main' =>['uri'=>'skl', 'title'=>'Capaian Pembelajaran'], 
+							 'addOn'=>['uri'=>'mapel','title'=>'Distribusi MaPel']
+							];
 		$data['isplainText'] = TRUE;
 		$data['key']	  = setting('Skl.primarykey');
+		
 		$data['opsi']	  = $this->curr_model->getLevel($id);
 		$data['dtview'][0]['rsdata'] = $this->model->where('currId',$id)->findAll();
+		$data['dtview'] = $this->_getMapel($id);
+		$data['rtarget']= "#skl-content";
 		$data['title']  = "Daftar Capaian Pembelajaran";
-		$data['actions']= setting('Skl.actions');
-		$data['addOnACt'] = setting('Skl.addOnACt');
+		$data['actions']= setting('mapel.actions');
 		return view($this->theme.'cells/dlist',$data);
 	}
 	
@@ -159,7 +164,8 @@ class Skl extends BaseController
 	
 	function updateAction($ids): RedirectResponse
 	{
-		$id = decrypt($ids); 
+		$idn = decrypt($ids); 
+		$id = explode(setting('Subject.arrDelimeter'),$idn); //$id[0]= subject id, $id[1] = id curr 
 		$roles = $rules = $this->dconfig->roles;
 		
 		if ($this->validate($roles)) {
@@ -170,7 +176,7 @@ class Skl extends BaseController
 
 			$rsdata = new \Modules\Akademik\Entities\Skl();
 			$rsdata->fill($data);
-			$simpan = $model->update($id, $rsdata);
+			$simpan = $model->update($id[0], $rsdata);
 			
 			if($simpan){
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
@@ -178,19 +184,53 @@ class Skl extends BaseController
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
 			
-			return redirect()->to(base_url('skl'));
+			if($id == 0){
+				return redirect()->to(base_url('skl'));
+			}else{
+				$idx =  encrypt($id[1]);
+				return redirect()->to(base_url('kurikulum/detail/'.$idx));
+			}
 		}else{
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
 
 	function delete($ids){
-		$id = decrypt($ids); 
+		$idn = decrypt($ids); 
+		$id = explode(setting('Subject.arrDelimeter'),$idn); //$id[0]= subject id, $id[1] = id curr 
 		$Sklmodel = new SklModel();
-		$Sklmodel->delete($id);
-		// masuk database
+		$Sklmodel->delete($id[0]);
 		$this->session->setFlashdata('sukses','Data telah dihapus');
-		return redirect()->to(base_url('skl'));
+		echo show_alert("Data Telah di Hapus","Sukses");
+		
+		if($id == 0){
+			return redirect()->to(base_url('skl'));
+		}else{
+			$idx =  encrypt($id[1]);
+			return redirect()->to(base_url('kurikulum/detail/'.$idx));
+		}
+	}
+	
+	private function _getMapel($currId)
+	{
+		$MapelModel = new MapelModel;
+		$skl = $this->model->where('currId', $currId)->findAll();
+		$rsdata = $MapelModel->getMapel($currId,true);
+		//test_result($rsdata);	    
+		$Result = [];
+		foreach($skl as $dt)
+		{
+			$Result[$dt->id]['title']=$dt->grade_name;
+			$rdata = (array_key_exists($dt->id,$rsdata))?$rsdata[$dt->id]:[];
+			$Result[$dt->id]['rsdata']=$rdata;
+		}
+		
+		if(count($Result)==0)
+		{
+			$Result[0]['rsdata']=[];
+		}
+		return $Result;
+	//	test_result($Result);
 	}
 	
 }

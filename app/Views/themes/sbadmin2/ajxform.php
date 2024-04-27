@@ -26,6 +26,7 @@ if(isset($hidden)){$Hidden = $hidden ;}
       </div>
       <?php echo form_open(current_url(),'class="contentform was-validated"',$Hidden); ?>
       <div class="modal-body">
+        <?= csrf_field() ?>
         <?php
 		foreach($fields as $fd => $row){
 			//CEK KONDISI FIELDS
@@ -59,10 +60,10 @@ if(isset($hidden)){$Hidden = $hidden ;}
 				$formInput = $input($fd,set_value($fd,$nilai),$extra,$row['type']);
 			}
 		?>
-			<div class="row mb-3">
-				<label class="col-sm-3 col-form-label" for="<?php echo $forID;?>"><?php echo $row['label'];?></label>
-				<div class="col-sm-9"><?=$formInput?></div>	 
-				<div class="valid-feedback">Valid.</div>   
+			<div class="form-floating">
+				<label for="<?php echo $forID;?>"><?php echo $row['label'];?></label>
+				<?=$formInput?>	 
+				   
 			</div>
 
 		<?php } ?>
@@ -92,9 +93,9 @@ if(isset($hidden)){$Hidden = $hidden ;}
                     // Output AJAX response to the div container
                     $("<?= $rtarget ;?>").html(response.responseText);
     				setTimeout(function () {
-                    location.reload();
-                    self.$("#confirm-cancel").trigger("click");
-                }, 900);              
+	                    location.reload();
+	                    self.$("#confirm-cancel").trigger("click");
+               		}, 900);              
                 }
             };  
             $("#btn_ok").click(function(){

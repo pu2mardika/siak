@@ -47,7 +47,7 @@ class Subject extends Migration
 		*/
         
          $fields = [
-            'subjectid'=> [
+            'id'=> [
             	'type' => 'varchar', 
             	'constraint' => 11,  
             	'index' => true,
@@ -58,15 +58,19 @@ class Subject extends Migration
             ],
             'subject_name' => [
             	'type' => 'varchar', 
-            	'constraint' => 35,
+            	'constraint' => 100,
+            ],
+            'akronim' => [
+            	'type' => 'varchar', 
+            	'constraint' => 5,
             ],
             'item_order' => [
             	'type' => 'varchar', 
             	'constraint' => 35,
             ],
             'tot_skk' => [
-            	'type' => 'varchar', 
-            	'constraint' => 255,
+            	'type' => 'int', 
+            	'constraint' => 11,
             ],
             'form_nilai'=> [
             	'type' => 'varchar', 
@@ -75,7 +79,7 @@ class Subject extends Migration
         ];
         
         $this->forge->addField($fields);
-        $this->forge->addPrimaryKey('subjectid');
+        $this->forge->addPrimaryKey('id');
         $this->forge->addKey('grup_id');
         $this->forge->addForeignKey('grup_id', 'grup_mapel', 'grup_id', 'CASCADE', 'CASCADE', 'fk_gmapel');
         $this->forge->createTable('subjects', true, $attributes);
@@ -100,8 +104,10 @@ class Subject extends Migration
         ];
         
         $this->forge->addField($fields);
-        $this->forge->addPrimaryKey(['id_mapel','id_skl'],'id');
-		$this->forge->addForeignKey('id_mapel', 'subjects', 'subjectid', 'CASCADE', 'CASCADE', 'fk_subject');
+        $this->forge->addPrimaryKey(['id_mapel', 'id_skl'],'id');
+     //   $this->forge->addKey('id_mapel');
+      //  $this->forge->addKey('id_skl');
+		$this->forge->addForeignKey('id_mapel', 'subjects', 'id', 'CASCADE', 'CASCADE', 'fk_subject');
 		$this->forge->addForeignKey('id_skl', 'tblSkl', 'id', 'CASCADE', 'CASCADE', 'fk_dtSKL');
         $this->forge->createTable('mapel', true, $attributes);
     }

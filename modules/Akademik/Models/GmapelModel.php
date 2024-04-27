@@ -38,4 +38,23 @@ class GmapelModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+    
+    public function getDropdown($currId=0)
+    {
+    	if($currId===0)
+    	{
+    		$data = $this->findAll();
+    	}else{
+    		$data = $this->where('curr_id', $currId)->findAll();
+		}
+		
+    	$dd=[];
+    	//$dd['-']='[PILIH GRUP MATA PELAJARAN]';
+    	$dd[0]='[TOP LEVEL]';
+    	foreach($data as $val)
+    	{
+    		$dd[$val->grup_id]=$val->nm_grup;
+    	}
+    	return $dd;
+    }
 }

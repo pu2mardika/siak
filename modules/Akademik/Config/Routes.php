@@ -44,3 +44,35 @@ $routes->group("skl", ["namespace" => "\Modules\Akademik\Controllers"], function
 	$routes->post("edit/(:any)", "Skl::updateAction/$1");
 	$routes->get("hapus/(:any)", "Skl::delete/$1");
 });
+
+$routes->group("grupmp", ["namespace" => "\Modules\Akademik\Controllers"], function ($routes) {
+	$routes->get("/", "Gmapel::index");
+	$routes->add("add", "Gmapel::addView");
+    $routes->post("add", "Gmapel::addAction");
+    $routes->add("add/(:any)", "Gmapel::addView/$1");
+    $routes->post("add/(:any)", "Gmapel::addAction/$1");
+    $routes->get("edit/(:any)", "Gmapel::updateView/$1");
+	$routes->post("edit/(:any)", "Gmapel::updateAction/$1");
+	$routes->get("hapus/(:any)", "Gmapel::delete/$1");
+});
+$routes->addRedirect('gmapel', 'grupmp');
+
+$routes->group("subject", ["namespace" => "\Modules\Akademik\Controllers"], function ($routes) {
+	$routes->get("/", "Subject::index");
+	$routes->add("add", "Subject::addView");
+    $routes->post("add", "Subject::addAction");
+    $routes->add("add/(:any)", "Subject::addView/$1");
+    $routes->post("add/(:any)", "Subject::addAction/$1");
+    $routes->get("edit/(:any)", "Subject::updateView/$1");
+	$routes->post("edit/(:any)", "Subject::updateAction/$1");
+	$routes->get("hapus/(:any)", "Subject::delete/$1");
+	$routes->get("show/(:any)", "Subject::showList/$1");
+});
+
+$routes->group("mapel", ["namespace" => "\Modules\Akademik\Controllers"], function ($routes) {
+    $routes->add("add/(:any)", "Mapel::addView/$1");
+    $routes->post("add/(:any)", "Mapel::addAction/$1");
+    $routes->get("edit/(:any)", "Mapel::updateView/$1");
+	$routes->post("edit/(:any)", "Mapel::updateAction/$1");
+	$routes->get("hapus/(:any)", "Mapel::delete/$1");
+});

@@ -184,7 +184,7 @@
 			
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?=base_url()?>">
-                <img src="<?=base_url().'/images/' . setting()->get('MyApp.logo')?>" width="100px"/>
+                <img src="<?=base_url().'images/' . setting()->get('MyApp.logo')?>" width="100px"/>
             </a>
 			 
             <!-- Divider -->
