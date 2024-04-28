@@ -19,8 +19,7 @@ class Kurikulum extends Entity
 		$yy = date("y",$tstgl);
         $rdnum = random_string('numeric',1);
 		$idk = $akronim.sprintf("%03d",$prodi).$yy.$rdnum;
-        //$idk = $akronim.$rdnum;
-		
+       
         $this->attributes["id"] = $idk ;
         return $this;
     } 

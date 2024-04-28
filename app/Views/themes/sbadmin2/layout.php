@@ -35,7 +35,11 @@
 	}
 
 	?>
-	
+	<script type="text/javascript">
+        var base_url = "<?=base_url()?>";
+        var module_url = "<?=$module_url?>";
+        var current_url = "<?=current_url()?>";
+    </script>
     <!-- Dynamic scripts -->
     <script type='text/javascript'>var base_url = '<?=base_url();?>'</script>
 	<?php
@@ -471,6 +475,7 @@
     <script src="<?=base_url('themes/sbadmin2/vendor/jquery-easing/jquery.easing.min.js')?>"></script>
     -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/6.0.0/bootbox.min.js"></script>
 
     <!-- Custom scripts for all pages-->
     <script src="<?=base_url('themes/sbadmin2/js/sb-admin-2.min.js')?>"></script>

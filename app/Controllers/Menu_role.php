@@ -17,8 +17,8 @@ class Menu_role extends \App\Controllers\BaseController
 	public function __construct() {
 		
 		parent::__construct();
-		$this->addJs ($this->config->baseURL . 'public/themes/modern/builtin/js/menu-role.js');
-		$this->addStyle($this->config->baseURL . 'public/vendors/wdi/wdi-loader.css');
+		$this->addJs ($this->config->baseURL . 'themes/modern/builtin/js/menu-role.js');
+		$this->addStyle($this->config->baseURL . 'vendors/wdi/wdi-loader.css');
 
 		$this->model = new MenuRoleModel;	
 		$this->data['data_menu'] = $this->model->getAllMenu();
@@ -39,7 +39,7 @@ class Menu_role extends \App\Controllers\BaseController
 	{
 		$this->cekHakAkses('read_data');
 		$data = $this->data;
-		$this->view('menu-role-data.php', $data);
+		echo view('main/menu-role-data', $data);
 	}
 	
 	public function delete() {
@@ -56,11 +56,11 @@ class Menu_role extends \App\Controllers\BaseController
 		}
 	}
 	
-	public function checkbox(){
+	//public function checkbox(){
+	public function editView(){
 		// helper('html.php');
 		$prefix_id = 'role_';
 	
-		
 		$menu_role =$this->model->getMenuRoleById($_GET['id']);
 		$checked = [];
 		foreach ($menu_role as $row) {
@@ -70,8 +70,8 @@ class Menu_role extends \App\Controllers\BaseController
 		$data = $this->data;
 		$data['prefix_id'] = $prefix_id;
 		$data['checked'] = $checked;
-		echo view('themes/modern/menu-role-form-edit.php', $data);
-		exit;
+		echo view('main/menu-role-form-edit', $data);
+		//exit;
 	}
 	
 	public function edit()

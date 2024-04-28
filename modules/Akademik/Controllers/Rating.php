@@ -9,7 +9,7 @@ use CodeIgniter\Events\Events;
 use Config\Services;
 use Config\MyApp;
 use Modules\Akademik\Models\SubjectModel;
-use Modules\Akademik\Models\MapelModel;
+use Modules\Akademik\Models\RatingModel;
 use Modules\Akademik\Models\KurikulumModel;
 
 class Rating extends BaseController
@@ -24,58 +24,81 @@ class Rating extends BaseController
 
     function __construct() {
         parent::__construct();
-        $this->dconfig = config(\Modules\Akademik\Config\Mapel::class);
+        $this->dconfig = config(\Modules\Akademik\Config\Rating::class);
         $this->session = \Config\Services::session();
-		$this->model = new MapelModel;	
+		$this->model = new RatingModel;	
 		$this->subjectModel = new SubjectModel;	
-        $this->curr_model = new KurikulumModel;
-		$this->data['site_title'] = 'Halaman Mapel';
+        $this->curr_model 	= new KurikulumModel;
+		$this->data['site_title'] = 'Halaman Rating';
 		$this->data['fields'] 	  = $this->dconfig->fields;
 		$this->data['key']		  = $this->dconfig->primarykey;
-		$this->data['allowimport']		  = $this->dconfig->importallowed;
+		$this->data['allowimport']= $this->dconfig->importallowed;
 		helper(['cookie', 'form', 'util']);
     }
 	
-	function addView($ids=0)
+	public function showList($currID):string
+	{ 
+		$id=(is_array($currID))?$currID['currId']:$currID;
+		//$GratingModel = new GratingModel;
+		$opt			  = $this->dconfig->opsi;
+		$dtview['useAccordion'] = true;
+		$dtview['strdelimeter'] =setting('Rating.arrDelimeter');
+		$dtview['fields'] = $this->dconfig->fields;
+		$dtview['id'] 	  = $id;
+		$dtview['aksi']	  = ['main' =>['uri'=>'rating', 'title'=>'Penilaian'], 
+							 'addOn'=>['uri'=>'rating','title'=>'Penilaian']];
+		$dtview['isplainText'] = TRUE;
+		$dtview['key']	  = setting('Rating.primarykey');
+		$dtview['opsi']	  = $opt;
+		$dtview['rtarget']= "#rating-content";
+		$dtview['dtview'][0]['rsdata'] = $this->model->where('curr_id',$id)->findAll();
+		$dtview['title']  = "Daftar Komponen Penilaian";
+		$dtview['actions']= setting('Rating.actions');
+		$dtview['addOnACt'] = setting('Rating.addOnACt');
+		$dtview['section'] = "ass";
+		//test_result($dtview);
+		return view($this->theme.'cells/dlist',$dtview);
+	}
+	
+	function addView($id=0)
 	{
 		$this->cekHakAkses('create_data');
-		$idn = decrypt($ids); 
-		$id = explode(setting('mapel.arrDelimeter'),$idn); //$id[0]= grup_id, $id[1] = id curr
+		//$idn = decrypt($ids); 
+		//$id = explode(setting('rating.arrDelimeter'),$idn); //$id[0]= id raing, $id[1] = id curr
 		$data   = $this->data;
-		$data['fields'] = $this->dconfig->fields;
+		$data['fields'] 	 = $this->dconfig->fields;
 		$data['useCKeditor'] = false;
-		$data['opsi']['id_mapel'] = $this->model->getDropdown($id[1],$id[0]);
-		$data['hidden']		= ['id_skl'=>$id[0], 'currID'=>$id[1]];
-		$data['useCKeditor']= false;
-		$data['rtarget']	= "#skl-content";
-		$data['title']	= "Tambah Mata Pelajaran";
-		$data['error'] 	= [];// validation_list_errors();
-		$data['rsdata'] = [];
+		$data['opsi'] 		 = setting('rating.opsi');
+		$data['hidden']		 = ['curr_id'=>$id];
+		$data['useCKeditor'] = false;
+		$data['rtarget']	 = "#rating-content";
+		$data['title']		 = "Tambah Mata Pelajaran";
+		$data['error'] 		 = [];// validation_list_errors();
+		$data['rsdata'] 	 = [];
 		echo view($this->theme.'ajxform', $data);
-		//echo view($this->theme.'form', $data);
 	}
 	
 	function addAction($ids=0): RedirectResponse
 	{
-		$idn = decrypt($ids); 
-		$id = explode(setting('mapel.arrDelimeter'),$idn); //$id[0]= grup_id, $id[1] = id curr
 		$rules = $this->dconfig->roles;	
 		if ($this->validate($rules)) {
-			$dataMapel = $this->request->getPost();
-			unset($dataMapel['currID']);
-			$MapelModel = new MapelModel();
-			$Mapel= new \Modules\Akademik\Entities\Mapel();
-			$Mapel->fill($dataMapel);
-			$simpan = $MapelModel->insert($Mapel,false);
+			$dataRating  	  = $this->request->getPost();
+			$dataRating['id'] = $dataRating['curr_id'];
+			$RatingModel 	  = new RatingModel();
+			
+			$Rating = new \Modules\Akademik\Entities\Rating();
+			$Rating->fill($dataRating);
+			$simpan = $RatingModel->insert($Rating,false);
+			
 			if($simpan){
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
 			if($ids == 0){
-				return redirect()->to(base_url('mapel'));
+				return redirect()->to(base_url('rating'));
 			}else{
-				$idx =  encrypt($id[2]);
+				$idx =  encrypt($ids);
 				return redirect()->to(base_url('kurikulum/detail/'.$idx));
 			}
 		}else{
@@ -88,43 +111,34 @@ class Rating extends BaseController
 		$this->cekHakAkses('update_data');
 		$idn = decrypt($ids); 
 		
-		$id = explode(setting('Mapel.arrDelimeter'),$idn); //$id[0]= mapel_id, $idx[1]=$idx[3] = id_skl, $idx[2] = id_curr
-		//$id = explode(setting('Mapel.arrDelimeter'),decrypt($idx[0])); //$id[0]= mapel_id, $id[1] = id_skl
+		$id = explode(setting('Rating.arrDelimeter'),$idn); //$id[0]= rating_id, $idx[1] = id_curr
 		//test_result($id);
-		$parm =['id_mapel'=>$id[0], 'id_skl'=>$id[1]];
 		$data   = $this->data;
-		$data['title']	= "Update Data Mapel";
+		$data['title']	= "Update Data Komponen Penilaian";
 		$this->dconfig->fields;
 		$data['useCKeditor'] = false;
-		$data['opsi']['id_mapel'] = $this->model->getDropdown($id[2],$id[2]);
-		$data['hidden']		= ['id_skl'=>$id[1]];
+		$data['opsi'] 		 = setting('rating.opsi');
+		$data['hidden']		= ['curr_id'=>$id[1]];
 		$data['useCKeditor']= false;
-		$data['rtarget']	= "#skl-content";
+		$data['rtarget']	= "#rating-content";
 		$data['error'] = validation_list_errors();		 
 		//$rs =  $this->model->where($parm)->find();
-		$data['rsdata'] =  $this->model->detMapel($parm);      
+		$data['rsdata'] =  $this->model->find($id[0])->toarray();      
 		echo view($this->theme.'ajxform',$data); 
 	}
 	
 	function updateAction($ids): RedirectResponse
 	{
 		$idn = decrypt($ids); 
-		$id = explode(setting('Mapel.arrDelimeter'),$idn); //$id[0]= mapel_id, $idx[1]=$idx[3] = id_skl, $idx[2] = id_curr
+		$id = explode(setting('Rating.arrDelimeter'),$idn); //$id[0]= rating_id, $idx[1]=$idx[3] = id_skl, $idx[2] = id_curr
 		$roles = $rules = $this->dconfig->roles;
-		$parm =['id_mapel'=>$id[0], 'id_skl'=>$id[1]];
-		
 		if ($this->validate($roles)) {
 			$data = $this->request->getPost();
-			$model = new MapelModel();
+			$model = new RatingModel();
 
-			$rsdata = new \Modules\Akademik\Entities\Mapel();
+			$rsdata = new \Modules\Akademik\Entities\Rating();
 			$rsdata->fill($data);
-			//Menyimpan data dengan pendekatan builder karena membutuhkan lebih dari 1 key
-			$RC['id_mapel']=$rsdata->id_mapel;
-			$RC['id_skl']=$rsdata->id_skl;
-			$RC['skk']=$rsdata->skk;
-			
-			$simpan = $model->where($parm)->set($RC)->update();
+			$simpan = $model->update($id[0], $rsdata);
 			
 			if($simpan){
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
@@ -132,9 +146,9 @@ class Rating extends BaseController
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
 			if($id == 0){
-				return redirect()->to(base_url('mapel'));
+				return redirect()->to(base_url('rating'));
 			}else{
-				$idx =  encrypt($id[2]);
+				$idx =  encrypt($id[1]);
 				return redirect()->to(base_url('kurikulum/detail/'.$idx));
 			}
 		}else{
@@ -144,18 +158,16 @@ class Rating extends BaseController
 
 	public function delete($ids){
 		$idn = decrypt($ids); 
-		$id = explode(setting('Mapel.arrDelimeter'),$idn); //$id[0]= mapel id, $id[1] = id curr
-		$parm =['id_mapel'=>$id[0], 'id_skl'=>$id[1]];
-		//$idx = ['id_mapel'=>$id[0], 'id']
-		$Mapelmodel = new MapelModel();
-		$Mapelmodel->where($parm)->delete();
+		$id = explode(setting('Rating.arrDelimeter'),$idn); //$id[0]= rating id, $id[1] = id curr
+		$Ratingmodel = new RatingModel();
+		$Ratingmodel->delete($id[0]);
 		// masuk database
 		$this->session->setFlashdata('sukses','Data telah dihapus');
 		echo show_alert("Data Telah di Hapus","Sukses");
 		if($id == 0){
-			return redirect()->to(base_url('mapel'));
+			return redirect()->to(base_url('rating'));
 		}else{
-			$idx =  encrypt($id[2]);
+			$idx =  encrypt($id[1]);
 			return redirect()->to(base_url('kurikulum/detail/'.$idx));
 		}
 	}

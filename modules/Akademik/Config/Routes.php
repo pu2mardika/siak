@@ -76,3 +76,20 @@ $routes->group("mapel", ["namespace" => "\Modules\Akademik\Controllers"], functi
 	$routes->post("edit/(:any)", "Mapel::updateAction/$1");
 	$routes->get("hapus/(:any)", "Mapel::delete/$1");
 });
+
+$routes->group("rating", ["namespace" => "\Modules\Akademik\Controllers"], function ($routes) {
+    $routes->add("add/(:any)", "Rating::addView/$1");
+    $routes->post("add/(:any)", "Rating::addAction/$1");
+    $routes->get("edit/(:any)", "Rating::updateView/$1");
+	$routes->post("edit/(:any)", "Rating::updateAction/$1");
+	$routes->get("hapus/(:any)", "Rating::delete/$1");
+});
+//$routes->addRedirect('rating', 'asscomp');
+
+$routes->group("raports", ["namespace" => "\Modules\Akademik\Controllers"], function ($routes) {
+    $routes->add("add/(:any)", "Raports::addView/$1");
+    $routes->post("add/(:any)", "Raports::addAction/$1");
+    $routes->get("edit/(:any)", "Raports::updateView/$1");
+	$routes->post("edit/(:any)", "Raports::updateAction/$1");
+	$routes->get("hapus/(:any)", "Raports::delete/$1");
+});

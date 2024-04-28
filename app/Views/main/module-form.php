@@ -1,3 +1,5 @@
+<?= $this->extend($layout) ?>
+<?= $this->section('main');?>
 <div class="card">
 	<div class="card-header">
 		<h5 class="card-title"><?=$title?></h5>
@@ -88,3 +90,4 @@
 		</form>
 	</div>
 </div>
+<?= $this->endSection() ?>

@@ -169,6 +169,14 @@ class Kurikulum extends BaseController
 		$vcall = view_cell('\Modules\Akademik\Controllers\Skl::showList', ['currId'=>$id]); 
 		$TABS['skl']     = ['title'=>'Data SKL','active'=>0, 'vcell'=>$vcall];
 		
+		//KOMPONEN NILAI 
+		$vcall = view_cell('\Modules\Akademik\Controllers\Rating::showList', ['currId'=>$id]); 
+		$TABS['rating']  = ['title'=>'Komponen Penilaian','active'=>0, 'vcell'=>$vcall];
+		
+		//KOMPONEN RAPORT 
+		$vcall = view_cell('\Modules\Akademik\Controllers\Raports::showList', ['currId'=>$id]); 
+		$TABS['raports']  = ['title'=>'Komponen Raport','active'=>0, 'vcell'=>$vcall];
+		
 		$data['tabs']	 = $TABS;
 		$data['resume']  = $RESUME;
 		$data['opsi'] 	 = $this->dconfig->opsi;

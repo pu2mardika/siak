@@ -40,16 +40,25 @@ service('auth')->routes($routes);
 
 $routes->group('menu', static function ($routes) {
     $routes->get('/', 'Menu::index');
+    $routes->post('/', 'Menu::index');
     $routes->get('add', 'Menu::add');
     $routes->post('edit', 'Menu::edit');
     $routes->get('menuDetail', 'Menu::menuDetail');
+});
+
+$routes->group('role', static function ($routes) {
+    $routes->get('/', 'Role::index');
+    $routes->post('/', 'Role::index');
+    $routes->get('add', 'Role::add');
+    $routes->post('edit', 'Role::edit');
+//    $routes->get('Detail', 'Role::menuDetail');
 });
 
 $routes->group('menu-role', static function($routes){
     $routes->get('/', 'Menu_role::index');
     $routes->get('add', 'Menu_role::add');
     $routes->post('edit', 'Menu_role::edit');
-    $routes->get('edit', 'Menu_role::edit');
+    $routes->get('edit', 'Menu_role::editView');
     $routes->get('menuDetail', 'Menu_role::menuDetail');
 });
 

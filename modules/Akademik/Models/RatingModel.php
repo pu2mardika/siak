@@ -13,7 +13,7 @@ class RatingModel extends Model
     protected $returnType       = \Modules\Akademik\Entities\Rating::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = 'id', 'curr_id', 'nm_komponen', 'no_urut', 'jns_nilai', 'type_nilai', 'is_mapel', 'tbl_stored_name', 'has_descript'];
+    protected $allowedFields    = ['id', 'curr_id', 'nm_komponen', 'no_urut', 'jns_nilai', 'type_nilai', 'is_mapel', 'tbl_stored_name', 'has_descript'];
 
     // Dates
     protected $useTimestamps = false;
@@ -38,4 +38,15 @@ class RatingModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function getDropdown($currID)
+    {
+        $data = $this->where('curr_id', $currID)->findAll();
+    	$dd=[];
+    	foreach($data as $val)
+    	{
+    		$dd[$val->id]=$val->nm_komponen;
+    	}
+    	return $dd;
+    }
 }

@@ -260,12 +260,13 @@ function bantuan(e){
 }
 
 //alert
-function notice(msg, ico)
-{
-	swal({
-	  title: "Oops........",
-	  text: msg,
-	  icon: ico,
+function show_alert(title, content, icon, timer) {
+	Swal.fire({
+		title: title,
+		text: content,
+		icon: icon,
+		showConfirmButton: false,
+		timer: timer
 	})
 }
 

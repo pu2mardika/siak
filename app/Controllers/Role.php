@@ -44,7 +44,7 @@ class Role extends \App\Controllers\BaseController
 		$data['module'] = $this->model->getAllModules();
 		$data['result'] = $this->model->getAllRole();
 		
-		$this->view('builtin/role-result.php', $data);
+		echo view('main/role-result', $data);
 	}
 	
 	public function add() 
@@ -65,7 +65,7 @@ class Role extends \App\Controllers\BaseController
 			$data = array_merge( $data, $save_msg);
 		}
 		
-		$this->view('builtin/role-form.php', $data);
+		echo view('main/role-form', $data);
 	}
 	
 	public function edit()
@@ -89,7 +89,7 @@ class Role extends \App\Controllers\BaseController
 			$data = array_merge($data, $save);
 		}
 
-		$this->view('builtin/role-form.php', $data);
+		echo view('main/role-form', $data);
 	}
 	
 	public function setData() {

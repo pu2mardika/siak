@@ -135,7 +135,8 @@ jQuery(document).ready(function () {
 		var $button = $bootbox.find('button').prop('disabled', true);
 		var $button_submit = $bootbox.find('button.submit');
 		var id = $(this).attr('data-id-menu');
-		$.get(current_url + '/checkbox?id=' + id, function(html){
+		var current_url = window.location.href;
+		$.get(current_url + '/edit?id=' + id, function(html){
 			$button.prop('disabled', false);
 			$bootbox.find('.modal-body').empty().append(html);
 		});

@@ -302,6 +302,7 @@ function show_alert($message, $title = null, $dismiss = true) {
 		}
 	}
 	
+	$icon_type = 'success';
 	if (!$title) {
 		switch ($type) {
 			case 'error' :

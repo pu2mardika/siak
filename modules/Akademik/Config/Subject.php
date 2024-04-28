@@ -20,7 +20,7 @@ class Subject extends BaseConfig
 	public array $fields = [
 		'grup_id'		=> ['label' => 'Level','width'=>0,'extra'=>['id' => 'grupID','class' => '', 'required' => true],'type'=>'dropdown'], 
 		'subject_name'	=> ['label' => 'Nama Mata Pelajaran','width'=>35,'extra'=>['id' => 'namaMP','class' => '', 'required' => true],'type'=>'text'], 
-		'akronim'		=> ['label' => 'Akronim','width'=>10,'extra'=>['id' => 'sbjID','class' => '', 'required' => true,'minlength'=>4, 'maxlength'=>3, 'size'=>3],'type'=>'text', ], 
+		'akronim'		=> ['label' => 'Akronim','width'=>10,'extra'=>['id' => 'sbjID','class' => '', 'required' => true,'minlength'=>3, 'maxlength'=>3, 'size'=>3],'type'=>'text', ], 
 		'item_order'	=> ['label' => 'No Urut','width'=>0,'extra'=>['id' => 'noUrt','class' => ''],'type'=>'text', ], 
 		'tot_skk'		=> ['label' => 'Jml SKK','width'=>10,'extra'=>['id' => 'skk','class' => '', 'required' => true],'type'=>'text',],  
 		'form_nilai'	=> ['label' => 'Format Nilai','width'=>15,'extra'=>['id' => 'frmnilai','class' => '', 'required' => true],'type'=>'dropdown',],  

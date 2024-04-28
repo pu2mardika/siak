@@ -108,7 +108,7 @@ class Module_role extends \App\Controllers\BaseController
 			$data['msg'] = $message;
 		}
 		
-		echo $this->view('main/module-role-form-add', $data);
+		echo view('main/module-role-form-add', $data);
 	}
 	
 	public function detail() {

@@ -271,7 +271,7 @@ $(document).ready(function()
 
 		$this = $(this);
 		fapicker({
-			iconUrl: base_url + 'public/vendors/font-awesome/metadata/icons.yml',
+			iconUrl: base_url + 'vendors/font-awesome/metadata/icons.yml',
 			onSelect: function (elm) {
 				
 				var icon_class = $(elm).data('icon');

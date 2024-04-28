@@ -13,8 +13,10 @@
  <added value=""/>
  <lastopfiles>
   <file name="C:\server\www\siak\modules\Akademik\Config\Routes.php"/>
-  <file name="C:\server\www\siak\modules\Akademik\Config\Gmapel.php"/>
   <file name="C:\server\www\siak\modules\Akademik\Config\Rating.php"/>
+  <file name="C:\server\www\siak\modules\Akademik\Controllers\Rating.php"/>
+  <file name="C:\server\www\siak\modules\Akademik\Models\RatingModel.php"/>
+  <file name="C:\server\www\siak\app\Helpers\util_helper.php"/>
   <lastactivefile name=""/>
  </lastopfiles>
  <todoblock>
@@ -237,119 +239,120 @@
    <todo pos="9;132" name="TODO initialize when sliding on the fly"/>
    <todo pos="13;799" name="TODO: solve this by computation"/>
   </todofile>
-  <todofile name="C:\server\www\siak\vendor\chillerlan\php-qrcode\examples\MyCustomOutput.php">
-   <todo pos="3;19" name="TODO: Implement setModuleValues() method."/>
-  </todofile>
   <todofile name="C:\server\www\siak\vendor\chillerlan\php-qrcode\src\QROptionsTrait.php">
    <todo pos="4;337" name="todo throw or ignore silently"/>
    <todo pos="3;337" name="@todo throw or ignore silently"/>
   </todofile>
-  <todofile name="C:\server\www\siak\vendor\chillerlan\php-qrcode\tests\Data\QRMatrixTest.php">
-   <todo pos="4;102" name="todo: actual mask pattern after mapData()"/>
-   <todo pos="3;102" name="@todo: actual mask pattern after mapData()"/>
-  </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Cache\Handlers\FileHandler.php">
-   <todo pos="28;200" name="TODO This will return null in a future release"/>
-   <todo pos="27;200" name="@TODO This will return null in a future release"/>
+   <todo pos="28;204" name="TODO This will return null in a future release"/>
+   <todo pos="27;204" name="@TODO This will return null in a future release"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Cache\Handlers\MemcachedHandler.php">
-   <todo pos="28;254" name="TODO This will return null in a future release"/>
-   <todo pos="27;254" name="@TODO This will return null in a future release"/>
+   <todo pos="28;258" name="TODO This will return null in a future release"/>
+   <todo pos="27;258" name="@TODO This will return null in a future release"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Cache\Handlers\WincacheHandler.php">
-   <todo pos="24;139" name="TODO This will return null in a future release"/>
-   <todo pos="23;139" name="@TODO This will return null in a future release"/>
+   <todo pos="24;141" name="TODO This will return null in a future release"/>
+   <todo pos="23;141" name="@TODO This will return null in a future release"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Config\Services.php">
-   <todo pos="10;521" name="TODO remove the following code for backward compatibility"/>
-   <todo pos="9;521" name="@TODO remove the following code for backward compatibility"/>
+   <todo pos="10;524" name="TODO remove the following code for backward compatibility"/>
+   <todo pos="9;524" name="@TODO remove the following code for backward compatibility"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Database\BaseBuilder.php">
-   <todo pos="46;316" name="TODO remove alias if exists"/>
-   <todo pos="45;316" name="@TODO remove alias if exists"/>
+   <todo pos="46;319" name="TODO remove alias if exists"/>
+   <todo pos="45;319" name="@TODO remove alias if exists"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Database\BaseConnection.php">
-   <todo pos="10;477" name="todo work with read/write connections"/>
-   <todo pos="9;477" name="@todo work with read/write connections"/>
+   <todo pos="10;507" name="todo work with read/write connections"/>
+   <todo pos="9;507" name="@todo work with read/write connections"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Database\BaseUtils.php">
-   <todo pos="10;311" name="TODO gzencode() requires `ext-zlib`, but _backup() is not implemented in all databases."/>
-   <todo pos="9;311" name="@TODO gzencode() requires `ext-zlib`, but _backup() is not implemented in all databases."/>
+   <todo pos="10;317" name="TODO gzencode() requires `ext-zlib`, but _backup() is not implemented in all databases."/>
+   <todo pos="9;317" name="@TODO gzencode() requires `ext-zlib`, but _backup() is not implemented in all databases."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Database\OCI8\Forge.php">
-   <todo pos="10;189" name="todo: can't cover multi pattern when set type."/>
-   <todo pos="9;189" name="@todo: can't cover multi pattern when set type."/>
+   <todo pos="10;199" name="todo: can't cover multi pattern when set type."/>
+   <todo pos="9;199" name="@todo: can't cover multi pattern when set type."/>
+  </todofile>
+  <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Database\Postgre\Connection.php">
+   <todo pos="10;70" name="TODO This format is for PDO_PGSQL."/>
+   <todo pos="9;70" name="@TODO This format is for PDO_PGSQL."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Debug\Exceptions.php">
-   <todo pos="10;86" name="TODO remove this after dropping PHP 8.1 support."/>
-   <todo pos="9;86" name="@TODO remove this after dropping PHP 8.1 support."/>
+   <todo pos="10;90" name="TODO remove this after dropping PHP 8.1 support."/>
+   <todo pos="9;90" name="@TODO remove this after dropping PHP 8.1 support."/>
+  </todofile>
+  <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Entity\Entity.php">
+   <todo pos="14;377" name="TODO if $casts is readonly, we don't need the setTypes() method."/>
+   <todo pos="13;377" name="@TODO if $casts is readonly, we don't need the setTypes() method."/>
+  </todofile>
+  <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Filters\Filters.php">
+   <todo pos="10;645" name="TODO remove this in the future."/>
+   <todo pos="9;645" name="@TODO remove this in the future."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\HTTP\DownloadResponse.php">
-   <todo pos="10;169" name="todo: depend super global"/>
-   <todo pos="9;169" name="@todo: depend super global"/>
+   <todo pos="10;173" name="todo: depend super global"/>
+   <todo pos="9;173" name="@todo: depend super global"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\HTTP\RequestTrait.php">
-   <todo pos="10;77" name="TODO Extract all this IP address logic to another class."/>
-   <todo pos="9;77" name="@TODO Extract all this IP address logic to another class."/>
+   <todo pos="10;85" name="TODO Extract all this IP address logic to another class."/>
+   <todo pos="9;85" name="@TODO Extract all this IP address logic to another class."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Log\Handlers\ChromeLoggerHandler.php">
-   <todo pos="10;140" name="todo Modify formatting of objects once we can view them in browser."/>
-   <todo pos="9;140" name="@todo Modify formatting of objects once we can view them in browser."/>
+   <todo pos="10;143" name="todo Modify formatting of objects once we can view them in browser."/>
+   <todo pos="9;143" name="@todo Modify formatting of objects once we can view them in browser."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Log\Logger.php">
-   <todo pos="13;331" name="todo - sanitize input before writing to file"/>
-  </todofile>
-  <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Model.php">
-   <todo pos="14;809" name="TODO Should use `$data instanceof Entity`."/>
-   <todo pos="13;809" name="@TODO Should use `$data instanceof Entity`."/>
+   <todo pos="13;333" name="todo - sanitize input before writing to file"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Pager\Pager.php">
-   <todo pos="10;250" name="todo determine based on a 'surroundCount' value"/>
-   <todo pos="9;250" name="@todo determine based on a 'surroundCount' value"/>
+   <todo pos="10;254" name="todo determine based on a 'surroundCount' value"/>
+   <todo pos="9;254" name="@todo determine based on a 'surroundCount' value"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Router\RouteCollection.php">
-   <todo pos="14;1432" name="todo determine if there's a way to whitelist hosts"/>
-   <todo pos="13;1432" name="@todo determine if there's a way to whitelist hosts"/>
+   <todo pos="14;1471" name="todo determine if there's a way to whitelist hosts"/>
+   <todo pos="13;1471" name="@todo determine if there's a way to whitelist hosts"/>
+  </todofile>
+  <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Test\FilterTestTrait.php">
+   <todo pos="22;166" name="TODO The following logic is in Filters class."/>
+   <todo pos="21;166" name="@TODO The following logic is in Filters class."/>
+   <todo pos="18;191" name="TODO The following logic is in Filters class."/>
+   <todo pos="17;191" name="@TODO The following logic is in Filters class."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Test\Mock\MockConnection.php">
-   <todo pos="14;76" name="todo deal with errors"/>
-   <todo pos="13;76" name="@todo deal with errors"/>
+   <todo pos="14;81" name="todo deal with errors"/>
+   <todo pos="13;81" name="@todo deal with errors"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\Validation\Validation.php">
-   <todo pos="31;259" name="TODO remove `= null`"/>
-   <todo pos="30;259" name="@TODO remove `= null`"/>
-   <todo pos="31;260" name="TODO remove `= null`"/>
-   <todo pos="30;260" name="@TODO remove `= null`"/>
-  </todofile>
-  <todofile name="C:\server\www\siak\vendor\codeigniter4\framework\system\View\Cell.php">
-   <todo pos="10;180" name="TODO extend Factories to be able to load classes with the same short name."/>
-   <todo pos="9;180" name="@TODO extend Factories to be able to load classes with the same short name."/>
+   <todo pos="31;279" name="TODO remove `= null`"/>
+   <todo pos="30;279" name="@TODO remove `= null`"/>
+   <todo pos="31;280" name="TODO remove `= null`"/>
+   <todo pos="30;280" name="@TODO remove `= null`"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\shield\src\Authentication\Authenticators\Session.php">
-   <todo pos="14;776" name="TODO delete the token record."/>
-   <todo pos="13;776" name="@TODO delete the token record."/>
+   <todo pos="14;772" name="TODO delete the token record."/>
+   <todo pos="13;772" name="@TODO delete the token record."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\codeigniter4\shield\src\Commands\Setup.php">
-   <todo pos="10;374" name="TODO Remove CITestStreamFilter and refactor when CI 4.5.0 or later is supported."/>
-   <todo pos="9;374" name="@TODO Remove CITestStreamFilter and refactor when CI 4.5.0 or later is supported."/>
-   <todo pos="10;385" name="TODO Remove CITestStreamFilter and refactor when CI 4.5.0 or later is supported."/>
-   <todo pos="9;385" name="@TODO Remove CITestStreamFilter and refactor when CI 4.5.0 or later is supported."/>
+   <todo pos="10;414" name="TODO Remove CITestStreamFilter and refactor when CI 4.5.0 or later is supported."/>
+   <todo pos="9;414" name="@TODO Remove CITestStreamFilter and refactor when CI 4.5.0 or later is supported."/>
+   <todo pos="10;425" name="TODO Remove CITestStreamFilter and refactor when CI 4.5.0 or later is supported."/>
+   <todo pos="9;425" name="@TODO Remove CITestStreamFilter and refactor when CI 4.5.0 or later is supported."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\dompdf\dompdf\lib\Cpdf.php">
    <todo pos="14;5867" name="todo is it still needed"/>
    <todo pos="13;5867" name="@todo is it still needed"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\dompdf\dompdf\src\Adapter\GD.php">
-   <todo pos="10;495" name="todo"/>
-   <todo pos="9;495" name="@todo"/>
    <todo pos="10;500" name="todo"/>
    <todo pos="9;500" name="@todo"/>
    <todo pos="10;505" name="todo"/>
    <todo pos="9;505" name="@todo"/>
    <todo pos="10;510" name="todo"/>
    <todo pos="9;510" name="@todo"/>
-   <todo pos="10;525" name="todo"/>
-   <todo pos="9;525" name="@todo"/>
+   <todo pos="10;515" name="todo"/>
+   <todo pos="9;515" name="@todo"/>
    <todo pos="10;530" name="todo"/>
    <todo pos="9;530" name="@todo"/>
    <todo pos="10;535" name="todo"/>
@@ -358,6 +361,8 @@
    <todo pos="9;540" name="@todo"/>
    <todo pos="10;545" name="todo"/>
    <todo pos="9;545" name="@todo"/>
+   <todo pos="10;550" name="todo"/>
+   <todo pos="9;550" name="@todo"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\dompdf\dompdf\src\Adapter\PDFLib.php">
    <todo pos="9;580" name="TODO: we should check the current PDF stroke color"/>
@@ -436,8 +441,8 @@
    <todo pos="10;38" name="TODO: optimization: test directly for !important and ! important"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\ezyang\htmlpurifier\library\HTMLPurifier\CSSDefinition.php">
-   <todo pos="9;444" name="TODO: support SLASH syntax"/>
-   <todo pos="18;531" name="TODO: Is this htmlspecialchars() call really necessary"/>
+   <todo pos="9;461" name="TODO: support SLASH syntax"/>
+   <todo pos="18;548" name="TODO: Is this htmlspecialchars() call really necessary"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\ezyang\htmlpurifier\library\HTMLPurifier\ChildDef\List.php">
    <todo pos="17;70" name="ToDo: Make this more robust in the case of not ol/ul"/>
@@ -454,7 +459,7 @@
    <todo pos="9;48" name="TODO: convert this to new syntax, main problem is getting"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\ezyang\htmlpurifier\library\HTMLPurifier\Printer\ConfigForm.php">
-   <todo pos="21;322" name="TODO does this need a break"/>
+   <todo pos="21;327" name="TODO does this need a break"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\ezyang\htmlpurifier\library\HTMLPurifier\Strategy\FixNesting.php">
    <todo pos="25;121" name="ToDo: I don't think it matters if it's def or"/>
@@ -466,7 +471,7 @@
    <todo pos="9;121" name="TODO check if TreeBehavior attached to modify lft/rgt cols"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\fakerphp\faker\src\Faker\Provider\Base.php">
-   <todo pos="9;642" name="TODO: remove in v2"/>
+   <todo pos="9;643" name="TODO: remove in v2"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\fakerphp\faker\src\Faker\Provider\kk_KZ\Address.php">
    <todo pos="5;15" name="TODO list all country names in the world"/>
@@ -481,7 +486,7 @@
    <todo pos="29;18" name="TODO: Document"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\masterminds\html5\src\HTML5\Parser\DOMTreeBuilder.php">
-   <todo pos="9;551" name="TODO: Need to handle case where comment appears outside of the HTML tag."/>
+   <todo pos="9;561" name="TODO: Need to handle case where comment appears outside of the HTML tag."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\masterminds\html5\src\HTML5\Parser\InputStream.php">
    <todo pos="2;20" name="TODO: Move this to the scanner."/>
@@ -497,45 +502,41 @@
    <todo pos="9;347" name="TODO: Currently, this always writes name=&quot;value&quot;, and does not do"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\nikic\php-parser\lib\PhpParser\Comment.php">
-   <todo pos="13;229" name="TODO: Rename these to include &quot;start&quot;."/>
+   <todo pos="13;197" name="TODO: Rename these to include &quot;start&quot;."/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\nikic\php-parser\lib\PhpParser\Internal\TokenStream.php">
-   <todo pos="21;244" name="TODO Handle non-space indentation"/>
+   <todo pos="17;232" name="TODO Handle non-space indentation"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\nikic\php-parser\lib\PhpParser\Lexer\TokenEmulator\AttributeEmulator.php">
-   <todo pos="9;41" name="TODO"/>
+   <todo pos="9;34" name="TODO"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\nikic\php-parser\lib\PhpParser\PrettyPrinterAbstract.php">
-   <todo pos="13;498" name="TODO Add &lt;"/>
-   <todo pos="17;729" name="TODO: Try to preserve formatting"/>
-   <todo pos="25;781" name="TODO: Preserve formatting."/>
-   <todo pos="25;885" name="TODO: Preserve formatting."/>
-   <todo pos="13;908" name="TODO: Support removing single node."/>
-   <todo pos="9;1359" name="TODO: &quot;yield&quot; where both key and value are inserted doesn't work"/>
-   <todo pos="86;1388" name="TODO"/>
-   <todo pos="47;1404" name="TODO These need to be treated more carefully"/>
-   <todo pos="9;1496" name="TODO Insertion into empty statement lists."/>
-   <todo pos="14;1544" name="TODO"/>
-   <todo pos="67;1566" name="TODO"/>
+   <todo pos="13;548" name="TODO Add &lt;"/>
+   <todo pos="17;779" name="TODO: Try to preserve formatting"/>
+   <todo pos="25;830" name="TODO: Preserve formatting."/>
+   <todo pos="25;940" name="TODO: Preserve formatting."/>
+   <todo pos="13;963" name="TODO: Support removing single node."/>
+   <todo pos="9;1427" name="TODO: &quot;yield&quot; where both key and value are inserted doesn't work"/>
+   <todo pos="86;1456" name="TODO"/>
+   <todo pos="47;1474" name="TODO These need to be treated more carefully"/>
+   <todo pos="9;1571" name="TODO Insertion into empty statement lists."/>
+   <todo pos="14;1619" name="TODO"/>
+   <todo pos="77;1645" name="TODO"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\phenx\php-font-lib\src\FontLib\EOT\File.php">
    <todo pos="5;60" name="TODO Read font data ..."/>
-  </todofile>
-  <todofile name="C:\server\www\siak\vendor\phenx\php-font-lib\src\FontLib\Table\Type\cmap.php">
-   <todo pos="8;62" name="todo Only CMAP version 4 and 12"/>
-   <todo pos="7;62" name="@todo Only CMAP version 4 and 12"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\phenx\php-font-lib\src\FontLib\Table\Type\post.php">
    <todo pos="9;68" name="TODO"/>
    <todo pos="9;76" name="TODO"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\phenx\php-font-lib\src\FontLib\TrueType\File.php">
-   <todo pos="24;226" name="todo"/>
-   <todo pos="23;226" name="@todo"/>
+   <todo pos="24;336" name="todo"/>
+   <todo pos="23;336" name="@todo"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\phenx\php-svg-lib\src\Svg\Surface\CPdf.php">
-   <todo pos="14;5810" name="todo is it still needed"/>
-   <todo pos="13;5810" name="@todo is it still needed"/>
+   <todo pos="14;5811" name="todo is it still needed"/>
+   <todo pos="13;5811" name="@todo is it still needed"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\phenx\php-svg-lib\src\Svg\Surface\SurfaceCpdf.php">
    <todo pos="9;115" name="TODO: Implement beginPath() method."/>
@@ -549,6 +550,10 @@
   </todofile>
   <todofile name="C:\server\www\siak\vendor\phenx\php-svg-lib\src\Svg\Tag\Path.php">
    <todo pos="21;402" name="TODO: optimize this"/>
+  </todofile>
+  <todofile name="C:\server\www\siak\vendor\phenx\php-svg-lib\src\Svg\Tag\UseTag.php">
+   <todo pos="13;25" name="TODO: log circular reference error state"/>
+   <todo pos="13;67" name="TODO: log circular reference error state"/>
   </todofile>
   <todofile name="C:\server\www\siak\vendor\phpoffice\phpspreadsheet\src\PhpSpreadsheet\Calculation\Financial\Depreciation.php">
    <todo pos="9;65" name="TODO Handle period value between 0 and 1 (e.g. 0.5)"/>
@@ -634,5 +639,5 @@
   </todofile>
  </todoblock>
  <dbgurls/>
- <lasttime value="1714196593"/>
+ <lasttime value="1714223852"/>
 </project>

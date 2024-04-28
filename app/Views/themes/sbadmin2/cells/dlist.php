@@ -71,7 +71,7 @@ foreach($dtview as $A => $dt){
 					<table id="table-result" class="table table-striped table-bordered table-sm" cellspacing="0">
 					<thead class="thead-dark">
 						<tr>
-							<th width="9%"><div align="center">No</div></th>
+							<th width="5%"><div align="center">No</div></th>
 							<?php 
 							$hasopt = [];
 							foreach($fields as $k =>$row){
@@ -87,7 +87,7 @@ foreach($dtview as $A => $dt){
 							}		
 							if($allowAct){
 							?>
-							<th width="9%"><div align="center">Aksi</div></th>
+							<th width="5%"><div align="center">Aksi</div></th>
 							<?php } ?>
 						</tr> 
 					</thead>

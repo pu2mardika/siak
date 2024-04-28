@@ -69,7 +69,7 @@ class Rating extends Migration
          $fields = [
             'id'=> [
             	'type' => 'varchar', 
-            	'constraint' => 11,  
+            	'constraint' => 32,  
             	'index' => true,
             ],
             'curr_id'=> [

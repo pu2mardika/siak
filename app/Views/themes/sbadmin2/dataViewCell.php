@@ -58,7 +58,7 @@
 			}
 	?>
 			<li class="nav-item">
-				<a class="<?= $class ?>" id="<?= $id ?>-tab" data-toggle="tab" href="#<?= $id ?>" role="tab" aria-controls="<?= $id ?>" aria-selected="<?= $selected ?>"><?= $vl['title'] ?></a>
+				<a class="<?= $class ?>" id="<?= $id ?>-tab" data-toggle="tab" href="#<?= $id ?>" role="tab" aria-controls="<?= $id ?>" aria-selected="<?= $selected ?>"><?= strtoupper($vl['title']) ?></a>
 			</li>
 		<?php } 
 		echo "</ul>"; 

@@ -69,7 +69,6 @@ class Menu extends BaseController
 		$data['list_module'] = 	$this->model->getListModules();
 		$data['role'] = 	$this->model->getAllRole();
 		$data['msg'] = $msg;
-	//	$this->view('menu-form.php', $data);
 		echo view('main/menu-form', $data);
 	}
 	

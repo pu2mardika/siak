@@ -71,8 +71,6 @@ abstract class BaseController extends Controller
      */
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
     {
-        $this->helpers = array_merge($this->helpers, ['setting']);
-
         // Do Not Edit This Line
         parent::initController($request, $response, $logger);
         date_default_timezone_set('Asia/Makassar');
@@ -258,7 +256,8 @@ abstract class BaseController extends Controller
 				$this->setCurrentModule('error');
 				$this->data['msg']['status'] = 'error';
 				$this->data['msg']['message'] = 'Role untuk module ini belum diatur'; 
-				echo view('app_error.php',$this->data);
+				$this->data['content']= 'Role untuk module ini belum diatur'; 
+				echo view('app_error',$this->data);
 				exit();
 			}
 		}
