@@ -101,6 +101,8 @@ class Rating extends Migration
         $this->forge->addForeignKey('curr_id', 'curriculum', 'id', 'CASCADE', 'CASCADE', 'fk_curr_craport');
         $this->forge->addForeignKey('comp_nilai', 'rating', 'id', 'CASCADE', 'CASCADE', 'fk_rate_rpt');
         $this->forge->createTable('comp_rpt', true, $attributes);
+
+        
     }
 
     public function down()

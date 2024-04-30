@@ -115,12 +115,12 @@ class Rombel extends BaseController
 		echo view($this->theme.'vdetail',$data);
 	}
 	
-	function tambah()
+	function addView()
 	{
 		$this->cekHakAkses('create_data');
 		$rules = $this->dconfig->roles;
-		//$this->simplival->hak('master',1);
-		
+
+
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
 			$rombelmodel = new RombelModel();
