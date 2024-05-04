@@ -25,7 +25,6 @@ class Rombel extends BaseConfig
 	public $fields = [
 		'nama_rombel'=> ['label' => 'Nama Rombel','width'=>40,'extra'=>['id' => 'namarombel','class' => '', 'required' => true],'type'=>'text', ], 
 		'grade'		 => ['label' => 'Grade/Tingkat','width'=>5,'extra'=>['id' => 'grade','class' => '', 'required' => true],'type'=>'dropdown'],
-		'kode_ta'	 => ['label' => 'Tahun Pelajaran','width'=>0,'extra'=>['id' => 'kodeta','class' => '', 'required' => true],'type'=>'dropdown'], 
 		'wali'	 	 => ['label' => 'Wali Kelas','width'=>40,'extra'=>['id' => 'srcwalikelas','class' => '', 'required' => true],'type'=>'text'],  
 		'walikelas'	 => ['label' => '','width'=>0,'extra'=>['id' => 'walikelas','class' => '', 'required' => true],'type'=>'hidden'],  
 	];

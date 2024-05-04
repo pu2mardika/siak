@@ -51,16 +51,10 @@ class Rombel extends BaseController
 			//test_result($tp);
 			$ctp = $tp->thid;
 		}
-	//	test_result($tp);
-		//$userModel->where('active', 1)->findAll();
 		$parm=['kode_ta'=>$ctp];
 		$dtrombel = $this->model->where('kode_ta', $ctp)->findAll();
-	//	$dtrombel = $this->model->getall($parm);
-		$total = $this->model->total();
-		
 		$data['title']	= "Manajemen Data Rombel";
 		$data['rsdata']	= $dtrombel;
-		$data['total']	= $total;
 		$data['msg'] 	= "";
 		$data['opsi'] 	= $this->dconfig->opsi;
 		$data['opsi']['walikelas'] 	= $this->tendikModel->getDropdown();
@@ -68,33 +62,7 @@ class Rombel extends BaseController
 		$data['allowimport']= $this->dconfig->importallowed;
 	//	test_result($data['opsi']);
 		echo view($this->theme.'datalist',$data);
-		
     }
-	
-	function dtlist()
-	{
-	 	$request = Services::request(); 
-        $m_jur 		= new RombelModel();
-		$rombel 			= $m_jur->findAll();
-		$total 			= $m_jur->total();
-		
-        foreach($rombel as $doc)
-        {
-        	//$no++;
-        	$doc['aksi']="<a href='#' class='btn-warning btn-sm'>Ubah</a>&nbsp; <a href='#' class='btn-danger btn-sm'>Hapus</a>";
-        	$ndata[]=$doc;
-        }	
-        
-		 $output = [
-            'draw' => $request->getPost('draw'),
-            'recordsTotal' => $total,
-            'recordsFiltered' => 9, //$datatable->countFiltered(),
-            'data' => $ndata
-        ];
-		
-		dd($rombel);
-        echo json_encode($output);
-	}
 	
 	function detail($ids)
 	{
@@ -119,8 +87,6 @@ class Rombel extends BaseController
 	{
 		$this->cekHakAkses('create_data');
 		$rules = $this->dconfig->roles;
-
-
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
 			$rombelmodel = new RombelModel();

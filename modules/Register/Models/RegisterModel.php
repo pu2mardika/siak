@@ -40,13 +40,4 @@ class RegisterModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-    
-    // total
-    public function total()
-    {
-        $builder = $this->db->table('tbl_register');
-        $query = $builder->get();
-        return $query->getNumRows();
-    }
-    
 }
