@@ -10,7 +10,6 @@ $routes->group("enroll", ["namespace" => "\Modules\Register\Controllers"], funct
 });
 
 $routes->group("enrollment", ["namespace" => "\Modules\Register\Controllers"], function ($routes) {
-
 	// welcome page - URL: /student
 	$routes->get("/", "Register::index");
 	$routes->get("dtlist", "Register::dtlist");

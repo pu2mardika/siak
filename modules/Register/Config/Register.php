@@ -54,8 +54,9 @@ class Siswa extends BaseConfig
 	//	'tempatlahir'	=> ['label' => 'Tempat Lahir','type'=>'text'], 
 		'tgllahir'		=> ['label' => 'Tempat, Tgl Lahir','type'=>'text'], 
 		'jk'			=> ['label' => 'Jenis Kelamin','type'=>'dropdown'], 
-		'alamat'		=> ['label' => 'ALamat','type'=>'text'],
+		'alamat'		=> ['label' => 'ALamat','type'=>'text'],		
 		'nohp'			=> ['label' => 'No. HP','type'=>'text'],  
+		'id_prodi'		=> ['label' => 'Jenis Kelamin','type'=>'dropdown'], 
 		'created_at' 	=> ['label' => 'Tgl. Register','type'=>'date', ],
 	];
 
@@ -91,10 +92,6 @@ class Siswa extends BaseConfig
             'nama'  => 'required',
 		]; 
 	
-	public $roleEdit = [
-			'nik' => "required",
-            'nama'  => 'required',
-		]; 
 	/**
 	 * --------------------------------------------------------------------
 	 * Layout for the views to extend
@@ -126,8 +123,4 @@ class Siswa extends BaseConfig
 		'edit'		=> true,
 		'delete'	=> true,
 	];
-	//public $actiondetail = true; 
-	//public $actionedit   = true; 
-	//public $actiondelete = true; 
-		
 }
