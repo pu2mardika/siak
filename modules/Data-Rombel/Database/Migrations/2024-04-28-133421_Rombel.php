@@ -98,16 +98,17 @@ class Rombel extends Migration
 		];
          
         $this->forge->addField($fields);
-        $this->forge->addPrimaryKey('mid');
+        $this->forge->addPrimaryKey('id');
         $this->forge->addKey('roomid');
         $this->forge->addKey('noinduk');
 		$this->forge->addForeignKey('roomid', 'rombel', 'id','CASCADE', 'CASCADE', 'fk_room_member');
-		$this->forge->addForeignKey('noinduk', 'siswa', 'noinduk','CASCADE', 'CASCADE', 'fk_room_siswa');
+		//$this->forge->addForeignKey('noinduk', 'siswa', 'noinduk','CASCADE', 'CASCADE', 'fk_room_siswa');
         $this->forge->createTable('rombel_memb', true, $attributes);
     }
 
     public function down()
     {
-        //
+        $this->forge->dropTable('rombel_memb', true);
+        $this->forge->dropTable('rombel', true);
     }
 }

@@ -48,7 +48,7 @@
                             <label for="floatingPasswordInput"><?= lang('Auth.password') ?></label>
                         </div>
     
-                        <button class="btn btn-outline-secondary btn-login" >
+                        <button class="btn btn-outline-secondary" >
                             <span toggle="#floatingPasswordInput" class="fa fa-eye fa-lg show-hide"></span>
                         </button>
                     </div>

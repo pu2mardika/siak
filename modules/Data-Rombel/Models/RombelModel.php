@@ -6,12 +6,12 @@ use App\Models\BaseModel;
 
 class RombelModel extends Model
 {
-    protected $table      = 'tbl_rombel';
-    protected $primaryKey = 'roomid';
+    protected $table      = 'rombel';
+    protected $primaryKey = 'id';
 
     //protected $useAutoIncrement = true;
     //protected $returnType    =  'Modules\Room\Entities\Rombel'; // configure entity to use'array';
-    protected $allowedFields = ['nama_rombel', 'walikelas', 'kode_ta', 'grade'];
+    protected $allowedFields = ['id','nama_rombel', 'getLevel', 'kode_ta', 'grade', 'curr_id','walikelas'];
     
     protected $returnType    =  \Modules\Room\Entities\Rombel::class;
     protected $useSoftDeletes = true;
@@ -50,18 +50,19 @@ class RombelModel extends Model
     
     public function getAll($tp=array())
     {
-    	$builder = $this->db->table('tbl_rombel a');
+    	$builder = $this->db->table('rombel a');
 		$builder->select('a.*, b.nama as wali')->join('tbl_ptk b', 'b.nik = a.walikelas')->where($tp);
-		$rs = $builder->get();
+	    $query = $builder->get();
+	//	$rs = $builder->getCompiledSelect();
 	
 	//	test_result($rs);
 		$result = [];
-		foreach($rs as $row){
+		foreach($query->getResult() as $row){
 			$rs = $row;
-			$rs['id']=encrypt($row->roomid);
-			$result[]=$rs;
+			$rs->id =encrypt($row->id);
+			$result[]= $rs;
 		}
-		return $result;
+        return $result;
     }
     
 }

@@ -66,6 +66,8 @@ php_errors.log
 
 #BEBERAPA FILE:
 20210921075909_akademik.php
+
+modules/Akademik/cells/
 #-------------------------
 # User Guide Temp Files
 #-------------------------

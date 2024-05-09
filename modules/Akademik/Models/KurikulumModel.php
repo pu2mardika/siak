@@ -40,10 +40,11 @@ class KurikulumModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
     
-    public function getDropdown()
+    public function getDropdown($prodi = 0)
     {
-    	$data = $this->findAll();
-    	$dd=[];
+    	$data = ($prodi == 0)?$this->findAll():$this->where('id_prodi', $prodi)->findAll();
+    	
+        $dd=[];
     	foreach($data as $val)
     	{
     		$dd[$val->id]=$val->curr_name;

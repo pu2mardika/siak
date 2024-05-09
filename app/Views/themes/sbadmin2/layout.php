@@ -50,7 +50,7 @@
 		
 		//dashboard Menu
 		$active = "";
-		if(current_url() == base_url().'/'){
+		if(current_url() == base_url()){
 			$active = " active";
 		}
 		$menu .= '<li class="nav-item'.$active.'">
@@ -116,7 +116,8 @@
 			}
 
 			if (substr($url, 0, 4) != 'http') {
-				$url = base_url().'/'. $url;
+				$uri = base_url($url);
+                $url = preg_replace('#//+#', '/', $uri);
 			}
 			
 			$menu .= '<li'. $class_li . '>
@@ -132,7 +133,7 @@
 				$submenu = '';
 				$collapse = 'collapse';
                 foreach($child as $ksub => $alink){
-                	$submenu .= '<a class="collapse-item" href="'. base_url().'/'.$alink['url']. '/">';
+                	$submenu .= '<a class="collapse-item" href="'. base_url($alink['url']).'/">';
                 	$menu_icon = '';
                 	if ($alink['class']) {
 						$menu_icon = '<i class="sidebar-menu-icon ' . $alink['class'] . '"></i>';

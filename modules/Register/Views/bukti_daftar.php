@@ -1,7 +1,10 @@
 <center> 
-    <img src="<?=base_url().'/images/' . $settingApp->logo_app?>" width="100px"/> 
-    <h3 style="line-height: 1.3; font-weight: bold;">TANDA BUKTI PENDAFTARAN</h3>  
-    <h4>REG.No: <?php echo $rsdata['idreg'];?></h4>
+    <img src="<?=$rsdata['logo']?>" alt="LOGO"  height="60" width="180"/>
+    <h2 style="line-height: 1.3; font-weight: bold;">TANDA BUKTI PENDAFTARAN </h2>
+    <h4> 
+        <div><?php echo $rsdata['judul'];?></div>
+        <div>REG.No: <?php echo $rsdata['idreg'];?></div>
+    </h4>
 </center>
 <table border=0 width=100% cellpadding=2 cellspacing=0 style="margin-top: 5px; text-align:left">  
     <tr>  
@@ -38,12 +41,13 @@
 
     <tr>
         <td colspan="2">
-            <?php echo $rsdata['qrcode'];?>
+            <br>
+            <div class="myQr"><?php echo $rsdata['qrcode'];?></div>
         </td>
         <td></td>
         <td>
             Karangaseam, <?php echo format_tanggal($Tgl)?>
-            <br><br><br>
+            <br><br><br><br><br>
             <?php echo $rsdata['nama'];?>
         </td>
     </tr>

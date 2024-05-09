@@ -73,7 +73,7 @@ foreach($fields as $fd => $row){
 <?= validation_list_errors() ?>
 <?= $this->endSection() ?>
 
-<?php  if(isset($addONJs)||isset($useCKeditor)){ ?>
+<?php  if(isset($addONJs)||isset($useCKeditor)||isset($addOnJSFunc)){ ?>
 	<?php $this->section('pageScripts'); ?>
 
 	<?php  if(isset($addONJs)){ ?>
@@ -83,6 +83,10 @@ foreach($fields as $fd => $row){
 				<?= $addONJs ?>
 			});			
 		</script>
+	<?php }	?>
+
+	<?php if(isset($addOnJSFunc)){ ?>
+		<script><?= $addOnJSFunc ?></script>
 	<?php }	?>
 
 	<?php  if(isset($useCKeditor)){ ?>

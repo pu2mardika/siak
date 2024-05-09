@@ -23,8 +23,11 @@ class Rombel extends BaseConfig
 	* 
 	*/
 	public $fields = [
+		'kode_ta'	 => ['label' => 'Tahun Pelajaran','width'=>0,'extra'=>['id' => 'kodeta','class' => '', 'required' => true],'type'=>'dropdown'], 
+		'prodi'		 => ['label' => 'Prodi','width'=>0,'extra'=>['id' => 'vprodi','class' => '', 'required' => true],'type'=>'dropdown', ], 
 		'nama_rombel'=> ['label' => 'Nama Rombel','width'=>40,'extra'=>['id' => 'namarombel','class' => '', 'required' => true],'type'=>'text', ], 
-		'grade'		 => ['label' => 'Grade/Tingkat','width'=>5,'extra'=>['id' => 'grade','class' => '', 'required' => true],'type'=>'dropdown'],
+		'curr_id'	 => ['label' => 'Kurikulum','width'=>0,'extra'=>['id' => 'currID','class' => '', 'required' => true],'type'=>'dropdown'],
+		'grade'		 => ['label' => 'Grade/Tingkat','width'=>5,'extra'=>['id' => 'vgrade','class' => '', 'required' => true],'type'=>'dropdown'],
 		'wali'	 	 => ['label' => 'Wali Kelas','width'=>40,'extra'=>['id' => 'srcwalikelas','class' => '', 'required' => true],'type'=>'text'],  
 		'walikelas'	 => ['label' => '','width'=>0,'extra'=>['id' => 'walikelas','class' => '', 'required' => true],'type'=>'hidden'],  
 	];
@@ -79,7 +82,14 @@ class Rombel extends BaseConfig
 	public $actions = [
 		'detail' 	=> ['icon'=>'list-alt','src'=>'rombel/detail/', 'label'=>'Detail', 'extra'=>''],
 		'edit' 		=> ['icon'=>'edit','src'=>'rombel/edit/', 'label'=>'Detail', 'extra'=>''],
-		'delete'	=> ['icon'=>'trash','src'=>'rombel/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
+		'delete'	=> ['icon'=>'trash','src'=>'rombel/rem/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
+	];
+
+	public array $dtfilter = [
+		'source'=>'TaPel',
+		'action'=>'rombel?tp=',
+		'cVal'	=>'',
+		'title'	=>'Ganti Tahun Pelajaran'
 	];
 		
 }

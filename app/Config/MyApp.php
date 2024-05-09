@@ -55,5 +55,32 @@ class MyApp extends BaseConfig
 		'hidden'	=>	'form_hidden',
 	];
 	
-	public $tmpfile_dir = WRITEPATH . 'tmp/';
+	public $tmpfile_dir = WRITEPATH . 'tmp/';	
+	public $qrPath_dir = ROOTPATH.'public/images/tmp/';
+	public $qrDirectory = 'images/tmp/';
+	
+	public $pdfPath_Dir = ROOTPATH.'public/tmp/pdf/';
+	public $pdftmpDir = 'tmp/pdf/';
+	
+	public function pdftmp_dir():string
+	{
+		return base_url('tmp/pdf/');
+	}
+	
+	public function qrtmp_dir():string
+	{
+		return base_url('images/tmp/');
+	}
+	
+	public function base64Logo():string
+	{
+		$logo = $this->imagesURL . $this->logo;
+		//$path = $_SERVER['DOCUMENT_ROOT']."/".$logo; 
+		$path = base_url($logo);// 'images/your_img.png' Modify this part (your_img.png  
+		$type = pathinfo($path, PATHINFO_EXTENSION);
+		$data = file_get_contents($path);
+		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+		//return $type;
+		return $base64;
+	}
 }

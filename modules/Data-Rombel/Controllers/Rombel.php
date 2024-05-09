@@ -1,9 +1,14 @@
 <?php namespace Modules\Room\Controllers;
 
 use App\Controllers\BaseController;
+use CodeIgniter\HTTP\ResponseInterface;
+use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\Events\Events;
 use Modules\Room\Models\RombelModel;
 use Modules\Tendik\Models\TendikModel;
 use Modules\Tp\Models\TpModel;
+use Modules\Akademik\Models\KurikulumModel;
+use Modules\Akademik\Models\ProdiModel;
 use Config\Services;
 use CodeIgniter\Files\File;
 use Config\MyApp;
@@ -16,20 +21,23 @@ class Rombel extends BaseController
 //	protected $session;
 	protected $theme;
 	protected $tendikModel;
-	
-	
+	protected $TpModel;
+	protected $form;
+
     function __construct() {
         parent::__construct();
         $this->dconfig = config(\Modules\Room\Config\Rombel::class);
         $this->session = \Config\Services::session();
 		$this->model = new RombelModel;	
 		$this->tendikModel = new TendikModel;	
-			
+		$this->TpModel = new TpModel;
+		$this->currModel  = model(\Modules\Akademik\Models\KurikulumModel::class); 	
 		$this->data['site_title'] = 'Manajemen Data Rombel';
 		$this->data['fields'] 	  = $this->dconfig->fields;
 		$this->data['opsi'] 	  = $this->dconfig->opsi;
 		$this->data['key']		  = $this->dconfig->primarykey;
-	//	$this->theme = $this->data[]
+		
+		//$this->form 			  = $this->theme.($this->request->isAJAX())?"ajxform":"form";
 		helper(['cookie', 'form','date']);
 		$this->addJs (base_url().'/js/modules/rombel.js?r=' . time());
 		$this->addJs (base_url().'/js/jquery.easy-autocomplete.min.js?r=' . time());
@@ -39,58 +47,71 @@ class Rombel extends BaseController
 	function index()
 	{
 		$this->cekHakAkses('read_data');
-		$tpModel = New TpModel;
+		
 		//echo $this->theme;die();
 		$data=$this->data;		
 		if (isset($_GET['tp'])) 
 		{
 			$ctp = $_GET['tp'];
-			$tp = $this->TpModel->findall($ctp);
+			$tp = $this->TpModel->find($ctp);
 		}else{
-			$tp = $tpModel->getcurTP();
+			$tp = $this->TpModel->getcurTP();
 			//test_result($tp);
 			$ctp = $tp->thid;
 		}
+		$addTitle = "Tahun ".$tp->deskripsi;;
 		$parm=['kode_ta'=>$ctp];
 		$dtrombel = $this->model->where('kode_ta', $ctp)->findAll();
-		$data['title']	= "Manajemen Data Rombel";
+		//$dtrombel = $this->model->getAll(['kode_ta'=>$ctp]);
+		$data['title']	= "Manajemen Data Rombel ".$addTitle;
 		$data['rsdata']	= $dtrombel;
 		$data['msg'] 	= "";
 		$data['opsi'] 	= $this->dconfig->opsi;
 		$data['opsi']['walikelas'] 	= $this->tendikModel->getDropdown();
+		$dtfilter	= $this->dconfig->dtfilter;
+		$tp = $this->TpModel->getcurTP();
+		$dtfilter['cVal'] = $ctp;
+		$data['TaPel'] 	= $this->TpModel->getDropdown();
+		$data['dtfilter'] 	= $dtfilter;
 		$data['actions']= $this->dconfig->actions;
 		$data['allowimport']= $this->dconfig->importallowed;
 	//	test_result($data['opsi']);
-		echo view($this->theme.'datalist',$data);
+		echo view($this->theme.'datalist',$data);	
     }
-	
-	function detail($ids)
+		
+	function addView()
 	{
-		$this->cekHakAkses('update_data');
-		$id = decrypt($ids); 
-		$data=$this->data;
-		$data['title']	= "Update Data Rombel";
-		$data['error'] = validation_list_errors();
-		$data['fields'] = $this->dconfig->fields;
+		$this->cekHakAkses('create_data');
+		$data	=$this->data;
+		$tp = $this->TpModel->getcurTP();
+			//test_result($tp);
+		$ctp = $tp->thid;
+		$currModel  = model(\Modules\Akademik\Models\KurikulumModel::class); 
+		$prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
+		$data['title']	= "Tambah Data Rombel";
+		$fields = $this->dconfig->fields;
+		$data['error'] = [];
+		$data['fields'] = $fields;
 		$data['opsi'] 	= $this->dconfig->opsi;
-		$rs =  $this->model->find($id);
-		$tglLahir = $rs->tgllahir;
-		$rsdata = $rs->toarray();
-		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-		$rsdata['tgllahir']=$tglLahir->toDateString();
-		$data['rsdata'] = $rsdata;
-	//	show_result($rsdata);
-		echo view($this->theme.'vdetail',$data);
+		$data['opsi']['kode_ta'] = $this->TpModel->getDropdown();
+		$data['opsi']['prodi'] = $prodiModel->getDropdown();
+		$data['opsi']['curr_id'] = [];
+		$data['rsdata'] = ['kode_ta'=>$ctp];
+		$data['addONJs'] = "rombel.init()";
+		echo view($this->theme.'form',$data);
 	}
 	
-	function addView()
+	function addAction(): RedirectResponse
 	{
 		$this->cekHakAkses('create_data');
 		$rules = $this->dconfig->roles;
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
 			$rombelmodel = new RombelModel();
-			//test_result($data);
+			$data['id']=$data['prodi'];
+			unset($data['prodi']); //hapus field prodi karena tidak maskuk ekda tabse
+			unset($data['wali']); //hapus field wali  karena yang dipakai adalah field wii
+		//	test_result($data);
 			$rombel= new \Modules\Room\Entities\rombel();
 			$rombel->fill($data);
 			$simpan = $rombelmodel->insert($rombel,false);
@@ -101,22 +122,33 @@ class Rombel extends BaseController
 			}
 			return redirect()->to(base_url('rombel'));
 		}else{
-			$TP = new TpModel();
-			$data	=$this->data;
-			$data['title']	= "Tambah Data Rombel";
-			$fields = $this->dconfig->fields;
-			$data['error'] = $this->validator->getErrors();// validation_list_errors();
-			$data['fields'] = $fields;
-			$data['opsi'] 	= $this->dconfig->opsi;
-			$data['opsi']['kode_ta'] = $TP->getDropdown();
-			$data['rsdata'] = [];
-			$data['addONJs'] = "rombel.init()";
-			//test_result($data);
-			echo view($this->theme.'form',$data);
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
 	
-	function update($ids)
+	function editView($ids)
+	{
+		$id = decrypt($ids); 
+		$data=$this->data;
+		$currModel  = model(\Modules\Akademik\Models\KurikulumModel::class); 
+		$prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
+		$data['title']	= "Update Data Rombel";
+		$data['error']  = [];
+		$data['fields'] = $this->dconfig->fields;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$rs =  $this->model->find($id)->toarray();
+		$rs['wali']     = $rs['walikelas'];
+		$data['rsdata'] = $rs;
+		$data['opsi'] 	= $this->dconfig->opsi;
+		$data['opsi']['kode_ta'] = $this->TpModel->getDropdown();
+		$data['opsi']['prodi']   = $prodiModel->getDropdown();
+		$data['opsi']['curr_id'] = $currModel->getDropdown();
+		$data['addONJs'] = "rombel.init()";
+		//test_result($rs);
+		echo view($this->theme.'form',$data);
+	}
+
+	function editAction($ids): RedirectResponse
 	{
 		$this->cekHakAkses('update_data');
 		$id = decrypt($ids); 
@@ -126,6 +158,8 @@ class Rombel extends BaseController
 			
 			//$this->model->update($id, $data);
 			$data = $this->request->getPost();
+			unset($data['prodi']); //hapus field prodi karena tidak maskuk ekda tabse
+			unset($data['wali']); //hapus field wali  karena yang dipakai adalah field wii
 			$model = new RombelModel();
 
 			$rsdata = new \Modules\Room\Entities\rombel();
@@ -140,19 +174,7 @@ class Rombel extends BaseController
 			
 			return redirect()->to(base_url('rombel'));
 		}else{
-			$data=$this->data;
-			$TP = new TpModel();
-			$data['title']	= "Update Data Rombel";
-			$data['error'] = validation_list_errors();
-			$data['fields'] = $this->dconfig->fields;
-			$data['opsi'] 	= $this->dconfig->opsi;
-			$rs =  $this->model->find($id)->toarray();
-			$rs['wali']=$rs['walikelas'];
-			$data['rsdata'] = $rs;
-			$data['opsi']['kode_ta']	= $TP->getDropdown();
-			$data['addONJs'] = "rombel.init()";
-			//test_result($rs);
-			echo view($this->theme.'form',$data);
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
 	
@@ -275,6 +297,39 @@ class Rombel extends BaseController
 		echo json_encode($data);
 		
 	}
+	
+	public function getcurr($id)
+	{
+	  $room = $this->currModel->getDropdown($id);
+	  //test_result($room);
+	  $htm='<option value="">[--PILIH KURIKULUM--]</option>';
+	  if(count($room)>0)
+	  {
+		  unset($room['-']);
+		  foreach($room as $k => $v)
+		  {
+			  //$ky=$this->kriptograf->paramEncrypt($k,$this->key);
+			  $htm .='<option value="'.$k.'">'.$v.'</option>';
+		  }
+	  }
+	  return $htm;
+  }
+
+  function getGrade($id)
+  	{
+		$grade=$this->currModel->getLevel($id);
+		$r = $grade['grade'];
+		$htm='<option value="">[--PILIH--]</option>';
+		if(count($r)>0)
+		{
+			foreach($r as $k =>$val)
+			{
+				$htm .='<option value="'.$k.'">'.$val.'</option>';
+			}
+		}
+		return $htm;
+	}
+
 }
 
 /* End of file yoa.php */

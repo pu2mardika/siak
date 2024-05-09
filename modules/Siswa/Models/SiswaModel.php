@@ -11,7 +11,7 @@ class SiswaModel extends Model
 
     //protected $useAutoIncrement = true;
     //protected $returnType    =  'Modules\Siswa\Entities\Siswa'; // configure entity to use'array';
-    protected $allowedFields = ['nik', 'idreg', 'nama', 'nisn', 'tempatlahir', 'tgllahir', 'jk', 'alamat', 'nohp', 'nama_ayah', 'nama_ibu', 'alamat_ortu', 'nohp_ayah', 'nohp_ibu'];
+    protected $allowedFields = [];
     
     protected $returnType    =  \Modules\Siswa\Entities\Siswa::class;
     protected $useSoftDeletes = true;
@@ -42,7 +42,7 @@ class SiswaModel extends Model
     // total
     public function total()
     {
-        $builder = $this->db->table('tbl_siswa');
+        $builder = $this->db->table('siswa');
         $query = $builder->get();
         return $query->getNumRows();
     }

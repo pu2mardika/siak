@@ -39,7 +39,7 @@ class Tbregister extends Migration
 		        'null'    	 => true,
 		    ],
 		    'tgllahir' => [
-		        'type'       => 'timestamp',
+		        'type'       => 'date',
 		        'null'    	 => true,
 		    ],
 		    'jk' => [

@@ -40,6 +40,14 @@ var rombel=function(){
 	   		    load('spp/chgTP/'+tp,"#dtp");
 	   		});
 	   		*/
+			$("#vprodi").change(function(){
+				var k=$("#vprodi").val();
+				load('rombel/dtcurr/'+k,'#currID');
+			});
+			$("#currID").change(function(){
+				var k=$("#currID").val();
+				load('rombel/shgrade/'+k,'#vgrade');
+			});
 		},
 	};
 }();

@@ -13,6 +13,11 @@
             background-attachment: fixed;
             background-position: center; 
         }
+        .myQR {
+            border: 5px outset blue;
+            background-color: lightblue;    
+            text-align: center;
+        }
     </style>
 </head>  
 

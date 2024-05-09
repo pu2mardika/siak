@@ -53,6 +53,7 @@ class TpModel extends Model
     	//$builder->where('akhir <=', now());
     	//$builder->where('awal >=', now());
     	$builder->where($param);
+        $builder->orderBy('thid', 'DESC');
     	//echo $builder->getCompiledSelect();//->getRow();	
     	return $builder->get()->getRow();
     }

@@ -2,7 +2,28 @@
   <?= $this->section('main') ?>
    
 	<div class="card-header">
-		<h5 class="card-title"><?= $title ?></h5>
+		<h5 class="card-title">
+			<?= $title ?>
+			<?php if(isset($dtfilter)){ ?>
+				<span class="float-right dropdown">
+					<a type="button" title="<?=$dtfilter['title']?>" data-toggle="dropdown" aria-expanded="false">
+						<i class="fa fa-ellipsis-v"></i>
+					</a>
+					<div class="dropdown-menu">
+						<?php 
+						$source=$dtfilter['source'] ;
+						$filter=$$source;
+						unset($filter[$dtfilter['cVal']]);
+						foreach($filter as $k => $desc)
+						{
+							//$k = encrypt($k);
+							echo '<a class="dropdown-item" href="'.base_url($dtfilter['action'].$k).'">'.$desc.'</a>';
+						}
+						?>
+					</div>
+				</span>
+			<?php } ?>
+		</h5>
 	</div>
 	
 	<div class="card-body">

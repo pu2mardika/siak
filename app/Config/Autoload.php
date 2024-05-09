@@ -44,11 +44,12 @@ class Autoload extends AutoloadConfig
         'Config'      => APPPATH . 'Config',
         'Modules'     		=> ROOTPATH. 'modules',
         'Modules\Akademik'  => ROOTPATH. 'modules/akademik',
-        'Modules\Siswa' 	=> ROOTPATH. 'modules/siswa',
-        'Modules\Tendik' 	=> ROOTPATH. 'modules/tendik',
+        'Modules\Siswa'     => ROOTPATH. 'modules/siswa',
+        'Modules\Tendik' 	  => ROOTPATH. 'modules/tendik',
         'Modules\Account' 	=> ROOTPATH. 'modules/accounting',
-        'Modules\Room' 		=> ROOTPATH. 'modules/Data-Rombel',
-        'Theme'   	  		=> ROOTPATH. 'template',
+        'Modules\Room' 		  => ROOTPATH. 'modules/Data-Rombel',
+        'Modules\Register'	=> ROOTPATH. 'modules/register',
+        'Theme'   	  		  => ROOTPATH. 'template',
     ];
 
     /**

@@ -1,19 +1,23 @@
-<?php namespace Modules\Register\Controllers;
+<?php
+
+namespace Modules\Register\Controllers;
 
 use App\Controllers\BaseController;
+use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\Events\Events;
 use CodeIgniter\HTTP\RedirectResponse;
-use Modules\Register\Models\RegisterModel;
 use Config\Services;
 use CodeIgniter\Files\File;
 use Config\MyApp;
-//use Modules\Register\Config\Register;
+use Modules\Register\Models\EnrollModel;
+//use Modules\Akademik\Models\ProdiModel;
+
 use Dompdf\Dompdf;
 use chillerlan\QRCode\{QRCode, QROptions};
 
-class Register extends BaseController
+class Enrollment extends BaseController
 {
-	public  $keys='';
+    public  $keys='';
 	protected $dconfig; 
 	protected $theme;
 	
@@ -21,10 +25,12 @@ class Register extends BaseController
         parent::__construct();
         $this->dconfig = config(\Modules\Register\Config\Register::class);
         $this->session = \Config\Services::session();
-		$this->model = new RegisterModel;	
-		$this->data['site_title'] = 'Manajemen Data Register';
+		$this->model = new EnrollModel;	
+		$this->ProdiModel = model(\Modules\Akademik\Models\ProdiModel::class);
+		$this->data['site_title'] = 'Manajemen Data Calon Peserta Didik';
 		$this->data['fields'] 	  = $this->dconfig->fields;
 		$this->data['opsi'] 	  = $this->dconfig->opsi;
+		$this->data['opsi']['id_prodi'] = $this->ProdiModel->getDropdown();
 		$this->data['key']		  = $this->dconfig->primarykey;
 	//	$this->theme = $this->data[]
 		helper(['cookie', 'form']);
@@ -34,72 +40,42 @@ class Register extends BaseController
 	{
 		$this->cekHakAkses('read_data');
 		$dtRegister = $this->model->findAll();
-		$total = $this->model->total();
-		//echo $this->theme;die();
 		$data=$this->data;	
-	//	test_result($data);	
-		/*
-		* Model Ajax
-		*/
-		$Register_updated = [];
-		$msg = [];
-		if (!empty($_POST['submit'])) 
-		{
-			$Register_updated = $this->model->update();
-			
-			if ($Register_updated) {
-				$msg['status'] = 'ok';
-				$msg['content'] = 'Data berhasil diupdate';
-			} else {
-				$msg['status'] = 'warning';
-				$msg['content'] = 'Tidak ada data yang diupdate';
-			}
-		}
-		// End Submit
-		$data['title']	= "Manajemen Data Register";
+		$data['title']	= "Data Calon Peserta Didik";
 		$data['rsdata']	= $dtRegister;
-		$data['total']	= $total;
-		$data['msg'] 	= $msg;
 		$data['actions']= $this->dconfig->actions;
 		$data['allowimport']= $this->dconfig->importallowed;
 		echo view($this->theme.'datalist',$data);
     }
 	
-	function detail($ids)
-	{
-		$this->cekHakAkses('update_data');
-		$id = decrypt($ids); 
-		$data=$this->data;
-		$data['title']	= "Update Data Register";
-		$data['error'] = validation_list_errors();
-		$data['fields'] = $this->dconfig->fields;
-		$data['opsi'] 	= $this->dconfig->opsi;
-		$rs =  $this->model->find($id);
-		$tglLahir = $rs->tgllahir;
-		$rsdata = $rs->toarray();
-		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-		$rsdata['tgllahir']=$tglLahir->toDateString();
-		$data['rsdata'] = $rsdata;
-	//	show_result($rsdata);
-		echo view($this->theme.'vdetail',$data);
-	}
-	
 	function addView()
 	{
 		$uri   = current_url(true);
 		$prodi = $uri->setSilent()->getSegment(3, 0);
+		
 		$data=$this->data; //mengambil data
-		$data['title']	= "Tambah Data Register";
-		$data['error']  = validation_list_errors();
+		$data['title']	= "Registrasi Calon Peserta Didik";
+		$data['error']  = [];
 		$fields = $this->dconfig->fields;
 		$rsdata = [];
-		if($prodi > 0){
+		if (isset($_GET['idx'])) 
+		{
+			$nik = $_GET['idx'];
+			$rsdata = $this->model->find($nik);
+			if(!$rsdata)
+			{
+				$rsdata['nik']=$nik;
+			}
+		}
+
+		if($prodi <> 0){
 			$fields['id_prodi']['type']='hidden';
 			$rsdata['id_prodi']=$prodi;
 		}
 		$data['fields'] = $fields;
-		$data['opsi'] 	= $this->dconfig->opsi;
+		//$data['opsi'] 	= $this->dconfig->opsi;
 		$data['rsdata'] = $rsdata;
+		$data['addOnJSFunc'] = $this->dconfig->addonJS;
 		//test_result($data);
 		echo view($this->theme.'form',$data);
 	}
@@ -113,9 +89,9 @@ class Register extends BaseController
 		if ($this->validate($rules)) {
 			$rdata = $this->request->getPost();
 			$rdata['idreg']=register(date("Y-m-d"));
-
-			$Registermodel = new RegisterModel();
-			$Register= new \Modules\Register\Entities\Register();
+			//test_result($rdata);
+			$Registermodel = new EnrollModel();
+			$Register= new \Modules\Register\Entities\Enroll();
 			$Register->fill($rdata);
 			$simpan = $Registermodel->insert($Register,false);
 			
@@ -138,51 +114,59 @@ class Register extends BaseController
 	{
 		$id = decrypt($ids);
 		#Ambil data 
-		$rs =  $this->model->find($id);
-		$tglLahir = $rs->tgllahir;
-		$rsdata = $rs->toarray();
-		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-		$rsdata['tgllahir']=$tglLahir->toDateString();
-
-		$dtQR = base_url('daftar/detail/'.$ids);
-		$tgl_lahir= $rsdata['tempatlahir'].", ".format_tanggal($rsdata['tgllahir']);
+		$opsi = $this->data['opsi'];
+		$rsdata =  $this->model->find($id)->toarray();
+		$dtQR = base_url('enroll/detail/'.$ids);
+		$tgl_lahir= ucwords($rsdata['tempatlahir'].", ".format_tanggal($rsdata['tgllahir']));
 		$rsdata['tgllahir'] = $tgl_lahir;
-		$rsdata['qrcode'] = '<img src="'.(new QRCode)->render($dtQR).'" alt="QR Code" height="150" width="150" />';;
+		$rsdata['qrcode'] = '<img src="'.(new QRCode)->render($dtQR).'" alt="QR Code" height="150" width="150" />';
+		$image ='images/' . setting()->get('MyApp.logo');
+		$rsdata['logo']	= base_url($image);
+		$rsdata['judul'] = "PROGRAM PILIHAN: ".strtoupper($opsi['id_prodi'][$rsdata['id_prodi']]);
+		$fdata['opsi'] = $opsi;
 		$fdata['rsdata'] = $rsdata;
-		$fdata['fields'] = $this->dconfig->printfield;
-		$fdata['opsi'] 	= $this->dconfig->opsi;				
+		$fdata['fields'] = $this->dconfig->printfield;		
 		$data['rsdata'] = $fdata;
+		//echo view('Modules\Register\Views\print_bukti',$data);
 		
 		#RANDER pdf
 		$filename = date('ymdHis').$id.'-Bukti Daftar';
 
         // instantiate and use the dompdf class
-        $dompdf = new Dompdf();
-
+       /*
+        $dompdf = new Dompdf(array('enable_remote' => true));
         // load HTML content
         $dompdf->loadHtml(view('Modules\Register\Views\print_bukti',$data));
-
         // (optional) setup the paper size and orientation
         $dompdf->setPaper('A4', 'potrait');
-
         // render html as PDF
         $dompdf->render();
         // output the generated pdf
         $dompdf->stream($filename);
+		*/
+		$html = view('Modules\Register\Views\print_bukti',$data);
+		$pdf = new \App\Libraries\Pdfgenerator();
+		$hsl = $pdf->generate($html, $filename, "A4", "landscape");
+		
+        //echo $hsl;
+        $Data=$this->data;
+        $Data['file_pdf'] = $hsl;
+        echo view($this->theme.'viewfile',$Data);
 	}
 	
 	function updateView($ids)
 	{
+		$this->cekHakAkses('update_data');
+		$id = decrypt($ids); 
 		$data=$this->data;
-		$data['title']	= "Update Data Register";
+		$data['title']	= "Update Data Calon Peserta Didik";
 		$data['error'] = validation_list_errors();
 		$data['fields'] = $this->dconfig->validasi_fields;
-		$data['opsi'] 	= $this->dconfig->opsi;
 		$rs =  $this->model->find($id);
 		$tglLahir = $rs->tgllahir;
 		$rsdata = $rs->toarray();
 		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-		$rsdata['tgllahir']=$tglLahir->toDateString();
+		//$rsdata['tgllahir']=$tglLahir->toDateString();
 		$data['rsdata'] = $rsdata;
 	//	show_result($rsdata);
 		echo view($this->theme.'form',$data);
@@ -197,9 +181,9 @@ class Register extends BaseController
 		if ($this->validate($roles)) {
 			//$this->model->update($id, $data);
 			$data = $this->request->getPost();
-			$model = new RegisterModel();
+			$model = new EnrollModel();
 
-			$rsdata = new \Modules\Register\Entities\Register();
+			$rsdata = new \Modules\Register\Entities\Enroll();
 			$rsdata->fill($data);
 			$simpan = $model->update($id, $rsdata);
 			
@@ -208,7 +192,7 @@ class Register extends BaseController
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
-			return redirect()->to(base_url('daftar'));
+			return redirect()->to(base_url('enrollment'));
 		}else{
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
@@ -216,11 +200,11 @@ class Register extends BaseController
 	
 	function delete($ids){
 		$id = decrypt($ids); 
-		$Registermodel = new RegisterModel();
+		$Registermodel = new EnrollModel();
 		$Registermodel->delete($id);
 		// masuk database
 		$this->session->setFlashdata('sukses','Data telah dihapus');
-		return redirect()->to(base_url('daftar'));
+		return redirect()->to(base_url('enrollment'));
 	}
 	
 	function fromxlsx(){
@@ -254,7 +238,7 @@ class Register extends BaseController
 				$Data['rsdata'] = $rsdata;
 				//Konfirmasi data
 				$this->session->setTempdata('dtRegister',$Data,120);
-				return redirect()->to(base_url('Register/konfirm'));
+				return redirect()->to(base_url('enrollment/konfirm'));
 	         }
 
 	         $data = ['errors' => 'The file has already been moved.'];
@@ -263,7 +247,7 @@ class Register extends BaseController
 			$data = $this->data;
 			$data['title']	= "Import Data Register";
 			$data['error'] = validation_list_errors();
-			$data['u_ri']  = base_url('Register/tempxls');
+			$data['u_ri']  = base_url('enrollment/tempxls');
 			echo view($this->theme.'frmImport',$data);
 		}
 	}
@@ -282,7 +266,7 @@ class Register extends BaseController
 		}
 		
 		if($act === $DATA['actY']){
-			$model = new RegisterModel();
+			$model = new EnrollModel();
 			$simpan = $model->insertBatch($DATA['rsdata']);
 			
 			if($simpan){
@@ -290,7 +274,7 @@ class Register extends BaseController
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 			}
-			return redirect()->to(base_url('daftar'));
+			return redirect()->to(base_url('enrollment'));
 		} 
 		
 		//$nilai $act = nol
@@ -298,7 +282,7 @@ class Register extends BaseController
 			//hapus data dari sesi
 			unset($_SESSION['dtRegister']);
 			$this->session->setFlashdata('warning','Data Dibatalkan oleh Pengguna');
-			return redirect()->to(base_url('daftar'));
+			return redirect()->to(base_url('enrollment'));
 		}
 	}
 	
@@ -325,6 +309,3 @@ class Register extends BaseController
         return $this->response->download($dirf.$nama_file.'.xlsx', null);
 	}
 }
-
-/* End of file yoa.php */
-/* Location: ./application/controllers/akademik/yoa.php */

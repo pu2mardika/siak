@@ -1,10 +1,12 @@
-<?php namespace Modules\Siswa\Config;
+<?php
+
+namespace Modules\Register\Config;
 
 use CodeIgniter\Config\BaseConfig;
 
-class Siswa extends BaseConfig
+class Register extends BaseConfig
 {
-	/**
+    /**
 	 * --------------------------------------------------------------------
 	 * Libraries
 	 * --------------------------------------------------------------------
@@ -32,19 +34,19 @@ class Siswa extends BaseConfig
 	*/
 	public $fields = [
 		'id_prodi'		=> ['label' => 'Program Pilihan','width'=>0,'extra'=>['id'=>'prodi','class' => '', 'required' => true],'type'=>'dropdown', ],
-		'nik'			=> ['label' => 'NIK','width'=>12, 'extra'=>['id'=>'noktp','class' => '', 'required' => true],'type'=>'text'],  
+		'nik'			=> ['label' => 'NIK','width'=>12, 'extra'=>['id'=>'noktp','class' => '', 'onchange'=>'getData(this.value)','required' => true, 'minlength'=>16, 'maxlength'=>16],'type'=>'text'],  
 		'nama'			=> ['label' => 'Nama Lengkap','width'=>15,'extra'=>['id'=>'name','class' => '', 'required' => true],'type'=>'text'], 
 		'nisn'			=> ['label' => 'NISN','width'=>0,'extra'=>['id'=>'nis','class' => '', 'required' => true],'type'=>'text'], 
 		'tempatlahir'	=> ['label' => 'Tempat Lahir','width'=>0,'extra'=>['id'=>'tplhr','class' => '', 'required' => true],'type'=>'text'], 
 		'tgllahir'		=> ['label' => 'Tanggal Lahir','width'=>0,'extra'=>['id'=>'tglh','class' => '', 'required' => true],'type'=>'date'], 
 		'jk'			=> ['label' => 'Jenis Kelamin','width'=>0, 'extra'=>['id'=>'sex','class' => '', 'required' => true],'type'=>'dropdown'], 
 		'alamat'		=> ['label' => 'ALamat','width'=>0,'extra'=>['id'=>'addr','class' => '', 'style' => 'height: 100px','required' => true],'type'=>'textarea'], 
-		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['id'=>'phone','class' => '', 'required' => true],'type'=>'tel'], 
+		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['id'=>'phone','class' => '', 'required' => true, 'minlength'=>10, 'maxlength'=>12],'type'=>'tel'], 
 		'nama_ayah'		=> ['label' => 'Nama Ayah','width'=>12, 'extra'=>['id'=>'father','class' => '', 'required' => true],'type'=>'text'], 
 		'nama_ibu'		=> ['label' => 'Nama Ibu','width'=>0, 'extra'=>['id'=>'mother','class' => '', 'required' => true],'type'=>'text'], 
 		'alamat_ortu'	=> ['label' => 'Alamat Orang Tua','width'=>0, 'extra'=>['id'=>'perentadd','class' => '', 'required' => true],'type'=>'text'], 
-		'nohp_ayah'		=> ['label' => 'No. HP Ayah','width'=>8, 'extra'=>['id'=>'phfth','class' => '', 'required' => true],'type'=>'tel'], 
-		'nohp_ibu'		=> ['label' => 'No. HP Ibu','width'=>0, 'extra'=>['id'=>'phmth','class' => '', 'required' => true],'type'=>'tel'],
+		'nohp_ayah'		=> ['label' => 'No. HP Ayah','width'=>8, 'extra'=>['id'=>'phfth','class' => '', 'required' => true, 'minlength'=>10, 'maxlength'=>12],'type'=>'tel'], 
+		'nohp_ibu'		=> ['label' => 'No. HP Ibu','width'=>0, 'extra'=>['id'=>'phmth','class' => '', 'required' => true, 'minlength'=>10, 'maxlength'=>12],'type'=>'tel'],
 		'sumber_info'	=> ['label' => 'Sumber Informasi','width'=>0, 'extra'=>['id'=>'sinfo','class' => '', 'required' => true],'type'=>'dropdown'],
 	];
 
@@ -56,7 +58,7 @@ class Siswa extends BaseConfig
 		'jk'			=> ['label' => 'Jenis Kelamin','type'=>'dropdown'], 
 		'alamat'		=> ['label' => 'ALamat','type'=>'text'],		
 		'nohp'			=> ['label' => 'No. HP','type'=>'text'],  
-		'id_prodi'		=> ['label' => 'Jenis Kelamin','type'=>'dropdown'], 
+		'id_prodi'		=> ['label' => 'Program Pilihan','type'=>'dropdown'], 
 		'created_at' 	=> ['label' => 'Tgl. Register','type'=>'date', ],
 	];
 
@@ -88,9 +90,16 @@ class Siswa extends BaseConfig
 	* 
 	*/
 	public $roles = [
-			'nik' => "required|is_unique[tbl_siswa.nik,nik]",
-            'nama'  => 'required',
-		]; 
+		'nik' 	=> "required|is_unique[tbl_register.nik,nik]|is_unique[tbl_datadik.nik,nik]|max_length[16]|min_length[16]",
+		'nama'  => 'required',
+		'nohp'  => 'required|max_length[12]|min_length[10]',
+	]; 
+
+	public $roleEdit = [
+		'nik' 	=> "required|max_length[16]|min_length[16]",
+		'nama'  => 'required',
+		'nohp'  => 'required|max_length[12]|min_length[10]',
+	]; 
 	
 	/**
 	 * --------------------------------------------------------------------
@@ -119,8 +128,12 @@ class Siswa extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> true,
-		'edit'		=> true,
-		'delete'	=> true,
+	//	'detail' 	=> ['icon'=>'th-list','src'=>'enrollment/detail/', 'label'=>'Detail', 'extra'=>''],
+		'edit' 		=> ['icon'=>'edit','src'=>'enrollment/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'enrollment/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
+
+	public string $addonJS = 'function getData(val){
+		window.location.replace(base_url+"enroll?idx="+val);
+	}';
 }
