@@ -9,6 +9,8 @@ use CodeIgniter\Files\File;
 use Config\MyApp;
 //use Modules\Siswa\Config\Siswa;
 
+use chillerlan\QRCode\{QRCode, QROptions};
+
 class Siswa extends BaseController
 {
 	public  $keys='';
@@ -21,20 +23,21 @@ class Siswa extends BaseController
         $this->dconfig = config(\Modules\Siswa\Config\Siswa::class);
         $this->session = \Config\Services::session();
 		$this->model = new SiswaModel;	
+		$this->prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
 		$this->data['site_title'] = 'Manajemen Data Siswa';
 		$this->data['fields'] 	  = $this->dconfig->fields;
 		$this->data['opsi'] 	  = $this->dconfig->opsi;
 		$this->data['key']		  = $this->dconfig->primarykey;
-	//	$this->theme = $this->data[]
-		helper(['cookie', 'form']);
+		
+		helper(['cookie', 'form','date']);
+	//	$this->addJs (base_url().'/js/jquery.easy-autocomplete.min.js?r=' . time());
+		$this->addJs (base_url().'js/modules/siswa.js?r=' . time());
     }
 	
 	function index()
 	{
 		$this->cekHakAkses('read_data');
-		$dtsiswa = $this->model->findAll();
-		$total = $this->model->total();
-		//echo $this->theme;die();
+		//$prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
 		$data=$this->data;		
 		/*
 		* Model Ajax
@@ -44,64 +47,38 @@ class Siswa extends BaseController
 		if (!empty($_POST['submit'])) 
 		{
 			$siswa_updated = $this->model->update();
-			
 			if ($siswa_updated) {
-				$msg['status'] = 'ok';
+				$msg['status']  = 'ok';
 				$msg['content'] = 'Data berhasil diupdate';
 			} else {
-				$msg['status'] = 'warning';
+				$msg['status']  = 'warning';
 				$msg['content'] = 'Tidak ada data yang diupdate';
 			}
 		}
-		// End Submit
-
-		$data['title']	= "Manajemen Data Siswa";
-		$data['rsdata']	= $dtsiswa;
-		$data['total']	= $total;
-		$data['msg'] 	= $msg;
-		$data['actions']= $this->dconfig->actions;
+		
+		if (isset($_GET['ps'])) 
+		{
+			$cps = $_GET['ps'];
+			$ps  = $this->prodiModel->find($cps);
+			$addTitle = $ps->nm_prodi;
+			$parm = ['prodi'=>$cps];
+		}else{
+			$cps = "";
+			$parm =[];
+			$addTitle = "[Semua Prodi]";
+		}
+		
+		$data['title']	  = "Data Siswa ".$addTitle;
+		$data['rsdata']	  = $this->model->getAll($parm);
+		$dtfilter		  = $this->dconfig->dtfilter;
+		$dtfilter['cVal'] = $cps;
+		$data['dtfilter'] = $dtfilter;
+		$data['ps'] 	  = $this->prodiModel->getDropdown();
+		$data['actions']  = $this->dconfig->actions;
 		$data['allowimport']= $this->dconfig->importallowed;
-		echo view($this->theme.'datalist',$data);
-		
+		$data['isplainText'] = TRUE;
+		echo view($this->theme.'datalist',$data);	
     }
-	
-	function dtlist()
-	{
-	 	$request = Services::request(); 
-        $m_jur 		= new SiswaModel();
-		$siswa 			= $m_jur->findAll();
-		$total 			= $m_jur->total();
-		
-        foreach($siswa as $doc)
-        {
-        	//$no++;
-        	$doc['aksi']="<a href='#' class='btn-warning btn-sm'>Ubah</a>&nbsp; <a href='#' class='btn-danger btn-sm'>Hapus</a>";
-        	$ndata[]=$doc;
-        }	
-        
-		 $output = [
-            'draw' => $request->getPost('draw'),
-            'recordsTotal' => $total,
-            'recordsFiltered' => 9, //$datatable->countFiltered(),
-            'data' => $ndata
-        ];
-		
-		dd($siswa);
-        echo json_encode($output);
-	}
-	
-	function v_trash()
-	{
-		$offset = $this->uri->segment(4,0);
-		$banyak_ya=$this->mod_jurusan->get_num();		
-		$perpage=$this->config->item('perpage');
-		$data2=$this->fungsi->getAjaxPagination($banyak_ya,
-				$perpage,'akademik/jurusan/v_trash/',4,'#panel_editing');
-		$data['paging'] = $data2['paging'];
-		$data['banyak']=$banyak_ya;
-		$data['jurusan'] = $this->mod_jurusan->view_trash($perpage,$offset);
-		$this->load->view('akademik/jurusan/trash_panel',$data);
-	}
 	
 	function detail($ids)
 	{
@@ -109,16 +86,13 @@ class Siswa extends BaseController
 		$id = decrypt($ids); 
 		$data=$this->data;
 		$data['title']	= "Update Data Siswa";
-		$data['error'] = validation_list_errors();
+		$data['error']  = [];
 		$data['fields'] = $this->dconfig->fields;
 		$data['opsi'] 	= $this->dconfig->opsi;
-		$rs =  $this->model->find($id);
-		$tglLahir = $rs->tgllahir;
-		$rsdata = $rs->toarray();
-		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-		$rsdata['tgllahir']=$tglLahir->toDateString();
+		$rsdata = $this->model->get($id);
+		$rsdata['tgllahir']=format_date($rsdata['tgllahir']);
 		$data['rsdata'] = $rsdata;
-	//	show_result($rsdata);
+	
 		echo view($this->theme.'vdetail',$data);
 	}
 	
@@ -126,11 +100,14 @@ class Siswa extends BaseController
 	{
 		$this->cekHakAkses('create_data');
 		$data=$this->data;
+	//	$prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
 		$data['title']	= "Tambah Data Siswa";
 		$data['error']  = [];
-		$data['fields'] = $this->dconfig->fields;
+		$data['fields'] = $this->dconfig->addFields;
 		$data['opsi'] 	= $this->dconfig->opsi;
+		$data['opsi']['prodi'] 	= $this->prodiModel->getDropdown();
 		$data['rsdata'] = [];
+		$data['addONJs'] = "siswa.init()";
 		echo view($this->theme.'form',$data);
 	}
 	
@@ -140,67 +117,39 @@ class Siswa extends BaseController
 		$rules = $this->dconfig->roles;	
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
+			unset($data['noktp']);
+
+			//MENYIAPKAN DATA PENDUKUNG
+			$thn= unix2Ind(strtotime($data['tgl_reg']),'Y');
+			$ps = $this->prodiModel->find($data['prodi'])->toarray();
+			
+			$param['tgl_reg >']=strtotime("01-01-".$thn. "00:00:00");
+			$param['prodi']=$data['prodi'];
+
+			$no=$this->model->getOrder($param);
+			$jur = $ps['jurusan'];
+			$lv = $ps['jenjang'];
+
+			$th = unix2Ind(strtotime($data['tgl_reg']),'y');
+			$NOINDUK = $jur.$lv.$th.sprintf("%02d",$data['prodi']).sprintf("%03d",$no).random_string('numeric',1);
+			
+			$data['noinduk']=$NOINDUK;
+			$data['no_urt'] =$no;
 			$siswamodel = new SiswaModel();
 			$siswa= new \Modules\Siswa\Entities\siswa();
 			$siswa->fill($data);
-			$simpan = $siswamodel->insert($siswa);
+			$simpan = $siswamodel->insert($siswa, false);
 			if($simpan){
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
-			}
-			return redirect()->to(base_url('siswa'));
+				return redirect()->to(base_url('siswa'));
+			}	
 		}else{
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
 	}
 	
-	function updateView($ids)
-	{
-		$this->cekHakAkses('update_data');
-		$id = decrypt($ids); 
-		 
-		$data=$this->data;
-		
-		$roles = $rules = $this->dconfig->roleEdit;
-		
-		$data=$this->data;
-		$data['title']	= "Update Data Siswa";
-		$data['error'] = validation_list_errors();
-		$data['fields'] = $this->dconfig->fields;
-		$data['opsi'] 	= $this->dconfig->opsi;
-		$rs =  $this->model->find($id);
-		$tglLahir = $rs->tgllahir;
-		$rsdata = $rs->toarray();
-		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-		$rsdata['tgllahir']=$tglLahir->toDateString();
-		$data['rsdata'] = $rsdata; 
-		echo view($this->theme.'form',$data);
-	}
-	
-	function updateAction($ids): RedirectResponse
-	{
-		$id = decrypt($ids); 
-		$roles = $rules = $this->dconfig->roles;
-		if ($this->validate($roles)) {
-			$data = $this->request->getPost();
-			$model = new SiswaModel();
-
-			$rsdata = new \Modules\Siswa\Entities\siswa();
-			$rsdata->fill($data);
-			$simpan = $model->update($id, $rsdata);
-			
-			if($simpan){
-				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
-			}else{
-				$this->session->setFlashdata('warning','Data gagal disimpan');
-			}
-			return redirect()->to(base_url('siswa'));
-		}else{
-			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
-		}
-		
-	}
 	function delete($ids){
 		$id = decrypt($ids); 
 		$siswamodel = new SiswaModel();
@@ -208,6 +157,37 @@ class Siswa extends BaseController
 		// masuk database
 		$this->session->setFlashdata('sukses','Data telah dihapus');
 		return redirect()->to(base_url('siswa'));
+	}
+
+	function ctkbukti($ids)
+	{
+		$id = decrypt($ids);
+		#Ambil data 
+		$opsi = $this->data['opsi'];
+		$rsdata =  $this->model->get($id);
+		$dtQR = base_url('enroll/detail/'.$ids);
+		$tgl_lahir= ucwords($rsdata['tempatlahir'].", ".format_tanggal($rsdata['tgllahir']));
+		$rsdata['tgllahir'] = $tgl_lahir;
+		$rsdata['qrcode'] = '<img src="'.(new QRCode)->render($dtQR).'" alt="QR Code" height="150" width="150" />';
+		$image ='images/' . setting()->get('MyApp.logo');
+		$rsdata['logo']	= base_url($image);
+		$rsdata['judul'] = "PROGRAM PILIHAN: ".strtoupper($rsdata['nm_prodi']);
+		$fdata['opsi'] = $opsi;
+		$fdata['rsdata'] = $rsdata;
+		$fdata['fields'] = $this->dconfig->printfield;		
+		$data['rsdata'] = $fdata;
+		
+		#RANDER pdf
+		$filename = date('ymdHis').$id.'-Bukti Daftar';
+
+		$html = view('Modules\Register\Views\print_bukti',$data);
+		$pdf = new \App\Libraries\Pdfgenerator();
+		$hsl = $pdf->generate($html, $filename, "A4", "landscape");
+		
+        //echo $hsl;
+        $Data=$this->data;
+        $Data['file_pdf'] = $hsl;
+        echo view($this->theme.'viewfile',$Data);
 	}
 	
 	function fromxlsx(){
@@ -310,6 +290,13 @@ class Siswa extends BaseController
 	    $writer->save($dirf.$nama_file.'.xlsx');;
        // header("Content-Type: application/vnd.ms-excel");
         return $this->response->download($dirf.$nama_file.'.xlsx', null);
+	}
+
+	public function getprofil($key="")
+	{
+		$data = $this->model->getlike($key);
+		echo json_encode($data);
+		
 	}
 }
 
