@@ -79,6 +79,8 @@ class Datadik extends BaseConfig
 	*/
 	public $importallowed = TRUE;
 	
+
+	public $addAllowed = FALSE;
 	/**
 	* ---------------------------------------------------------------------
 	* action boolean
@@ -87,8 +89,8 @@ class Datadik extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail' 	=> ['icon'=>'list-alt','src'=>'siswa/detail/', 'label'=>'Detail', 'extra'=>''],
-		'edit' 		=> ['icon'=>'edit','src'=>'siswa/edit/', 'label'=>'Detail', 'extra'=>''],
-		'delete'	=> ['icon'=>'trash','src'=>'siswa/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
+		'detail' 	=> ['icon'=>'list-alt','src'=>'datadik/detail/', 'label'=>'Detail', 'extra'=>''],
+		'edit' 		=> ['icon'=>'edit','src'=>'datadik/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'datadik/detail/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 }

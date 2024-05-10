@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class DatadikModel extends Model
 {
     protected $table            = 'tbl_datadik';
-    protected $primaryKey       = 'id';
+    protected $primaryKey       = 'nik';
     protected $useAutoIncrement = true;
     protected $returnType       = \Modules\Siswa\Entities\DataDik::class;
     protected $useSoftDeletes   = false;

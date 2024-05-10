@@ -57,7 +57,7 @@ class Datadik extends BaseController
 
 		$data['title']	= "Manajemen Data Siswa";
 		$data['rsdata']	= $dtsiswa;
-	//	$data['total']	= $total;
+		$data['allowADD']	=  $this->dconfig->addAllowed;
 		$data['msg'] 	= $msg;
 		$data['actions']= $this->dconfig->actions;
 		$data['allowimport']= $this->dconfig->importallowed;
@@ -112,11 +112,11 @@ class Datadik extends BaseController
 		$data['error'] = validation_list_errors();
 		$data['fields'] = $this->dconfig->fields;
 		$data['opsi'] 	= $this->dconfig->opsi;
-		$rs =  $this->model->find($id);
-		$tglLahir = $rs->tgllahir;
-		$rsdata = $rs->toarray();
+		$rsdata =  $this->model->find($id)->toarray();
+	//	$tglLahir = $rs->tgllahir;
+		//$rsdata = $rs->toarray();
 		//$rsdata['tgllahir']=$tglLahir->toDateTimeString();
-		$rsdata['tgllahir']=$tglLahir->toDateString();
+		$rsdata['tgllahir']=format_date($rsdata['tgllahir']);
 		$data['rsdata'] = $rsdata;
 	//	show_result($rsdata);
 		echo view($this->theme.'vdetail',$data);
