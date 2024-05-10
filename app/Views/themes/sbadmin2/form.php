@@ -47,7 +47,7 @@ foreach($fields as $fd => $row){
 		$data = [
 			'type'  => 'hidden',
 			'name'  => $fd,
-			'id'    => $fd,
+			'id'    => $extra['id'],
 			'value' => set_value($fd,$nilai),
 			'class' => $extra['class'],
 		];

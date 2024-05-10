@@ -59,7 +59,7 @@ class Rombel extends BaseController
 			//test_result($tp);
 			$ctp = $tp->thid;
 		}
-		$addTitle = "Tahun ".$tp->deskripsi;;
+		$addTitle = "Tahun ".$tp->deskripsi;
 		$parm=['kode_ta'=>$ctp];
 		$dtrombel = $this->model->where('kode_ta', $ctp)->findAll();
 		//$dtrombel = $this->model->getAll(['kode_ta'=>$ctp]);

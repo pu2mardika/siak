@@ -12,27 +12,7 @@ class TblSiswa extends Migration
          
         $attributes = ['ENGINE' => 'InnoDB', 'CHARSET'=>'utf8mb4', 'COLLATE' => 'utf8mb4_general_ci'];
         $this->db->disableForeignKeyChecks();
-		/**
-         * module_status table.
-         * CREATE TABLE `tbl_siswa` (
-			  `noinduk` varchar(15) NOT NULL,
-			  `nik` varchar(17) NOT NULL,
-			  `nisn` varchar(15) DEFAULT NULL,
-			  `nama` varchar(50) NOT NULL,
-			  `jk` char(2) NOT NULL,
-			  `tmp_lahir` varchar(50) NOT NULL,
-			  `tgl_lahir` int(11) NOT NULL,
-			  `alamat` varchar(50) DEFAULT NULL,
-			  `nohp` varchar(12) DEFAULT NULL,
-			  `nm_ayah` varchar(50) NOT NULL,
-			  `alamat_ayah` varchar(100) NOT NULL,
-			  `nm_ibu` varchar(50) DEFAULT NULL,
-			  `nohp_ortu` varchar(12) DEFAULT NULL,
-			  `prodi` int(3) NOT NULL,
-			  `state` tinyint(1) NOT NULL DEFAULT 0,
-			  `order` int(3) NOT NULL
-			) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-         */
+		
         $fields = [
 		    'nik' => [
 		        'type'       => 'varchar',
@@ -153,6 +133,23 @@ class TblSiswa extends Migration
 		        'constraint' => 11,
 		        'null'    	 => true,
 		    ],
+			'no_urt' => [
+		        'type'       => 'int',
+		        'constraint' => 11,
+		        'null'    	 => true,
+		    ],
+			'created_at' => [
+		        'type'    => 'TIMESTAMP',
+		        'default' => new RawSql('CURRENT_TIMESTAMP'),
+		    ],
+		    'updated_at' => [
+		        'type'   => 'TIMESTAMP',
+		        'null' 	 => true,
+		    ],
+		    'deleted_at' => [
+		        'type'   => 'TIMESTAMP',
+		        'null' 	 => true,
+		    ],
 		];
          
         $this->forge->addField($fields);
@@ -160,7 +157,7 @@ class TblSiswa extends Migration
 		$this->forge->addUniqueKey(['nik', 'prodi'], 'program');
         $this->forge->createTable('tbl_siswa', true, $attributes);
         $this->forge->addForeignKey('nik', 'tbl_datadik', 'nik','CASCADE', 'CASCADE');
-		$this->forge->processIndexes('tbl_siswa');
+		$this->forge->processIndexes('siswa');
 
         //table tahun pelajaran (tbl_tp)
         $fields = [
@@ -237,14 +234,6 @@ class TblSiswa extends Migration
       //  $this->forge->addForeignKey('kode_ta', 'tbl_tp', 'thid','CASCADE', 'CASCADE');
 		$this->forge->processIndexes('tbl_rombel');
 		
-		/*tabel rombel_member
-        CREATE TABLE `tb_rombel_memb` (
-		  `member_id` varchar(15) NOT NULL,
-		  `id_rombel` varchar(15) NOT NULL,
-		  `noinduk` varchar(15) DEFAULT NULL,
-		  `no_absen` int(11) NOT NULL,
-		  `state` tinyint(2) NOT NULL
-		)
         */
         $fields = [
 		    'member_id' => [
@@ -292,10 +281,7 @@ class TblSiswa extends Migration
 
     public function down()
     {
-        //
-		$this->forge->dropTable('tbl_rombel_memb', true);
-		$this->forge->dropTable('tbl_rombel', true);
-        $this->forge->dropTable('tbl_siswa', true);
+        $this->forge->dropTable('siswa', true);
         $this->forge->dropTable('tbl_tp', true);
         $this->forge->dropTable('tbl_datadik', true);        
     }

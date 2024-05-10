@@ -42,7 +42,7 @@ class Siswa extends Entity
 		//$config->driver = 'OpenSSL';
 
 		$encrypter = \Config\Services::encrypter($config);
-		$this->attributes['id']= bin2hex($encrypter->encrypt($this->attributes['nik']));
+		$this->attributes['id']= bin2hex($encrypter->encrypt($this->attributes['noinduk']));
 		return $this->attributes['id'];
 	}
     

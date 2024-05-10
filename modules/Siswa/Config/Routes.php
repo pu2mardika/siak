@@ -20,6 +20,7 @@ $routes->group("siswa", ["namespace" => "\Modules\Siswa\Controllers"], function 
 	$routes->get("edit/(:any)", "Siswa::updateView/$1");
 	$routes->post("edit/(:any)", "Siswa::updateAction/$1");
 	$routes->get("detail/(:any)", "Siswa::detail/$1");
+	$routes->get("getprofil/(:any)", "Siswa::getprofil/$1");
 });
 
 $routes->group("datadik", ["namespace" => "\Modules\Siswa\Controllers"], function ($routes) {

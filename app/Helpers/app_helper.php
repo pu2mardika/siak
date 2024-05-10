@@ -366,9 +366,18 @@ function ind_to_unix($tgl, $jam=NULL) {
 	if(strlen($tg[0])===4){
 		$d = $tg[2]; $y = $tg[0];
 	}
-		
+
 	$hasil=strtotime($y.'-'.$m.'-'.$d.' '.$Jam);
 	return $hasil;
+}
+
+function ind2unix($tgl)
+{
+	if ($tgl == '0000-00-00 00:00:00' || !$tgl) {
+		return false;
+	}
+	$exp = explode (' ', $tgl);
+	return ind_to_unix($exp[0]);
 }
 
 function nextTgl($time_sekarang, $n, $format="d F Y",$ofset=1)
