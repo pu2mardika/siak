@@ -65,7 +65,7 @@ class Register extends BaseConfig
 	public $validasi_fields = [
 		'id_prodi'		=> ['label' => 'Program Pilihan','width'=>0,'extra'=>['id'=>'prodi','class' => '', 'disabled'],'type'=>'dropdown', ],
 		'nik'			=> ['label' => 'NIK','width'=>12, 'extra'=>['id'=>'noktp','class' => '', 'disabled'],'type'=>'text'],  
-		'nama'			=> ['label' => 'Nama Lengkap','width'=>15,'extra'=>['id'=>'name','class' => '', 'disabled'],'type'=>'text'], 
+		'nama'			=> ['label' => 'Nama Lenextragkap','width'=>15,'extra'=>['id'=>'name','class' => '', 'disabled'],'type'=>'text'], 
 		'nisn'			=> ['label' => 'NISN','width'=>0,'extra'=>['id'=>'nis','class' => '', 'disabled'],'type'=>'text'], 
 		'tempatlahir'	=> ['label' => 'Tempat Lahir','width'=>0,'extra'=>['id'=>'tmplhr','class' => '', 'disabled'],'type'=>'text'], 
 		'tgllahir'		=> ['label' => 'Tanggal Lahir','width'=>0,'extra'=>['id'=>'tgllhr','class' => '', 'disabled'],'type'=>'date'], 
@@ -74,7 +74,7 @@ class Register extends BaseConfig
 		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['id'=>'phone','class' => '', 'disabled'],'type'=>'tel'], 
 		'nama_ayah'		=> ['label' => 'Nama Ayah','width'=>12, 'extra'=>['id'=>'father','class' => '', 'disabled'],'type'=>'text'], 
 		'nama_ibu'		=> ['label' => 'Nama Ibu','width'=>0, 'extra'=>['id'=>'mother','class' => '', 'disabled'],'type'=>'text'], 
-		'alamat_ortu'	=> ['label' => 'Alamat Orang Tua','width'=>0, 'extra'=>['id'=>'prntaddrs','class' => '', 'disabled'],'type'=>'text'], 
+		'alamat_ortu'	=> ['label' => 'Alamat Orang Tua','width'=>0, ''=>['id'=>'prntaddrs','class' => '', 'disabled'],'type'=>'text'], 
 		'nohp_ayah'		=> ['label' => 'No. HP Ayah','width'=>8, 'extra'=>['id'=>'phfth','class' => '', 'disabled'],'type'=>'tel'], 
 		'nohp_ibu'		=> ['label' => 'No. HP Ibu','width'=>0, 'extra'=>['id'=>'phmth','class' => '', 'disabled'],'type'=>'tel'],
 		'sumber_info'	=> ['label' => 'Sumber Informasi','width'=>0, 'extra'=>['id'=>'sinfo','class' => '', 'disabled'],'type'=>'dropdown'],
@@ -128,7 +128,7 @@ class Register extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-	//	'detail' 	=> ['icon'=>'th-list','src'=>'enrollment/detail/', 'label'=>'Detail', 'extra'=>''],
+		'konfirm' 	=> ['icon'=>'th-list','src'=>'siswa/validasi?idx=', 'label'=>'Detail', 'extra'=>''],
 		'edit' 		=> ['icon'=>'edit','src'=>'enrollment/edit/', 'label'=>'Detail', 'extra'=>''],
 		'delete'	=> ['icon'=>'trash','src'=>'enrollment/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];

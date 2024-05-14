@@ -6,6 +6,10 @@ use Dompdf\FontMetrics;
 use Config\MyApp;
 use CodeIgniter\Files\File;
 
+use chillerlan\QRCode\Output\QROutputInterface;
+use chillerlan\QRCode\Data\QRMatrix;
+use chillerlan\QRCode\{QRCode, QROptions};
+
 class Pdfgenerator {
     public function generate($html, $filename='', $paper = 'A4', $orientation = '', $stream=TRUE)
     {   
@@ -19,7 +23,7 @@ class Pdfgenerator {
         if ($stream) {
             $dompdf->stream($filename.".pdf", array("Attachment" => 0));
             exit();
-        } else {
+        } else {            
 			$fname 	 	 = $filename.'.pdf';
 			$dirf 		 = setting()->get('MyApp.pdftmpDir');
 			$path 		 = setting()->get('MyApp.pdfPath_Dir');
@@ -100,11 +104,11 @@ class Pdfgenerator {
 		$canvas->line(16, $y, $w - 16, $y, $color, 1);
         $canvas->image($qrcode, 20, $y, 40, 40);
        // $canvas->page_text(65, 805, $myconfig->siteName, $font, 12, array(0,0,0));            
-        $canvas->page_text(65, $y+3, $myconfig->companyName, $font, 12, array(0,0,0));            
+        $canvas->page_text(65, $y+3, $companyName, $font, 12, array(0,0,0));            
         $canvas->page_text(65, $y+15, $text, $font, 9, array(0,0,0));            
 		//$canvas->page_text(260, 810, $footer, $font, 9, array(0,0,0));
 		$canvas->page_text($w-100, $y+3, "Page {PAGE_NUM} - {PAGE_COUNT}", $font, 9, array(0,0,0));
-		
+				
 		//Add an image to the pdf  as watermax
 		// Specify watermark image 
 		$imageURL = 'images/logofinal.png'; 
@@ -127,4 +131,47 @@ class Pdfgenerator {
 	    
 	}
 	
+	public function createQR($data, $fname = "qrcode.png")
+	{
+		$path = setting()->get('MyApp.qrPath_dir');
+		$qrurl = setting()->get('MyApp.qrDirectory');
+		
+		$qrcode  = new QRCode;
+		// set options after QRCode invocation
+		$options = new QROptions;
+		// $outputType can be one of: GDIMAGE_BMP, GDIMAGE_GIF, GDIMAGE_JPG, GDIMAGE_PNG, GDIMAGE_WEBP
+		//$options->outputType          = QROutputInterface::GDIMAGE_PNG;
+		$options->quality             = 60;
+		// the size of one qr module in pixels
+		$options->scale               = 20;
+		$options->bgColor             = [200, 150, 200];
+		$options->imageTransparent    = true;
+		// the color that will be set transparent
+		// @see https://www.php.net/manual/en/function.imagecolortransparent
+		$options->transparencyColor   = [200, 150, 200];
+		$options->drawCircularModules = true;
+		$options->drawLightModules    = true;
+		$options->circleRadius        = 0.4;
+		$options->keepAsSquare        = [
+			QRMatrix::M_FINDER_DARK,
+			QRMatrix::M_FINDER_DOT,
+			QRMatrix::M_ALIGNMENT_DARK,
+		];
+		/*
+		$options->moduleValues        = [
+			QRMatrix::M_FINDER_DARK    => [0, 63, 255], // dark (true)
+			QRMatrix::M_FINDER_DOT     => [0, 63, 255], // finder dot, dark (true)
+			QRMatrix::M_FINDER         => [233, 233, 233], // light (false)
+			QRMatrix::M_ALIGNMENT_DARK => [255, 0, 255],
+			QRMatrix::M_ALIGNMENT      => [233, 233, 233],
+			QRMatrix::M_DATA_DARK      => [0, 0, 0],
+			QRMatrix::M_DATA           => [233, 233, 233],
+		];
+		*/
+		if(! is_dir($path)){mkdir($path,0777,true);	}
+		//$fname = "qrcode.png";
+		//RENDER
+		(new QRCode($options))->render($data, $path.$fname);
+		return base_url().$qrurl.$fname;	
+	}
 }

@@ -9,9 +9,11 @@ use CodeIgniter\Files\File;
 use Config\MyApp;
 //use Modules\Siswa\Config\Siswa;
 
+use chillerlan\QRCode\Output\QROutputInterface;
+use chillerlan\QRCode\Data\QRMatrix;
 use chillerlan\QRCode\{QRCode, QROptions};
 use Picqer;
- 
+
 class Siswa extends BaseController
 {
 	public  $keys='';
@@ -75,7 +77,8 @@ class Siswa extends BaseController
 		$dtfilter['cVal'] = $cps;
 		$data['dtfilter'] = $dtfilter;
 		$data['ps'] 	  = $this->prodiModel->getDropdown();
-		$data['actions']  = $this->dconfig->actions;
+	//	$data['actions']  = $this->dconfig->actions;
+		$data['condActDet']  = $this->dconfig->condActDet;
 		$data['allowimport']= $this->dconfig->importallowed;
 		$data['isplainText'] = TRUE;
 		echo view($this->theme.'datalist',$data);	
@@ -109,7 +112,7 @@ class Siswa extends BaseController
 		$data['addONJs'] = "siswa.init()";
 		echo view($this->theme.'form',$data);
 	}
-	
+
 	function addAction(): RedirectResponse
 	{
 		$rules = $this->dconfig->roles;	
@@ -118,16 +121,15 @@ class Siswa extends BaseController
 			unset($data['noktp']);
 
 			//MENYIAPKAN DATA PENDUKUNG
-			$data['no_urt'] =$no;
-			$data['noinduk']=$this->_setNoInduk($data);
-			$data['tgl_reg']= strtotime($data['tgl_reg']);
-			
+			$data = $this->_setNoInduk($data);
 			$siswamodel = new SiswaModel();
 			$siswa= new \Modules\Siswa\Entities\siswa();
 			$siswa->fill($data);
 			$simpan = $siswamodel->insert($siswa, false);
 			if($simpan){
+				$ids = encrypt($NOINDUK);
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
+				return redirect()->to(base_url('siswa/ctkreg/'.$ids));
 			}else{
 				$this->session->setFlashdata('warning','Data gagal disimpan');
 				return redirect()->to(base_url('siswa'));
@@ -156,35 +158,58 @@ class Siswa extends BaseController
 		$fields1 = setting()->get('Register.fields');
 		unset($fields1['id_prodi']); //hapus id_prodi
 		$fields2 = setting()->get('Siswa.addFields');
+		$fields0 = setting()->get('Siswa.addOnFields');
+		//$fields1['sumber_info']['extra']['disabled']=true;
 		unset($fields2['noktp']);
 		unset($fields2['nik']);
 
 		$data = $this->data;
 		$data['title']	= "Tambah Data Siswa";
 		$data['error']  = [];
-		$data['fields'] = array_merge($fields1, $fields2);
+		$data['fields'] = array_merge($fields0, $fields1, $fields2);
 		$data['opsi'] 	= setting()->get('Register.opsi');
 		$data['opsi']['prodi'] 	= $this->prodiModel->getDropdown();
 		$data['rsdata'] = $regData;
+		$data['hidden'] = ['idreg' => $regData['idreg']];
 	//	$data['addONJs'] = "siswa.init()";
 		echo view($this->theme.'form',$data);
 	}
-	
-	function konfirm_action(): RedirectResponse
+
+	function konfirmAction(): RedirectResponse
 	{
 		$rules = $this->dconfig->roles;	
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
+			$dtdikf= ['nik', 'idreg', 'nama', 'nisn', 'tempatlahir', 'tgllahir', 'jk', 'alamat', 'nohp', 
+					  'nama_ayah', 'nama_ibu', 'alamat_ortu', 'nohp_ayah', 'nohp_ibu', 'sumber_info'];
+			//mengambil data field datadik
+			//test_result($data);
+			$datadik=[];
+			foreach($dtdikf as $k)
+			{
+				$datadik[$k]=$data[$k];
+			}
 			
-			test_result($data);
-			//MENYIAPKAN DATA PENDUKUNG
-			$data = $this->_setNoInduk($data);			
+			$siswaf = [
+				'noinduk', 'nik', 'prodi', 'no_ijazah', 'tgl_ijazah', 'tgl_diterima', 'tgl_reg', 'no_urt'
+			];
+			$data = $this->_setNoInduk($data);
+			
+			$dtreg=[];
+			foreach($siswaf as $k)
+			{
+				$dtreg[$k]=$data[$k];
+			}
+			show_result($data);
+			show_result($datadik);
+			show_result($dtreg);
+			
+			//test_result($data);
+			//MENYIMPAN DATA	
 			$siswamodel = new SiswaModel();
-			$siswa= new \Modules\Siswa\Entities\siswa();
-			$siswa->fill($data);
-			$simpan = $siswamodel->insert($siswa, false);
+			$simpan = $siswamodel->actSimpan($datadik, $dtreg);
 			if($simpan){
-				$ids = encrypt($NOINDUK);
+				$ids = encrypt($data['noinduk']);
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
 				return redirect()->to(base_url('siswa/ctkreg/'.$ids));
 			}else{
@@ -234,7 +259,7 @@ class Siswa extends BaseController
 		#RANDER pdf
 		$filename = date('ymdHis').$id.'-Bukti Daftar';
 
-		$html = view('Modules\Siswa\Views\buktiReg',$data);
+		$html = view('Modules\Siswa\Views\buktiReg',$fdata);
 		$pdf = new \App\Libraries\Pdfgenerator();
 	//	$pdf->createQR($dtQR);
 		
@@ -353,6 +378,27 @@ class Siswa extends BaseController
 		echo json_encode($data);
 		
 	}
+
+	private function _setNoInduk($data)
+	{
+		$thn= unix2Ind(strtotime($data['tgl_reg']),'Y');
+		$ps = $this->prodiModel->find($data['prodi'])->toarray();
+		
+		$param['tgl_reg >']=strtotime("01-01-".$thn. "00:00:00");
+		$param['prodi']=$data['prodi'];
+
+		$no=$this->model->getOrder($param);
+		$jur = $ps['jurusan'];
+		$lv = $ps['jenjang'];
+	//	test_result($no);
+		$th = unix2Ind(strtotime($data['tgl_reg']),'y');
+		$NOINDUK = $jur.$lv.$th.sprintf("%02d",$data['prodi']).sprintf("%03d",$no).random_string('numeric',1);
+		$data['no_urt'] =$no;
+		$data['noinduk']=$NOINDUK;
+		$data['tgl_reg']= strtotime($data['tgl_reg']);
+		return $data;	
+	}
+	
 }
 
 /* End of file yoa.php */

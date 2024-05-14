@@ -11,6 +11,8 @@ $routes->group("siswa", ["namespace" => "\Modules\Siswa\Controllers"], function 
 	$routes->get("add", "Siswa::addView");
 	$routes->post("add", "Siswa::addAction");
 	$routes->get("hapus/(:any)", "Siswa::delete/$1");
+	$routes->get("validasi", "Siswa::konfirm");
+	$routes->post("validasi", "Siswa::konfirmAction");
 	$routes->get("import", "Siswa::fromxlsx");
 	$routes->post("import", "Siswa::fromxlsx");
 	$routes->get("tempxls", "Siswa::tmpobyek");
@@ -21,6 +23,7 @@ $routes->group("siswa", ["namespace" => "\Modules\Siswa\Controllers"], function 
 	$routes->post("edit/(:any)", "Siswa::updateAction/$1");
 	$routes->get("detail/(:any)", "Siswa::detail/$1");
 	$routes->get("getprofil/(:any)", "Siswa::getprofil/$1");
+	$routes->get("ctkreg/(:any)", "Siswa::ctkbukti/$1");
 });
 
 $routes->group("datadik", ["namespace" => "\Modules\Siswa\Controllers"], function ($routes) {

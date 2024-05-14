@@ -139,7 +139,7 @@
 								
 					if(isset($condActDet))
 						{
-							$url = $condActDet[$data->state];
+							$url = (array_key_exists($data->state,$condActDet))?$condActDet[$data->state]:[];
 							foreach($url as $act)
 							{
 							//	$id= $ids;
