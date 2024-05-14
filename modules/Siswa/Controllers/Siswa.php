@@ -10,7 +10,8 @@ use Config\MyApp;
 //use Modules\Siswa\Config\Siswa;
 
 use chillerlan\QRCode\{QRCode, QROptions};
-
+use Picqer;
+ 
 class Siswa extends BaseController
 {
 	public  $keys='';
@@ -87,12 +88,11 @@ class Siswa extends BaseController
 		$data=$this->data;
 		$data['title']	= "Update Data Siswa";
 		$data['error']  = [];
-		$data['fields'] = $this->dconfig->fields;
+	//	$data['fields'] = $this->dconfig->fields;
 		$data['opsi'] 	= $this->dconfig->opsi;
 		$rsdata = $this->model->get($id);
 		$rsdata['tgllahir']=format_date($rsdata['tgllahir']);
 		$data['rsdata'] = $rsdata;
-	
 		echo view($this->theme.'vdetail',$data);
 	}
 	
@@ -100,7 +100,6 @@ class Siswa extends BaseController
 	{
 		$this->cekHakAkses('create_data');
 		$data=$this->data;
-	//	$prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
 		$data['title']	= "Tambah Data Siswa";
 		$data['error']  = [];
 		$data['fields'] = $this->dconfig->addFields;
@@ -111,7 +110,6 @@ class Siswa extends BaseController
 		echo view($this->theme.'form',$data);
 	}
 	
-	
 	function addAction(): RedirectResponse
 	{
 		$rules = $this->dconfig->roles;	
@@ -120,21 +118,10 @@ class Siswa extends BaseController
 			unset($data['noktp']);
 
 			//MENYIAPKAN DATA PENDUKUNG
-			$thn= unix2Ind(strtotime($data['tgl_reg']),'Y');
-			$ps = $this->prodiModel->find($data['prodi'])->toarray();
-			
-			$param['tgl_reg >']=strtotime("01-01-".$thn. "00:00:00");
-			$param['prodi']=$data['prodi'];
-
-			$no=$this->model->getOrder($param);
-			$jur = $ps['jurusan'];
-			$lv = $ps['jenjang'];
-
-			$th = unix2Ind(strtotime($data['tgl_reg']),'y');
-			$NOINDUK = $jur.$lv.$th.sprintf("%02d",$data['prodi']).sprintf("%03d",$no).random_string('numeric',1);
-			
-			$data['noinduk']=$NOINDUK;
 			$data['no_urt'] =$no;
+			$data['noinduk']=$this->_setNoInduk($data);
+			$data['tgl_reg']= strtotime($data['tgl_reg']);
+			
 			$siswamodel = new SiswaModel();
 			$siswa= new \Modules\Siswa\Entities\siswa();
 			$siswa->fill($data);
@@ -150,6 +137,65 @@ class Siswa extends BaseController
 		}
 	}
 	
+	function konfirm()
+	{
+		$this->cekHakAkses('create_data');
+		if (isset($_GET['idx'])) 
+		{
+			$id = decrypt($_GET['idx']);
+		}else{
+			return redirect()->to(base_url('enrollment'));
+		}
+
+		//ambil data registrasi
+		$RegModel = model(\Modules\Register\Models\EnrollModel::class); 
+		$regData = $RegModel->find($id)->toarray();
+		$regData['prodi']=$regData['id_prodi'];
+		
+		//test_result($regData);
+		$fields1 = setting()->get('Register.fields');
+		unset($fields1['id_prodi']); //hapus id_prodi
+		$fields2 = setting()->get('Siswa.addFields');
+		unset($fields2['noktp']);
+		unset($fields2['nik']);
+
+		$data = $this->data;
+		$data['title']	= "Tambah Data Siswa";
+		$data['error']  = [];
+		$data['fields'] = array_merge($fields1, $fields2);
+		$data['opsi'] 	= setting()->get('Register.opsi');
+		$data['opsi']['prodi'] 	= $this->prodiModel->getDropdown();
+		$data['rsdata'] = $regData;
+	//	$data['addONJs'] = "siswa.init()";
+		echo view($this->theme.'form',$data);
+	}
+	
+	function konfirm_action(): RedirectResponse
+	{
+		$rules = $this->dconfig->roles;	
+		if ($this->validate($rules)) {
+			$data = $this->request->getPost();
+			
+			test_result($data);
+			//MENYIAPKAN DATA PENDUKUNG
+			$data = $this->_setNoInduk($data);			
+			$siswamodel = new SiswaModel();
+			$siswa= new \Modules\Siswa\Entities\siswa();
+			$siswa->fill($data);
+			$simpan = $siswamodel->insert($siswa, false);
+			if($simpan){
+				$ids = encrypt($NOINDUK);
+				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
+				return redirect()->to(base_url('siswa/ctkreg/'.$ids));
+			}else{
+				$this->session->setFlashdata('warning','Data gagal disimpan');
+				return redirect()->to(base_url('siswa'));
+			}	
+		}else{
+			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+		}
+	}
+
 	function delete($ids){
 		$id = decrypt($ids); 
 		$siswamodel = new SiswaModel();
@@ -162,32 +208,41 @@ class Siswa extends BaseController
 	function ctkbukti($ids)
 	{
 		$id = decrypt($ids);
+		//$redColor = [255, 0, 0];
+		$generator = new Picqer\Barcode\BarcodeGeneratorPNG();
 		#Ambil data 
+		$user = $this->data['user'];
+		//test_result($user);
 		$opsi = $this->data['opsi'];
 		$rsdata =  $this->model->get($id);
-		$dtQR = base_url('enroll/detail/'.$ids);
-		$tgl_lahir= ucwords($rsdata['tempatlahir'].", ".format_tanggal($rsdata['tgllahir']));
+		$dtQR = base_url('siswa/detail/'.$ids);
+		$tgl_lahir= ucwords($rsdata['tempatlahir'].", ".format_date($rsdata['tgllahir']));
 		$rsdata['tgllahir'] = $tgl_lahir;
-		$rsdata['qrcode'] = '<img src="'.(new QRCode)->render($dtQR).'" alt="QR Code" height="150" width="150" />';
+		$rsdata['qrcode'] = '';// '<img src="'.(new QRCode)->render($dtQR).'" alt="QR Code" height="150" width="150" />';
+		$barcode   = $generator->getBarcode($rsdata['noinduk'], $generator::TYPE_CODE_128);
+		$rsdata['barcode'] = '<img src="data:image/png;base64,'. base64_encode($barcode).'"/>';
 		$image ='images/' . setting()->get('MyApp.logo');
-		$rsdata['logo']	= base_url($image);
-		$rsdata['judul'] = "PROGRAM PILIHAN: ".strtoupper($rsdata['nm_prodi']);
+		$fdata['logo']	= base_url($image);
+		$fdata['instansi']	= setting()->get('MyApp.companyName');
 		$fdata['opsi'] = $opsi;
 		$fdata['rsdata'] = $rsdata;
-		$fdata['fields'] = $this->dconfig->printfield;		
-		$data['rsdata'] = $fdata;
-		
+		$fdata['fields'] = $this->dconfig->fields;		
+		$fdata['rsdata'] = $rsdata;
+		$fdata['user'] = $user['fullname'];
+	//	test_result($rsdata);
+	//	echo view('Modules\Siswa\Views\buktiReg',$fdata);
 		#RANDER pdf
 		$filename = date('ymdHis').$id.'-Bukti Daftar';
 
-		$html = view('Modules\Register\Views\print_bukti',$data);
+		$html = view('Modules\Siswa\Views\buktiReg',$data);
 		$pdf = new \App\Libraries\Pdfgenerator();
-		$hsl = $pdf->generate($html, $filename, "A4", "landscape");
+	//	$pdf->createQR($dtQR);
 		
-        //echo $hsl;
+		$hsl = $pdf->generate($html, $filename, "A4", "potrait",FALSE);
         $Data=$this->data;
         $Data['file_pdf'] = $hsl;
         echo view($this->theme.'viewfile',$Data);
+		
 	}
 	
 	function fromxlsx(){

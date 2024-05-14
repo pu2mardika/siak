@@ -11,8 +11,8 @@ class Pdfgenerator {
     {   
         $options = new Options();
         $options->set('isRemoteEnabled', TRUE);
-       // $dompdf = new Dompdf($options);
-		$dompdf = new Dompdf(array('enable_remote' => true));
+        $options->set('enable_remote', TRUE);
+        $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html);
         $dompdf->setPaper($paper, $orientation);
         $dompdf->render();
@@ -20,12 +20,30 @@ class Pdfgenerator {
             $dompdf->stream($filename.".pdf", array("Attachment" => 0));
             exit();
         } else {
-            $dompdf->output();
-            $domPdf = $pdf->getDomPDF();
-  
-	        $canvas = $domPdf->get_canvas();
-	        $canvas->page_text(10, 10, "Page {PAGE_NUM} of {PAGE_COUNT}", null, 10, [0, 0, 0]);
-        	return $pdf->download($filename.'.pdf');
+			$fname 	 	 = $filename.'.pdf';
+			$dirf 		 = setting()->get('MyApp.pdftmpDir');
+			$path 		 = setting()->get('MyApp.pdfPath_Dir');
+			$companyName = setting()->get('MyApp.companyName');
+			$footer 	 = setting()->get('MyApp.appName')." ".setting()->get('MyApp.appVerison');
+
+			$canvas = $dompdf->get_canvas();
+			$fontmatrik = new FontMetrics($canvas, $options);
+			$font = $fontmatrik->get_font("helvetica", "10");
+			$txtHeight = $fontmatrik->get_font_height($font, 8);  
+			$w = $canvas->get_width();
+			$h = $canvas->get_height();
+			$y = $h - 2 * $txtHeight - 30;
+			
+			$color = array(0, 0, 0);
+			$text = $footer." | Generated on: ".date("d-m-Y H:i");
+			$canvas->line(16, $y, $w - 16, $y, $color, 1);
+			      
+			$canvas->page_text(65, $y+3, $companyName, $font, 12, array(0,0,0));            
+			$canvas->page_text(65, $y+15, $text, $font, 9, array(0,0,0));  
+
+			$hsl= $dompdf->output();
+			file_put_contents($path.$fname, $hsl);
+			return base_url($dirf.$fname);
         }
     }
 	
@@ -36,17 +54,18 @@ class Pdfgenerator {
 		$path 	 = $myconfig ->pdfPath_Dir;
 		$fname 	 = $filename.'.pdf';
 		
-		$img_url = $myconfig ->imagesURL;
-		$logo 	 = $myconfig ->logo;
-		
-		$qr_url = $myconfig ->qrDirectory;
+		$qr_url = $myconfig ->qrDirectory;		
+		$companyName = setting()->get('MyApp.companyName');
+		$logo 		 = setting()->get('MyApp.logo');
+		$img_url 	 = setting()->get('MyApp.imagesURL');
 		
 		$options = new Options();
 		$options->setIsPhpEnabled(true);
 		$options->setIsRemoteEnabled(true);
+		$options->set('enable_remote', TRUE);
 		//$options->setDebugCss(true);
-		//$dompdf = new Dompdf($options);
-		$dompdf = new Dompdf(array('enable_remote' => true));
+		$dompdf = new Dompdf($options);
+		//$dompdf = new Dompdf(array('enable_remote' => true));
 		$dompdf->set_option('defaultFont', 'Courier');
 		
 		//(Optional) Setup the paper size and orientation
@@ -86,8 +105,6 @@ class Pdfgenerator {
 		//$canvas->page_text(260, 810, $footer, $font, 9, array(0,0,0));
 		$canvas->page_text($w-100, $y+3, "Page {PAGE_NUM} - {PAGE_COUNT}", $font, 9, array(0,0,0));
 		
-		 
-		
 		//Add an image to the pdf  as watermax
 		// Specify watermark image 
 		$imageURL = 'images/logofinal.png'; 
@@ -109,6 +126,5 @@ class Pdfgenerator {
 		return base_url($dirf.$fname);
 	    
 	}
-	
 	
 }
