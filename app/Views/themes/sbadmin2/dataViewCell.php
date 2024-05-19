@@ -87,8 +87,7 @@
  
  <?= $this->section('pageScripts') ?>
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-	
+
 	<?php if($session->getFlashdata('sukses')) { ?>
 	<script>
 	  swal("Berhasil", "<?php echo $session->getFlashdata('sukses'); ?>","success")

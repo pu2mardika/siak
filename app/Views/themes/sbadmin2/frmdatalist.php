@@ -36,11 +36,16 @@
 				  </a>
 				  <?php
 				  if(isset($addOnACt)){
-					  	$ids = encrypt($RData[$keys]);
 					  	foreach($addOnACt as $aksi)
 						{
+								/*
 							echo "<a role='button' class='btn btn-outline-".$aksi['btn_type']."'  href='".base_url().$aksi['src'].$ids.
 								 "' title='".$aksi['label']."'><i class='fa fa-".$aksi['icon']."'></i>&nbsp;".$aksi['label']."</a> ";
+								*/
+								$act="show('".$aksi['src'].$ids."','#xcontent')";
+							//	$act="show('".$aksi['src'].$ids."','#xcontent')";
+								echo '<a role="button" class="btn btn-outline-'.$aksi['btn_type'].'" href="javascript:" 
+								onclick="'.$act.'" title="'.$aksi['label'].'"><i class="fa fa-'.$aksi['icon'].'"></i>&nbsp;'.$aksi['label'].'</a>';
 						}
 				  }
 				  
@@ -272,7 +277,6 @@
  <?= $this->endSection() ?>
  
  <?= $this->section('pageScripts') ?>
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
 	
 	<?php if($session->getFlashdata('sukses')) { ?>
@@ -327,11 +331,6 @@
 		      "scrollX": true,
 		    });
 		  
-		    $('#vdetail').on('hidden.bs.modal', function (e) {
-			  // do clear data on dtviews
-			  $('#dtviews').html = "";
-			})
-			
 			<?php if(isset($addONJs)){ echo $addONJs ;} ?>
 			
 		});

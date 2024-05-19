@@ -29,17 +29,6 @@ var rombel=function(){
     return {
 		init: function(){
 	   		$("input#srcwalikelas").easyAutocomplete(vtendik);  
-	   		/*$("#search_box").focus();
-	   	//	$(".contentform").ajaxForm(options);
-	   	//	$("#btn_cari").click(function(){$(".contentform").submit();});
-	   		$(".chgtp").click(function(){
-	   		    var tp=$(this).attr("data-tp");
-	   		    var thn=$(this).attr("data-thn");
-	   		    $("#itp").val(tp);
-	   		    $("#dtp").attr("data-value-type",tp);
-	   		    load('spp/chgTP/'+tp,"#dtp");
-	   		});
-	   		*/
 			$("#vprodi").change(function(){
 				var k=$("#vprodi").val();
 				load('rombel/dtcurr/'+k,'#currID');
@@ -51,3 +40,4 @@ var rombel=function(){
 		},
 	};
 }();
+function showpart(){var k=$('#srcroom').val(); load('rombel/show?id='+k,'#dtviews');};

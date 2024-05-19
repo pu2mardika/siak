@@ -40,6 +40,10 @@ class Rombel extends Migration
 		        'constraint' => 11,
 		        'null'    	 => true,
 		    ],
+			'learn_metode' => [
+		        'type'       => 'tinyint',
+		        'constraint' => 2,
+		    ],
 			'created_at' => [
 		        'type'    => 'TIMESTAMP',
 		        'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -78,10 +82,6 @@ class Rombel extends Migration
 		    'no_absen' => [
 		        'type'       => 'int',
 		        'constraint' => 11,
-		    ],
-		    'learn_metode' => [
-		        'type'       => 'tinyint',
-		        'constraint' => 2,
 		    ],
 		    'created_at' => [
 		        'type'    => 'TIMESTAMP',

@@ -39,15 +39,6 @@ class RombelModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
     
-    // total
-    public function total($tp=array())
-    {
-        $builder = $this->db->table($this->table);
-        $query = $builder->where($tp);
-        $query = $builder->get();
-        return $query;
-    }
-    
     public function getAll($tp=array())
     {
     	$builder = $this->db->table('rombel a');
