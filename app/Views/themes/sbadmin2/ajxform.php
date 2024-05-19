@@ -62,12 +62,12 @@ if(isset($hidden)){$Hidden = $hidden ;}
 		?>
 			<div class="form-floating">
 				<label for="<?php echo $forID;?>"><?php echo $row['label'];?></label>
-				<?=$formInput?>	 
-				   
+				<?=$formInput?>	    
 			</div>
-
+			
 		<?php } ?>
-        
+			<div id="addOnInput" class="form-floating"></div>
+			<div id="dtviews"></div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup/Batal</button>
@@ -80,6 +80,7 @@ if(isset($hidden)){$Hidden = $hidden ;}
 
 <?php  
 //	$this->section('pageScripts');
+$addONJs=(isset($addONJs))?$addONJs:"";
 ?>
 <script> 
 	$(document).ready(function ($) {
@@ -117,7 +118,8 @@ if(isset($hidden)){$Hidden = $hidden ;}
 			    format: 'DD-MM-YYYY'
 			});		
 		*/
-			return false;
+		<?= $addONJs ?>
+		return false;
     });			
 </script>
 <?php

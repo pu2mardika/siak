@@ -11,7 +11,7 @@ class RombelModel extends Model
 
     //protected $useAutoIncrement = true;
     //protected $returnType    =  'Modules\Room\Entities\Rombel'; // configure entity to use'array';
-    protected $allowedFields = ['id','nama_rombel', 'getLevel', 'kode_ta', 'grade', 'curr_id','walikelas'];
+    protected $allowedFields = ['id','nama_rombel', 'getLevel', 'kode_ta', 'grade', 'curr_id','walikelas','learn_metode'];
     
     protected $returnType    =  \Modules\Room\Entities\Rombel::class;
     protected $useSoftDeletes = true;
@@ -56,4 +56,14 @@ class RombelModel extends Model
         return $result;
     }
     
+    public function getDropdown($param=[])
+    {
+    	$data = $this->where($param)->findAll();
+    	$dd[""]="[--PILIH ROMBEL--]";
+    	foreach($data as $val)
+    	{
+    		$dd[$val->id]=$val->nama_rombel;
+    	}
+    	return $dd;
+    }
 }

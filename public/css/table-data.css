@@ -1,0 +1,47 @@
+.table-data{        
+    width: 100%;
+    padding: 0;
+    margin: 0 auto 1.5em auto;
+    border-top: 1px solid #C1DAD7;
+    border-left: 1px solid #C1DAD7;
+    border-collapse:collapse;
+    font-size:12px;
+    font-family: verdana,arial,sans-serif;
+    color:#545454;
+}
+.table-data td {
+font: normal 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+border-right: 1px solid #C1DAD7;
+border-bottom: 1px solid #C1DAD7;
+padding: 3px 6px 3px 6px;
+color: #4f6b72;
+width: auto;
+}
+.table-data th {
+font: normal 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+border-right: 1px solid #C1DAD7;
+border-bottom: 1px solid #C1DAD7;
+padding: 3px 6px 3px 6px;
+color: #4f6b72;
+width: auto;
+text-align: center;
+background-color:#F5FAFA;
+font-weight: bold;
+}
+.pinggir-data{
+font: normal 11px "Trebuchet MS", Verdana, Arial, Helvetica, sans-serif;
+border-right: 1px solid #C1DAD7;
+border-bottom: 1px solid #C1DAD7;
+padding: 3px 6px 3px 6px;
+color: #4f6b72;
+/*width: auto;*/
+text-align: left;
+}
+
+.isix{
+padding: 8px
+}
+
+.dataTables_wrapper{
+    background-color: transparent;
+}

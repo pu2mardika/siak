@@ -69,7 +69,7 @@ class Rombel extends Migration
 		$fields = [
 		    'id' => [
 		        'type'       => 'varchar',
-		        'constraint' => 15,
+		        'constraint' => 40,
 		    ],
 		    'roomid' => [
 		        'type'       => 'varchar',
@@ -99,10 +99,9 @@ class Rombel extends Migration
          
         $this->forge->addField($fields);
         $this->forge->addPrimaryKey('id');
-        $this->forge->addKey('roomid');
-        $this->forge->addKey('noinduk');
+		$this->forge->addUniqueKey(['nik', 'roomid'], 'roomid');
 		$this->forge->addForeignKey('roomid', 'rombel', 'id','CASCADE', 'CASCADE', 'fk_room_member');
-		//$this->forge->addForeignKey('noinduk', 'siswa', 'noinduk','CASCADE', 'CASCADE', 'fk_room_siswa');
+		$this->forge->addForeignKey('noinduk', 'siswa', 'noinduk','CASCADE', 'CASCADE', 'fk_room_siswa');
         $this->forge->createTable('rombel_memb', true, $attributes);
     }
 

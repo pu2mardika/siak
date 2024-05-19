@@ -128,7 +128,20 @@ class TblSiswa extends Migration
 		        'type'       => 'int',
 		        'constraint' => 11,
 		    ],
-		    'tgl_reg' => [
+			'no_ijazah' => [
+		        'type'       => 'varchar',
+		        'constraint' => 50,
+		        'null'    	 => true,
+		    ],
+			'tgl_ijazah' => [
+		        'type'       => 'date',
+		        'null'    	 => true,
+		    ],
+			'tgl_diterima' => [
+		        'type'       => 'date',
+		        'null'    	 => true,
+		    ],
+			'tgl_reg' => [
 		        'type'       => 'int',
 		        'constraint' => 11,
 		        'null'    	 => true,

@@ -15,4 +15,11 @@ $routes->group("rombel", ["namespace" => "\Modules\Room\Controllers"], function 
 	$routes->get("dtwali/(:any)", "Rombel::getwali/$1");
 	$routes->get("dtcurr/(:any)", "Rombel::getcurr/$1");
 	$routes->get("shgrade/(:any)", "Rombel::getGrade/$1");
+
+	$routes->get("detail", "RoomMember::index");
+	$routes->get("pos/(:any)", "RoomMember::addView/$1");
+	$routes->post("pos/(:any)", "RoomMember::addAction");
+	$routes->get("action", "RoomMember::doAction");
+	$routes->get("scrmember", "RoomMember::getDataMember");
 });
+$routes->addRedirect('roommember', 'rombel');

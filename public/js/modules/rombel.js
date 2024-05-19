@@ -29,7 +29,7 @@ var rombel=function(){
     return {
 		init: function(){
 	   		$("input#srcwalikelas").easyAutocomplete(vtendik);  
-			$("#vprodi").change(function(){
+	   		$("#vprodi").change(function(){
 				var k=$("#vprodi").val();
 				load('rombel/dtcurr/'+k,'#currID');
 			});
@@ -38,6 +38,19 @@ var rombel=function(){
 				load('rombel/shgrade/'+k,'#vgrade');
 			});
 		},
+
+		add:function(r){
+			$("#bsdrommb").change(function(){
+				var k=$("#bsdrommb").val();
+				var r=$("[name='roomid']").val(); 
+				$('#dtviews').html("");
+				load('rombel/action?act='+k+'&ids='+r,'#addOnInput');
+			});	
+			$("#srcroom").change(function(){
+				var k=$(this).val();
+				load('rombel/show?id='+k,'#dtviews');
+			});	
+		},
 	};
 }();
-function showpart(){var k=$('#srcroom').val(); load('rombel/show?id='+k,'#dtviews');};
+function getData(){var k=$('#srcroom').val(); load('rombel/scrmember?ids='+k,'#dtviews');};
