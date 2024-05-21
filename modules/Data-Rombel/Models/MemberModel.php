@@ -48,7 +48,7 @@ class MemberModel extends Model
     {
         $where = "a.deleted_at IS NULL";
         $builder = $this->db->table('rombel_memb a');
-		$builder->select('a.*, c.idreg, c.nama, c.nisn, c.jk, b.no_ijazah')
+		$builder->select('a.id, a.roomid, a.noinduk, c.idreg, c.nama, c.nisn, c.jk, b.no_ijazah, a.no_absen, a.created_at')
                 ->join('siswa b', 'a.noinduk = b.noinduk')
                 ->join('tbl_datadik c', 'b.nik = c.nik');	
 		$builder->orderBy('a.noinduk', 'ASC');
@@ -66,7 +66,7 @@ class MemberModel extends Model
 
     public function get($id)
     {
-        $parm['noinduk']=$id;
+        $parm['a.noinduk']=$id;
         return $this->getData($parm)->getRowArray();
     }
 

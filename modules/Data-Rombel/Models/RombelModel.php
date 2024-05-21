@@ -66,4 +66,16 @@ class RombelModel extends Model
     	}
     	return $dd;
     }
+
+    public function Dropdown($param=[])
+    {
+    	$data = $this->where($param)->findAll();
+    	$dd[""]="[--PILIH ROMBEL--]";
+    	foreach($data as $val)
+    	{
+    		$id = decrypt($val->id);
+            $dd[$id]=$val->nama_rombel;
+    	}
+    	return $dd;
+    }
 }

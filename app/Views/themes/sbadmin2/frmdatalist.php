@@ -195,9 +195,9 @@
 								
 								//CEK IS CONDITIONAL ACTION DETAIL IS PRESENT
 					
-								if(isset($condActDet) || isset($addOnACt))
+								if(isset($detAction) || isset($ddOnActDet) || isset($condActDet))
 								{
-									echo '<th width="9%"><div align="center">Aksi</div></th>';
+									echo '<th width="4%"><div align="center">Aksi</div></th>';
 								}	
 								?>
 							</tr> 
@@ -229,32 +229,37 @@
 								
 								//CEK CONDITIONAL ACTION
 								$ids= encrypt($data[$key]);
-								if(isset($detAction)){
-									echo "<td>";
-									foreach($detAction as $act)
+								if(isset($detAction) || isset($addOnActDet) ||isset($condActDet)){
+									echo '<td align="center">';
+									foreach($detAction as $aksi)
 									{
-										echo "<a href='".base_url().$act['src'].$ids."' title='".$act['label']."'><i class='fa fa-".$act['icon']."'></i></a> ";
+										$act="show('".$aksi['src'].$ids."','#xcontent')";
+										echo '<a href="javascript:" onclick="'.$act.'" title="'.$aksi['label'].'"><i class="fa fa-'.$aksi['icon'].'"></i></a> ';
 									}
-									echo "</td>";
-								}
+
+									if(isset($addOnActDet)){										
+										foreach($addOnActDet as $act)
+										{
+											echo "<a href='".base_url().$act['src'].$ids."' ".$act['extra']." title='".$act['label']."'><i class='fa fa-".$act['icon']."'></i></a> ";
+										}
+									}
 								
-								if(isset($condActDet))
-								{
-									$fkey = $condActDet['field'];
-									$state = $condActDet['state'];
-									$aksi = $condActDet['actdet'];
-									
-									$url = $aksi[$data[$state]];
-									echo "<td>";
-									foreach($url as $act)
+									if(isset($condActDet))
 									{
+										$fkey = $condActDet['field'];
+										$state = $condActDet['state'];
+										$aksi = $condActDet['actdet'];
+										$url = $aksi[$data[$state]];
 										
-										$lebel = ($act['useRow'])?$data[$fkey]:"<i class='fa fa-".$act['icon']."'></i>";
-										$href = ($act['src']=="#")?"#":base_url().$act['src'].$ids;
-										echo "<a href='".$href."' title='".$act['label']."' ".
-											$act['attr'].">$lebel</a> ";
+										foreach($url as $act)
+										{
+											$lebel = ($act['useRow'])?$data[$fkey]:"<i class='fa fa-".$act['icon']."'></i>";
+											$href = ($act['src']=="#")?"#":base_url().$act['src'].$ids;
+											echo "<a href='".$href."' title='".$act['label']."' ".
+												$act['attr'].">$lebel</a> ";
+										}
 									}
-									echo "</td>";
+									echo "</td>";	
 								}
 								?>
 							</tr>

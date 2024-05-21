@@ -75,6 +75,8 @@ class RoomMember extends BaseController
 		$data['keys'] 	= $this->dconfig->primarykey;
 		$data['opsi']   = setting()->get('Siswa.opsi');
 		$data['detAction']= $this->dconfig->actions;
+		$data['addOnActDet']= $this->dconfig->detAddOnACt;
+		$data['addOnACt']= $this->dconfig->addOnAct;
 	//	test_result($dtmember);
 		echo view($this->theme.'frmdatalist',$data);	
     }
@@ -165,22 +167,27 @@ class RoomMember extends BaseController
 	{
 		$id = decrypt($ids); 
 		$data=$this->data;
-		$currModel  = model(\Modules\Akademik\Models\KurikulumModel::class); 
-		$prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
-		$data['title']	= "Update Data Rombel";
+	//	$currModel  = model(\Modules\Akademik\Models\KurikulumModel::class); 
+	//	$prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
+		$data['title']	= "Mutasi Rombel";
 		$data['error']  = [];
-		$data['fields'] = $this->dconfig->fields;
-		$data['opsi'] 	= $this->dconfig->opsi;
+		$data['fields'] = $this->dconfig->Mutasaifields;
+		$data['opsi']   = setting()->get('Siswa.opsi');
+	
 		$rs =  $this->model->find($id)->toarray();
-		$rs['wali']     = $rs['walikelas'];
-		$data['rsdata'] = $rs;
-		$data['opsi'] 	= $this->dconfig->opsi;
-		$data['opsi']['kode_ta'] = $this->TpModel->getDropdown();
-		$data['opsi']['prodi']   = $prodiModel->getDropdown();
-		$data['opsi']['curr_id'] = $currModel->getDropdown();
-		$data['addONJs'] = "rombel.init()";
-		//test_result($rs);
-		echo view($this->theme.'form',$data);
+		$rsdata = $this->model->get($rs['noinduk']);
+		show_result($rsdata);
+		//AMBIL DATA ROMBEL YANG SETARA
+		$room = $this->rombelModel->find($rsdata['roomid'])->toarray();
+		$idx = encrypt($rs['roomid']);
+		$rsdata['nama_rombel'] = $room['nama_rombel'];
+		$data['rsdata'] = $rsdata;
+		$parm = ['curr_id'=>$room['curr_id'],'grade'=>$room['grade'],'kode_ta'=>$room['kode_ta']];
+		$roomDD = $this->rombelModel->Dropdown($parm);
+		unset($roomDD[$rs['roomid']]);
+		$data['opsi']['roomid']=$roomDD;
+		$data['rtarget']	= "#dtHistory";
+		echo view($this->theme.'ajxform',$data);
 	}
 
 	function editAction($ids): RedirectResponse
@@ -193,11 +200,9 @@ class RoomMember extends BaseController
 			
 			//$this->model->update($id, $data);
 			$data = $this->request->getPost();
-			unset($data['prodi']); //hapus field prodi karena tidak maskuk ekda tabse
-			unset($data['wali']); //hapus field wali  karena yang dipakai adalah field wii
-			$model = new RombelModel();
+			$model = new MemberModel();
 
-			$rsdata = new \Modules\Room\Entities\rombel();
+			$rsdata = new \Modules\Room\Entities\member();
 			$rsdata->fill($data);
 			$simpan = $model->update($id, $rsdata);
 			
@@ -215,8 +220,8 @@ class RoomMember extends BaseController
 	
 	function delete($ids){
 		$id = decrypt($ids); 
-		$rombelmodel = new RombelModel();
-		$rombelmodel->delete($id);
+		$MemberModel = new MemberModel();
+		$MemberModel->delete($id);
 
 		$this->session->setFlashdata('sukses','Data telah dihapus');
 		return redirect()->to(base_url('rombel'));

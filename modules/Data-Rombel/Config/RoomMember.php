@@ -58,6 +58,15 @@ class RoomMember extends BaseConfig
 	public $suportFields = [
 		'room'		=> ['label' => 'Nama Rombel','extra'=>['id'=>'srcroom','class' => '', 'onchange'=>'getData(this.value)', 'required' => true],'type'=>'dropdown']
 	];
+
+	public $Mutasaifields = [
+		'noinduk'	=> ['label' => 'No. Induk (NIPD)', 'extra'=>['id'=>'noktp','class' => '', 'disabled' => true],'type'=>'text'], 
+		'nama'		=> ['label' => 'Nama Lengkap', 'extra'=>['id'=>'namasiswa','class' => '', 'disabled' => true],'type'=>'text'], 
+		'nisn'		=> ['label' => 'N.I.S.N','extra'=>['id'=>'nisnx','class' => '', 'disabled' => true],'type'=>'text'], 
+		'jk'		=> ['label' => 'Jenis Kelamin','extra'=>['id'=>'jks','class' => '', 'disabled' => true],'type'=>'dropdown'], 
+		'nama_rombel'=> ['label' => 'Rombel Awal','extra'=>['id'=>'srcroom','class' => '', 'disabled' => true],'type'=>'text'], 
+		'roomid'	=> ['label' => 'Rombel Tujuan','extra'=>['id'=>'dstroom','class' => '', 'required' => true],'type'=>'dropdown'], 
+	];
 	/**
 	* ---------------------------------------------------------------------
 	* ROLE DATA
@@ -72,10 +81,7 @@ class RoomMember extends BaseConfig
 	];  
 	
 	public $roleEdit = [
-		'nama_rombel'   => ['label' => 'Nama Rombel', 'rules' =>'required'],
-        'walikelas'  	=> ['label' => 'Nama Wali Kelas', 'rules' =>'required'],
-        'kode_ta'  		=> ['label' => 'Tahun Pelajaran', 'rules' =>'required'],
-        'grade'  		=> ['label' => 'Grade/Tingkat', 'rules' =>'required'],
+        'roomid'  		=> ['label' => 'Rombel Tujuan', 'rules' =>'required'],
 	];  
 	/**
 	 * --------------------------------------------------------------------
@@ -103,13 +109,17 @@ class RoomMember extends BaseConfig
 	* 
 	* @var array
 	*/
+
+	public $addOnAct = [
+		'add' => ['icon'=>'plus-square','src'=>'rombel/enroll/', 'label'=>'Enroll Siswa', 'btn_type'=>'success'],
+	];
+
 	public $actions = [
-		'mutasi'	=> ['icon'=>'exchange','src'=>'rombel/mutasi/', 'label'=>'Detail', 'extra'=>''],
-		'delete'	=> ['icon'=>'trash','src'=>'rombel/rem/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
+		'mutasi'	=> ['icon'=>'exchange','src'=>'rombel/mutasi/', 'label'=>'Pindah Rombel', 'extra'=>''],
 	];
 
 	public array $detAddOnACt = [
-		'add' => ['icon'=>'plus-square','src'=>'rombel/pos/', 'label'=>'Tambah', 'btn_type'=>'success'],
+		'delete'	=> ['icon'=>'remove','src'=>'rombel/del/', 'label'=>'Hapus Siswa', 'extra'=>"onclick='confirmation(event)'"],
 	];
 	
 }

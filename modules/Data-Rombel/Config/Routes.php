@@ -17,9 +17,12 @@ $routes->group("rombel", ["namespace" => "\Modules\Room\Controllers"], function 
 	$routes->get("shgrade/(:any)", "Rombel::getGrade/$1");
 
 	$routes->get("detail", "RoomMember::index");
-	$routes->get("pos/(:any)", "RoomMember::addView/$1");
-	$routes->post("pos/(:any)", "RoomMember::addAction");
+	$routes->get("enroll/(:any)", "RoomMember::addView/$1");
+	$routes->post("enroll/(:any)", "RoomMember::addAction");
 	$routes->get("action", "RoomMember::doAction");
 	$routes->get("scrmember", "RoomMember::getDataMember");
+	$routes->get("del/(:any)", "RoomMember::delete/$1");
+	$routes->get("mutasi/(:any)", "RoomMember::editView/$1");
+	$routes->post("mutasi/(:any)", "RoomMember::editAction/$1");
 });
 $routes->addRedirect('roommember', 'rombel');
