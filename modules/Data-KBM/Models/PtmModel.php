@@ -1,23 +1,23 @@
 <?php
 
-namespace Modules\Room\Models;
+namespace Modules\Kbm\Models;
 
 use CodeIgniter\Model;
 
-class MemberModel extends Model
+class PtmModel extends Model
 {
-    protected $table            = 'rombel_memb';
+    protected $table            = 'ptm';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    protected $returnType       = \Modules\Room\Entities\Member::class;
+    protected $returnType       = \Modules\Kbm\Entities\Ptm::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id', 'roomid', 'noinduk', 'no_absen'];
+    protected $allowedFields    = ['id', 'id_mapel', 'roomid', 'subgrade', 'ptk_id', 'kkm'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
 
-    protected array $casts = [];
+    protected array $casts = [];    
     protected array $castHandlers = [];
 
     // Dates
@@ -46,12 +46,15 @@ class MemberModel extends Model
 
     private function getData($parm)
     {
+       //`id`, `id_mapel`, `roomid`, `subgrade`, `ptk_id`, `kkm`, 
         $where = "a.deleted_at IS NULL";
-        $builder = $this->db->table('rombel_memb a');
-		$builder->select('a.id, a.roomid, a.noinduk, c.idreg, c.nama, c.nisn, c.jk, b.no_ijazah, a.no_absen, a.created_at')
-                ->join('siswa b', 'a.noinduk = b.noinduk')
-                ->join('tbl_datadik c', 'b.nik = c.nik');	
-		$builder->orderBy('a.noinduk', 'ASC');
+        $builder = $this->db->table('ptm a');
+		$builder->select('a.id, a.roomid, a.id_mapel, c.skk, a.kkm, e.subject_name, a.ptk_id, b.nama, b.noid, d.nama_rombel, d.kode_ta, a.subgrade')
+                ->join('tbl_ptk b', 'a.ptk_id = b.nik')
+                ->join('mapel c', 'a.id_mapel = c.id_mapel')
+                ->join('rombel d', 'a.roomid = d.id')
+                ->join('subjects e', 'c.id_mapel = e.id');	
+		$builder->orderBy('a.id_mapel', 'ASC');
 		$builder->where($where);
 		$builder->where($parm);
 		$query = $builder->get();
@@ -60,31 +63,7 @@ class MemberModel extends Model
 
     public function getAll($parm=[])
     {
-    //    $parm[deleted_at]=null;
         return $this->getData($parm)->getResultArray();
-    }
-
-    public function get($id)
-    {
-        $parm['a.noinduk']=$id;
-        return $this->getData($parm)->getRowArray();
-    }
-
-    /**
-     * menampilkan data siswa sesuai dengan prodi dan belum
-     * terdaftar pada ta dan grade bersangkutan.
-     */
-    public function getParticipan($prodi, $ta, $grade)
-    {
-        $sql = 'SELECT a.noinduk, a.nik, b.nama, a.prodi, b.idreg, b.jk
-        FROM siswa a JOIN tbl_datadik b ON a.nik = b.nik
-        WHERE a.prodi = '.$prodi.' AND NOT EXISTS
-        ((SELECT y.nik, x.id, z.kode_ta, z.grade   
-           FROM  rombel_memb x JOIN siswa y ON x.noinduk = y.noinduk  JOIN rombel z ON x.roomid = z.id
-           WHERE z.kode_ta = '.$ta.' AND z.grade = '.$grade.' AND a.nik = y.nik));';
-        
-        $query = $this->db->query($sql);
-        return $query->getResultArray();
     }
 
     public function simpanMasal($data)
@@ -96,6 +75,6 @@ class MemberModel extends Model
     public function updateMasal($data)
     {
         $builder = $this->db->table($this->table);
-        return $builder->updateBatch($data);
+        return $builder->updateBatch($data,['id_mapel', 'roomid', 'subgrade']);
     }
 }

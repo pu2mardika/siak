@@ -176,7 +176,7 @@ class RoomMember extends BaseController
 	
 		$rs =  $this->model->find($id)->toarray();
 		$rsdata = $this->model->get($rs['noinduk']);
-		show_result($rsdata);
+		//show_result($rsdata);
 		//AMBIL DATA ROMBEL YANG SETARA
 		$room = $this->rombelModel->find($rsdata['roomid'])->toarray();
 		$idx = encrypt($rs['roomid']);

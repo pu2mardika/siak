@@ -39,8 +39,26 @@ class MapelModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
     
+	private function getsData($param=[])
+	{
+		$builder = $this->db->table('mapel a');
+		$builder->select('a.*, b.subject_name, b.akronim, c.grade, c.subgrade')
+				->join('subjects b', 'a.id_mapel = b.id')
+				->join('tblskl c', 'a.id_skl = c.id');
+		$builder->orderBy('a.id_skl', 'ASC');
+		$builder->orderBy('b.item_order', 'ASC');
+		$builder->where($param);
+		$query = $builder->get();
+		return $query;
+	}
+
+	public function getsMapel($parm)
+	{
+		return $this->getsData($parm)->getResultArray();
+	}
+
     public function getMapel($currID){    	
-    	//'subject_name', 'akronim', 'item_order'
+    	/*'subject_name', 'akronim', 'item_order'
     	$builder = $this->db->table('mapel a');
 		$builder->select('a.*, b.subject_name, b.akronim, c.grade, c.subgrade')
 				->join('subjects b', 'a.id_mapel = b.id')
@@ -49,6 +67,10 @@ class MapelModel extends Model
 		$builder->orderBy('b.item_order', 'ASC');
 		$builder->where('c.currId', $currID);
 		$query = $builder->get()->getResult();
+		*/
+		$param['c.currId']=$currID;
+		$builder = $this->getsData($param);
+		$query = $builder->getResult();
 		$Result = [];
 		foreach($query as $dt)
 		{
@@ -62,7 +84,7 @@ class MapelModel extends Model
 		}
 		return $Result;
     }
-    
+	    
     public function detMapel(array $parm)
     {
     	$RS=[];

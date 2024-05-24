@@ -49,6 +49,7 @@ class Autoload extends AutoloadConfig
         'Modules\Account' 	=> ROOTPATH. 'modules/accounting',
         'Modules\Room' 		  => ROOTPATH. 'modules/Data-Rombel',
         'Modules\Register'	=> ROOTPATH. 'modules/register',
+        'Modules\Kbm' 		  => ROOTPATH. 'modules/Data-KBM',
         'Theme'   	  		  => ROOTPATH. 'template',
     ];
 

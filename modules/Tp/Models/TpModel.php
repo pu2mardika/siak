@@ -61,7 +61,7 @@ class TpModel extends Model
     public function getDropdown()
     {
     	$data = $this->findAll();
-    	$dd=[];
+    	$dd[''] = "[--PILIH--]";
     	foreach($data as $val)
     	{
     		$dd[$val->thid]=$val->deskripsi;
