@@ -52,6 +52,7 @@ class Autoload extends AutoloadConfig
         'Modules\Kbm' 		  => ROOTPATH. 'modules/Data-KBM',
         'Modules\Assessment'  => ROOTPATH. 'modules/Assessment',
         'Modules\Project'     => ROOTPATH. 'modules/Project',
+        'Modules\Raport'      => ROOTPATH. 'modules/Raport',
         'Theme'   	  		  => ROOTPATH. 'template',
     ];
 
