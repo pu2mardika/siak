@@ -13,7 +13,7 @@ class MapelModel extends Model
     protected $returnType       = \Modules\Akademik\Entities\Mapel::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_mapel', 'id_skl', 'skk'];
+    protected $allowedFields    = ['id','id_subject', 'id_skl', 'skk'];
 
     // Dates
     protected $useTimestamps = false;
@@ -42,8 +42,8 @@ class MapelModel extends Model
 	private function getsData($param=[])
 	{
 		$builder = $this->db->table('mapel a');
-		$builder->select('a.*, b.subject_name, b.akronim, c.grade, c.subgrade')
-				->join('subjects b', 'a.id_mapel = b.id')
+		$builder->select('a.id, a.id as id_mapel, a.id_subject, a.id_skl, a.skk, b.subject_name, b.akronim, c.grade, c.subgrade')
+				->join('subjects b', 'a.id_subject = b.id')
 				->join('tblskl c', 'a.id_skl = c.id');
 		$builder->orderBy('a.id_skl', 'ASC');
 		$builder->orderBy('b.item_order', 'ASC');
@@ -79,7 +79,7 @@ class MapelModel extends Model
 			$dt->akronim = $akrn;
 			$dt->skk = (int)$skk;
 			//$dt->id = encrypt($dt->id_mapel.setting('Mapel.arrDelimeter').$dt->id_skl);
-			$dt->id = $dt->id_mapel.setting('Mapel.arrDelimeter').$dt->id_skl;
+			//$dt->id = $dt->id_subject.setting('Mapel.arrDelimeter').$dt->id_skl;
 			$Result[$dt->id_skl][]=$dt;
 		}
 		return $Result;
@@ -91,7 +91,8 @@ class MapelModel extends Model
     	$R=$this->where($parm)->find();
     	foreach($R as $V)
     	{
-    		$RS['id_mapel']=$V->id_mapel;
+    		$RS['id']=$V->id;
+    		$RS['id_subject']=$V->id_subject;
     		$RS['id_skl']=$V->id_skl;
     		$RS['skk']=$V->skk;
     	}
@@ -109,7 +110,7 @@ class MapelModel extends Model
     	//'id', 'grup_id', 'subject_name', 'akronim', 'item_order', 'tot_skk', 'form_nilai' from subjects
     	$sql="SELECT `a`.`id`, `a`.`subject_name`  FROM `subjects` `a` LEFT JOIN `grup_mapel` `b` 
 			  ON `a`.`grup_id`=`b`.`grup_id` WHERE `b`.`curr_id` = '$currID' 
-			  AND `a`.`id` NOT IN (SELECT id_mapel FROM mapel WHERE id_skl = '$sklID') 
+			  AND `a`.`id` NOT IN (SELECT id_subject FROM mapel WHERE id_skl = '$sklID') 
 			  ORDER BY `a`.`grup_id` ASC, `a`.`item_order` ASC";
 		$result = $this->db->query($sql)->getResult();
 		

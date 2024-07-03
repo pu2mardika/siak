@@ -53,16 +53,22 @@ class Rating extends Migration
             	'constraint' => 1,
             	'default'    => 0,
             ],
-            'has_descript' => [
+            'bobot' => [
             	'type' => 'tinyint', 
             	'constraint' => 1,
             	'default'    => 0,
+            ],
+            'akronim' => [
+            	'type' => 'varchar', 
+            	'constraint' => 3,
+            	'null'    	 => false,
             ],
         ];
         
         $this->forge->addField($fields);
         $this->forge->addPrimaryKey('id');
         $this->forge->addKey('curr_id');
+        $this->forge->addKey('akronim');
         $this->forge->addForeignKey('curr_id', 'curriculum', 'id', 'CASCADE', 'CASCADE', 'fk_curr_rating');
         $this->forge->createTable('rating', true, $attributes);
         

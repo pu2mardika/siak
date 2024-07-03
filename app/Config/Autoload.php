@@ -42,14 +42,16 @@ class Autoload extends AutoloadConfig
     public $psr4 = [
         APP_NAMESPACE => APPPATH, // For custom app namespace
         'Config'      => APPPATH . 'Config',
-        'Modules'     		=> ROOTPATH. 'modules',
-        'Modules\Akademik'  => ROOTPATH. 'modules/akademik',
-        'Modules\Siswa'     => ROOTPATH. 'modules/siswa',
+        'Modules'     		  => ROOTPATH. 'modules',
+        'Modules\Akademik'    => ROOTPATH. 'modules/akademik',
+        'Modules\Siswa'       => ROOTPATH. 'modules/siswa',
         'Modules\Tendik' 	  => ROOTPATH. 'modules/tendik',
-        'Modules\Account' 	=> ROOTPATH. 'modules/accounting',
+        'Modules\Account' 	  => ROOTPATH. 'modules/accounting',
         'Modules\Room' 		  => ROOTPATH. 'modules/Data-Rombel',
-        'Modules\Register'	=> ROOTPATH. 'modules/register',
+        'Modules\Register'	  => ROOTPATH. 'modules/register',
         'Modules\Kbm' 		  => ROOTPATH. 'modules/Data-KBM',
+        'Modules\Assessment'  => ROOTPATH. 'modules/Assessment',
+        'Modules\Project'     => ROOTPATH. 'modules/Project',
         'Theme'   	  		  => ROOTPATH. 'template',
     ];
 

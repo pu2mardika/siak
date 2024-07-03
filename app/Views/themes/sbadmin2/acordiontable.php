@@ -83,15 +83,23 @@
 							<table class="table table-bordered table-sm">
 								<thead class="thead-light">
 								<tr>
-									<th width="5%">#</th>
-									<?php foreach($fields as $key => $dt){ //MENYIAPKAN  JUDUL COLOM TABEL ?>
+									<th width="5%"><div align="center">#</div></th>
+									<?php foreach($fields as $k => $dt){ //MENYIAPKAN  JUDUL COLOM TABEL ?>
 									<th width="<?=$dt['width']?>%"><div align="center"><?=$dt['label']?> </div></th>
-									<?php } ?>
+									<?php } 
+									if(isset($actions) && count($actions)>0)
+									{
+										echo '<th width="8%"><div align="center">Aksi</div></th>';
+									}
+									?>
 								</tr>
 								</thead><tbody>
 								<?php //pengulangan isi tabel 
 								$no=1;
+							//	test_result($rs['detail']);
 								foreach($rs['detail'] as $rc){
+									$ids= (array_key_exists($key, $rc))?$rc[$key]:"";
+									if(isset($isplainText)){$ids = encrypt($ids) ;}
 									echo "<tr>";
 									echo '<td valign="top" align="center"><div align="center">'.$no.'</div></td>';
 									foreach($fields as $fd =>$val)
@@ -108,12 +116,28 @@
 										}
 										echo '<td class="nowrapped" align="'.$Algn.'" valign="middle">'.$dtval.'</td>';
 									}
+									if(isset($actions) && count($actions)>0)
+									{
+										echo '<td width="8%">';
+										foreach($actions as $act)
+										{
+											echo "<a role='button' class='btn ".$act['btn_type']."'  href='".base_url().$act['src'].$ids.
+												 "' title='".$act['label']."'><i class='fa fa-".$act['icon']."'></i></a> ";
+										}
+										echo '</td>';
+									}
 									echo "</tr>";
 									$no++;
 								}
 								?>
 								</tbody>
 							</table>
+							<?php
+							if(isset($subfootnote))
+							{
+								//tampilkan 
+							}
+							?>
 						</div>
 					</div><br>
 				<?php } ?>

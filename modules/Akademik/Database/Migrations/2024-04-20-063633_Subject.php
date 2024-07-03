@@ -89,7 +89,11 @@ class Subject extends Migration
 		*/
 		
 		 $fields = [
-            'id_mapel'=> [
+            'id'=> [
+            	'type' => 'varchar', 
+            	'constraint' => 16,  
+            ],
+            'id_subject'=> [
             	'type' => 'varchar', 
             	'constraint' => 11,  
             ],
@@ -104,10 +108,10 @@ class Subject extends Migration
         ];
         
         $this->forge->addField($fields);
-        $this->forge->addPrimaryKey(['id_mapel', 'id_skl'],'id');
-     //   $this->forge->addKey('id_mapel');
-      //  $this->forge->addKey('id_skl');
-		$this->forge->addForeignKey('id_mapel', 'subjects', 'id', 'CASCADE', 'CASCADE', 'fk_subject');
+        $this->forge->addPrimaryKey('id');
+        $this->forge->addKey('id_subject');
+        $this->forge->addKey('id_skl');
+		$this->forge->addForeignKey('id_subject', 'subjects', 'id', 'CASCADE', 'CASCADE', 'fk_subject');
 		$this->forge->addForeignKey('id_skl', 'tblSkl', 'id', 'CASCADE', 'CASCADE', 'fk_dtSKL');
         $this->forge->createTable('mapel', true, $attributes);
     }

@@ -31,7 +31,7 @@
 		$Acction = current_url(); 
 		$allowAdd =TRUE;
 		$allowAct =TRUE;
-		
+		$dom = (isset($dom))?$dom:'Bfltip';
 		if(isset($act)){$Acction = $act ;}
 		if(isset($allowADD)){$allowAdd = $allowADD;}
 		if(isset($allowACT)){$allowAct = $allowACT;}
@@ -128,6 +128,23 @@
 							echo "<a href='".base_url().$act['src'].$ids."' title='".$act['label']."'><i class='fa fa-".$act['icon']."'></i></a> ";
 						}
 					}
+
+					if(isset($ajxAction))
+					{
+						foreach($ajxAction as $aksi)
+						{
+							if($aksi['extra']=="")
+							{
+								$act = 'onclick = "show(\''.$aksi["src"].$ids.'\',\'#idviews\')"';
+								$href = "javascript:";
+							}else{
+								$act  = $aksi['extra'];
+								$href = base_url().$aksi['src'].$ids;
+							}
+							//$act="show('".$aksi['src'].$ids."','#xcontent')";
+							echo '<a href="'.$href.'" '.$act.' title="'.$aksi['label'].'"><i class="fa fa-'.$aksi['icon'].'"></i></a> ';
+						}
+					}
 					
 					if(isset($actions)){
 						foreach($actions as $btn => $act)
@@ -208,7 +225,7 @@
 	<script>
 		$(document).ready(function() {
 		   $('#table-result').DataTable({
-		      "dom": 'Bfltip',
+		      "dom": '<?=$dom?>',
 		      "buttons": ["copy", "csv", "excel", "pdf", "print"],
 		      "responsive": true, 
 		      "paging": true,

@@ -1,0 +1,3 @@
+Tanggal 17 Juni 2024
+perubahan struktur penilaian dengan tambahan modular, dan agregat
+perubahan pada bagian mapel di kurikulum dengan penambahan jenis penilaian

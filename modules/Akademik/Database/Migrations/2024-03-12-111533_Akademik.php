@@ -157,6 +157,15 @@ class Akademik extends Migration
             	'type' => 'smallint', 
             	'constraint' => 2,
             ],
+			'has_project' => [
+            	'type' => 'tinyint', 
+            	'constraint' => 1,
+            	'default' => 0,
+            ],
+			'action_class'  => [
+            	'type' => 'varchar', 
+            	'constraint' => 6,
+            ],
 			'state'   	 => [
             	'type' => 'smallint', 
             	'constraint' => 1,

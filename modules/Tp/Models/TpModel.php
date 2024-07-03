@@ -60,7 +60,7 @@ class TpModel extends Model
     
     public function getDropdown()
     {
-    	$data = $this->findAll();
+    	$data = $this->orderBy('thid', 'desc')->findAll();
     	$dd[''] = "[--PILIH--]";
     	foreach($data as $val)
     	{

@@ -47,7 +47,8 @@ class RoomMember extends BaseController
 		$data=$this->data;		
 		if (isset($_GET['ids'])) 
 		{
-			$id = decrypt($_GET['ids']);
+			$ids= $_GET['ids'];
+			$id = decrypt($ids);
 		}else{
 			$this->session->setFlashdata('warning','Data gagal ditampilkan');
 			return redirect()->to(base_url('rombel'));
@@ -58,14 +59,33 @@ class RoomMember extends BaseController
 		$R = $this->rombelModel->getAll(['id'=>$id]);
 		$room = (array) $R[0];
 		$addTitle = $room['nama_rombel'];
-		
-		$room['curr_id']=$KUR[$room['curr_id']];
+		$currID = $room['curr_id'];
+		$room['curr_id']=$KUR[$currID];
 		$room['learn_metode']=$LM['learn_metode'][$room['learn_metode']];
+		$roomID = decrypt($room['id']);
 		
 		//RESUME DATA
 		$data['resume']['field'] = $this->dconfig->ResumeFields;
 		$data['resume']['data'] = $room;
 		$data['resume']['subtitle'] = "Manajemen Anggota Rombel ";//.$addTitle;
+
+		//AMBIL DATA KURIKULUM MEMILIKI PROJEK ATAU TIDAK
+		$KUR = $this->currModel->find($currID); 
+		$msg = "NO PROJECT";
+		$addOnAct = $this->dconfig->addOnAct;
+		if($KUR->has_project==1)
+		{
+			$msg = "HAS PROJECT";
+			$data['resume']['field']['projek']=['label' => 'Data Projek', 'perataan'=>'left'];
+			
+			//ambil data projek
+			$projekModel = model(\Modules\Project\SkenModel::class);
+		//	$rsProjek = $projekModel->asarray()->where('room_id', $roomID)->findAll();
+			$rsProjek = $projekModel->getsAll(['room_id'=>$roomID]);
+			//menjadikan hasil rsproject sebagai string
+			$data['resume']['data']['projek'] = view_cell('\Modules\Project\Controllers\SkenProject::getProject', ['id'=>$id]);
+		}
+	
 		$data['addOnACt'] = $this->dconfig->detAddOnACt;
 		$dtmember = $this->model->getAll(['a.roomid'=>$id]);
 		$data['rsdata']	= $dtmember;
@@ -75,7 +95,7 @@ class RoomMember extends BaseController
 		$data['opsi']   = setting()->get('Siswa.opsi');
 		$data['detAction']= $this->dconfig->actions;
 		$data['addOnActDet']= $this->dconfig->detAddOnACt;
-		$data['addOnACt']= $this->dconfig->addOnAct;
+		$data['addOnACt']= $addOnAct;
 	//	test_result($dtmember);
 		echo view($this->theme.'frmdatalist',$data);	
     }
@@ -87,7 +107,7 @@ class RoomMember extends BaseController
 		if(is_null($ids))
 		{
 			$this->session->setFlashdata('warning','Data gagal ditampilkan');
-			return redirect()->to(base_url('rombel'));
+			return redirect()->to(base_url('nilai'));
 		}
 		
 		$data = $this->data;
@@ -123,7 +143,7 @@ class RoomMember extends BaseController
 		//menampilkan data siswa dalam cek box
 		$data['resData'] = $partisipan;
 		$data['keys'] 	 = 'noinduk';
-		$data['fhead']   = $this->dconfig->srcFields;
+		$data['fields']  = $this->dconfig->srcFields;
 		$data['has_ref'] = [];
 		$data['opsi']	 = [];
 		echo view($this->theme.'cells/tablecheck',$data);
@@ -257,7 +277,8 @@ class RoomMember extends BaseController
 		//menampilkan data siswa dalam cek box
 		$data['resData'] = $partisipan;
 		$data['keys'] 	 = 'noinduk';
-		$data['fhead']   = $this->dconfig->srcFields;
+	//	$data['fhead']   = $this->dconfig->srcFields;
+		$data['fields']   = $this->dconfig->srcFields;
 		$data['has_ref'] = [];
 		$data['opsi']	 = [];
 		echo view($this->theme.'cells/tablecheck',$data);

@@ -49,11 +49,11 @@ class PtmModel extends Model
        //`id`, `id_mapel`, `roomid`, `subgrade`, `ptk_id`, `kkm`, 
         $where = "a.deleted_at IS NULL";
         $builder = $this->db->table('ptm a');
-		$builder->select('a.id, a.roomid, a.id_mapel, c.skk, a.kkm, e.subject_name, a.ptk_id, b.nama, b.noid, d.nama_rombel, d.kode_ta, a.subgrade')
+		$builder->select('a.id, a.roomid, a.id_mapel, c.skk, a.kkm, e.subject_name, a.ptk_id, b.nama, b.noid, d.nama_rombel, d.kode_ta, a.subgrade, d.curr_id')
                 ->join('tbl_ptk b', 'a.ptk_id = b.nik')
-                ->join('mapel c', 'a.id_mapel = c.id_mapel')
+                ->join('mapel c', 'a.id_mapel = c.id')
                 ->join('rombel d', 'a.roomid = d.id')
-                ->join('subjects e', 'c.id_mapel = e.id');	
+                ->join('subjects e', 'c.id_subject = e.id');	
 		$builder->orderBy('a.id_mapel', 'ASC');
 		$builder->where($where);
 		$builder->where($parm);

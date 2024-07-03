@@ -31,7 +31,7 @@ class RoomMember extends BaseConfig
 	* 
 	*/
 	public $fields = [
-		'noinduk'		=> ['label' => 'No. Induk (NIPD)','width'=>12, 'extra'=>['id'=>'noktp','class' => '', 'required' => true],'type'=>'text'], 
+		'noinduk'		=> ['label' => 'No. Induk (NIPD)','width'=>12, 'extra'=>['id'=>'noktp', 'class' => '', 'required' => true],'type'=>'checkbox'], 
 		'nama'			=> ['label' => 'Nama Lengkap','width'=>25,'extra'=>['id'=>'namasiswa','class' => '', 'required' => true],'type'=>'text'], 
 		'nisn'			=> ['label' => 'N.I.S.N','width'=>10,'extra'=>['id'=>'nisnx','class' => '', 'required' => true],'type'=>'text'], 
 		'jk'			=> ['label' => 'Jenis Kelamin','width'=>8, 'extra'=>['id'=>'jks','class' => '', 'required' => true],'type'=>'dropdown'], 
@@ -50,9 +50,10 @@ class RoomMember extends BaseConfig
 	];
 
 	public $srcFields = [
-		'noinduk'		=> ['label' => 'No. Induk (NIPD)','width'=>10], 
-		'nama'			=> ['label' => 'Nama Lengkap','width'=>50], 
-		'jk'			=> ['label' => 'JK','width'=>5],
+		'nipd'		=> ['label' => 'No. Induk (NIPD)','width'=>10,'extra'=>['id'=>'bsdrommb', 'name'=>'pd[]'], 'type'=>'checkbox'], 
+		'noinduk'	=> ['label' => 'No. Induk (NIPD)','width'=>15, 'type'=>'display'], 
+		'nama'		=> ['label' => 'Nama Lengkap','width'=>50, 'type'=>'display'], 
+		'jk'		=> ['label' => 'JK','width'=>5,'type'=>'display'],
 	];
 
 	public $suportFields = [

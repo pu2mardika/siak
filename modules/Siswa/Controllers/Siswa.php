@@ -122,6 +122,7 @@ class Siswa extends BaseController
 
 			//MENYIAPKAN DATA PENDUKUNG
 			$data = $this->_setNoInduk($data);
+			$NOINDUK = $data['noinduk'];
 			$siswamodel = new SiswaModel();
 			$siswa= new \Modules\Siswa\Entities\siswa();
 			$siswa->fill($data);
@@ -200,9 +201,9 @@ class Siswa extends BaseController
 			{
 				$dtreg[$k]=$data[$k];
 			}
-			show_result($data);
-			show_result($datadik);
-			show_result($dtreg);
+		//	show_result($data);
+		//	show_result($datadik);
+		//	show_result($dtreg);
 			
 			//test_result($data);
 			//MENYIMPAN DATA	

@@ -18,11 +18,11 @@
 					<?php 
 					$dfield = $resume['field'];
 					$RData = $resume['data'];
-					$subtitle = (array_key_exists('subtitle',$resume))?$resume['subtitle']:"Keterangan";
+					$subtitle = (array_key_exists('subtitle',$resume))?$resume['subtitle']:"";
 					?>
-					<div class="card bg-transparent">
+					<div class="card text-dark bg-transparent">
 						<div class="card-body">
-							<h5 class="card-titler text-info"><?= $subtitle ?>:</h5>
+							<h5 class="card-titler text-info"><?= $subtitle ?></h5>
 							<table class='table table-sm'>
 								<?php
 								
@@ -130,14 +130,14 @@
 			<?php
 			} //END FI ALERTS ?>
 		</div>
-		
+		<br>
 		<?php
 		if(isset($rsdata)){
 			$Adact="";
 		?>
-			<div class="card" id="History">
-				<h5 class="card-header">
-					<button class="btn btn-outline-primary" data-toggle="collapse" href="#dtHistory" role="button" aria-expanded="true" aria-controls="dtHistory">
+			<div class="card " id="History">
+				<h5 class="card-header bg-light">
+					<button class="btn btn-outline-primary btn-sm" role="button" data-toggle="collapse" data-target="#dtHistory" aria-expanded="true" aria-controls="dtHistory">
 						Show\Hide Detail
 					</button>
 					<span class="float-right dropdown">
@@ -160,12 +160,12 @@
 							
 							if(isset($condAddOnAct)){
 								$ids = encrypt($RData[$keys]);
-								$addOnACt = $condAddOnAct[$dataStated];
+								$caddOnACt = $condAddOnAct[$dataStated];
 								
-								foreach($addOnACt as $aksi)
+								foreach($caddOnACt as $aksi)
 								{
-									echo "<a role='button' class='btn btn-outline-".$aksi['btn_type']."'  href='".base_url().$aksi['src'].$ids.
-										"' title='".$aksi['label']."'><i class='fa fa-".$aksi['icon']."'></i>&nbsp;".$aksi['label']."</a> ";
+									echo "<a class='dropdown-item'  href='".base_url().$aksi['src'].$ids.
+										"' ".$aksi['extra']."  title='".$aksi['label']."'><i class='fa fa-".$aksi['icon']."'></i>&nbsp;".$aksi['label']."</a> ";
 								}
 							}
 							?>
@@ -173,7 +173,7 @@
 					</span>
 				</h5>
 				
-				<div id="dtHistory" class="card-body text-dark bg-transparent">
+				<div id="dtHistory" class="width card-body text-dark bg-transparent overflow-auto">
 					<?php $hfield=[]; ?>
 					<table id="<?php echo ($dataTable)?"table-result":"dtable";?>" class="table table-striped table-bordered" width="100%" cellspacing="0" 
 					data-order='[[ 1, "asc" ]]' data-page-length='25'>
@@ -233,8 +233,16 @@
 									echo '<td align="center">';
 									foreach($detAction as $aksi)
 									{
-										$act="show('".$aksi['src'].$ids."','#xcontent')";
-										echo '<a href="javascript:" onclick="'.$act.'" title="'.$aksi['label'].'"><i class="fa fa-'.$aksi['icon'].'"></i></a> ';
+										if($aksi['extra']=="")
+										{
+											$act = 'onclick = "show(\''.$aksi["src"].$ids.'\',\'#xcontent\')"';
+											$href = "javascript:";
+										}else{
+											$act  = $aksi['extra'];
+											$href = base_url().$aksi['src'].$ids;
+										}
+										//$act="show('".$aksi['src'].$ids."','#xcontent')";
+										echo '<a href="'.$href.'" '.$act.' title="'.$aksi['label'].'"><i class="fa fa-'.$aksi['icon'].'"></i></a> ';
 									}
 
 									if(isset($addOnActDet)){										

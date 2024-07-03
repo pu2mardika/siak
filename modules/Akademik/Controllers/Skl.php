@@ -71,7 +71,7 @@ class Skl extends BaseController
 		$data['key']	  = setting('Skl.primarykey');
 		
 		$data['opsi']	  = $this->curr_model->getLevel($id);
-		$data['dtview'][0]['rsdata'] = $this->model->where('currId',$id)->findAll();
+	//	$data['dtview'][0]['rsdata'] = $this->model->where('currId',$id)->findAll();
 		$data['dtview'] = $this->_getMapel($id);
 		$data['rtarget']= "#skl-content";
 		$data['title']  = "Daftar Capaian Pembelajaran";

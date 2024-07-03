@@ -44,10 +44,10 @@ class Mapel extends BaseController
 		$data   = $this->data;
 		$data['fields'] = $this->dconfig->fields;
 		$data['useCKeditor'] = false;
-		$data['opsi']['id_mapel'] = $this->model->getDropdown($id[1],$id[0]);
-		$data['hidden']		= ['id_skl'=>$id[0], 'currID'=>$id[1]];
-		$data['useCKeditor']= false;
-		$data['rtarget']	= "#skl-content";
+		$data['opsi']['id_subject'] = $this->model->getDropdown($id[1],$id[0]);
+		$data['hidden']		 = ['id_skl'=>$id[0], 'currID'=>$id[1]];
+		$data['useCKeditor'] = false;
+		$data['rtarget']	 = "#skl-content";
 		$data['title']	= "Tambah Mata Pelajaran";
 		$data['error'] 	= [];// validation_list_errors();
 		$data['rsdata'] = [];
@@ -62,7 +62,12 @@ class Mapel extends BaseController
 		$rules = $this->dconfig->roles;	
 		if ($this->validate($rules)) {
 			$dataMapel = $this->request->getPost();
+			//ambil grade dan sub grade dari skl
+			$sklModel = model(\Modules\Akademik\Models\SklModel::class);
+			$skl = $sklModel->find($dataMapel['id_skl']);
+			$id = $dataMapel['id_subject'].$skl->grade.$skl->subgrade;
 			unset($dataMapel['currID']);
+			$dataMapel['id']=$id;
 			$MapelModel = new MapelModel();
 			$Mapel= new \Modules\Akademik\Entities\Mapel();
 			$Mapel->fill($dataMapel);
@@ -88,30 +93,28 @@ class Mapel extends BaseController
 		$this->cekHakAkses('update_data');
 		$idn = decrypt($ids); 
 		
-		$id = explode(setting('Mapel.arrDelimeter'),$idn); //$id[0]= mapel_id, $idx[1]=$idx[3] = id_skl, $idx[2] = id_curr
-		//$id = explode(setting('Mapel.arrDelimeter'),decrypt($idx[0])); //$id[0]= mapel_id, $id[1] = id_skl
-		//test_result($id);
-		$parm =['id_mapel'=>$id[0], 'id_skl'=>$id[1]];
+		$id = explode(setting('Mapel.arrDelimeter'),$idn); //$id[0]= mapel_id, $idx[1] = id_curr, $idx[2] = id_skl
+	//	test_result($id);
+		$parm =['id_subject'=>$id[0], 'id_skl'=>$id[2]];
 		$data   = $this->data;
 		$data['title']	= "Update Data Mapel";
 		$this->dconfig->fields;
 		$data['useCKeditor'] = false;
-		$data['opsi']['id_mapel'] = $this->model->getDropdown($id[2],$id[2]);
-		$data['hidden']		= ['id_skl'=>$id[1]];
+		$data['opsi']['id_subject'] = $this->model->getDropdown($id[1],$id[1]);
+		$data['hidden']		= ['id_skl'=>$id[2]];
 		$data['useCKeditor']= false;
 		$data['rtarget']	= "#skl-content";
 		$data['error'] = validation_list_errors();		 
-		//$rs =  $this->model->where($parm)->find();
-		$data['rsdata'] =  $this->model->detMapel($parm);      
+		$data['rsdata'] =  $this->model->find($id[0])->toarray();//$this->model->detMapel($parm);      
 		echo view($this->theme.'ajxform',$data); 
 	}
 	
 	function updateAction($ids): RedirectResponse
 	{
 		$idn = decrypt($ids); 
-		$id = explode(setting('Mapel.arrDelimeter'),$idn); //$id[0]= mapel_id, $idx[1]=$idx[3] = id_skl, $idx[2] = id_curr
+		$id = explode(setting('Mapel.arrDelimeter'),$idn); //$id[0]= mapel_id, $idx[1] = id_curr, $idx[2] = id_skl
 		$roles = $rules = $this->dconfig->roles;
-		$parm =['id_mapel'=>$id[0], 'id_skl'=>$id[1]];
+		$parm =['id'=>$id[0]];
 		
 		if ($this->validate($roles)) {
 			$data = $this->request->getPost();

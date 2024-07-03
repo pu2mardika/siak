@@ -67,7 +67,9 @@ if(isset($hidden)){$Hidden = $hidden ;}
 			
 		<?php } ?>
 			<div id="addOnInput" class="form-floating"></div>
-			<div id="dtviews"></div>
+			<div id="dtviews">
+				<?php if(isset($vcell)){echo $vcell;}?>
+			</div>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup/Batal</button>

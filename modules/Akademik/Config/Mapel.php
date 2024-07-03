@@ -16,7 +16,7 @@ class Mapel extends BaseConfig
 	* 
 	*/
 	public array $fields = [
-		'id_mapel'=> ['label' => 'Mata Pelajaran','width'=>35,'extra'=>['id' => 'mpid','class' => '', 'required' => true],'type'=>'dropdown'],
+		'id_subject'=> ['label' => 'Mata Pelajaran','width'=>35,'extra'=>['id' => 'mpid','class' => '', 'required' => true],'type'=>'dropdown'],
 		'skk'	=> ['label' => 'Jumlah SKK','width'=>10,'extra'=>['id' => 'jskk','class' => '', 'required' => true],'type'=>'text'], 
 	];
 	
@@ -34,7 +34,7 @@ class Mapel extends BaseConfig
     
 	public array $roles = [
         'id_skl'   	=> ['label' => 'Kode/Akronim', 'rules' =>'required'],
-		'id_mapel'	=> ['label' => 'Nama Mata Pelajaran', 'rules' =>'required'],
+		'id_subject'	=> ['label' => 'Nama Mata Pelajaran', 'rules' =>'required'],
         'skk'  	=> ['label' => 'Jumlah SKK', 'rules' =>'required'],
 	];  
 

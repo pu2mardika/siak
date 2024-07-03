@@ -66,7 +66,7 @@ foreach($fields as $fd => $row){
 
 <?php } ?>
 	<div id="addOnInput" class="form-floating"></div>
-	<div id="dtviews"></div>
+	<div id="dtviews"><?php if(isset($vcell)){echo $vcell;}?></div>
 <div class="text-center">
   <button type="submit" class="btn btn-primary"><i class="fa fa-save"></i>&nbsp;Simpan</button>
   <button type="reset" class="btn btn-secondary">Reset</button>

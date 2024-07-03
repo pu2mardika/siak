@@ -85,6 +85,7 @@ class Rating extends BaseController
 			$dataRating  	  = $this->request->getPost();
 			$dataRating['id'] = $dataRating['curr_id'];
 			$dataRating['tbl_stored_name'] = $this->dconfig->tbl_stored_name($dataRating['jns_nilai']);
+			//test_result($dataRating);
 			$RatingModel 	  = new RatingModel();
 			
 			$Rating = new \Modules\Akademik\Entities\Rating();
@@ -135,6 +136,7 @@ class Rating extends BaseController
 		$roles = $rules = $this->dconfig->roles;
 		if ($this->validate($roles)) {
 			$data = $this->request->getPost();
+			$data['tbl_stored_name'] = $this->dconfig->tbl_stored_name($data['jns_nilai']);
 			$model = new RatingModel();
 
 			$rsdata = new \Modules\Akademik\Entities\Rating();

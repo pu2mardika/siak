@@ -13,7 +13,7 @@ class RatingModel extends Model
     protected $returnType       = \Modules\Akademik\Entities\Rating::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id', 'curr_id', 'nm_komponen', 'no_urut', 'jns_nilai', 'type_nilai', 'is_mapel', 'tbl_stored_name', 'has_descript'];
+    protected $allowedFields    = ['id', 'curr_id', 'nm_komponen', 'no_urut', 'jns_nilai', 'type_nilai', 'is_mapel', 'tbl_stored_name', 'has_descript', 'bobot', 'akronim'];
 
     // Dates
     protected $useTimestamps = false;
@@ -42,7 +42,7 @@ class RatingModel extends Model
     public function getDropdown($currID)
     {
         $data = $this->where('curr_id', $currID)->findAll();
-    	$dd=[];
+    	$dd[""]="[-- PILIH KOMPONEN --]";
     	foreach($data as $val)
     	{
     		$dd[$val->id]=$val->nm_komponen;

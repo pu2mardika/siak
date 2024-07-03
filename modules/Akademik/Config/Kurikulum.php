@@ -9,6 +9,7 @@ class Kurikulum extends BaseConfig
     //OPSI
     public $opsi = [
         'curr_system'=> [1=>"Paket", 2=>"Semester", 3=>"Catur Wulan", 4=>"Quarter"],
+        'has_project'=> [0=>"Tanpa Project", 1=>"Dengan Project"],
     ];
 
     /**
@@ -26,7 +27,9 @@ class Kurikulum extends BaseConfig
 		'issued'		=> ['label' => 'Tgl Mulai Berlaku','width'=>0,'extra'=>['id' => 'tmt','class' => '', 'required' => true],'type'=>'date', ], 
         'l_duration'	=> ['label' => 'Lama Belajar','width'=>8,'extra'=>['id' => 'durasi','class' => '', 'required' => true],'type'=>'number', ], 
 		'curr_system'	=> ['label' => 'Sistem Kurikulum','width'=>10,'extra'=>['id' => 'cursytem','class' => '', 'required' => true],'type'=>'dropdown', ],
-		'instance_rpt'	=> ['label' => 'Akronim Kurikulum','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true],'type'=>'text'],  
+		'instance_rpt'	=> ['label' => 'Akronim Kurikulum','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true,'maxlength'=>"6",'minlength'=>"6"],'type'=>'text'],  
+		'has_project'	=> ['label' => 'Memiliki Project','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true],'type'=>'dropdown'],
+		'action_class'	=> ['label' => 'Kelompok Kurikulum','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true,'maxlength'=>"6",'minlength'=>"6"],'type'=>'text'],   
 	];
 
 	public string $resume_descrip_field = 'curr_desc';
@@ -44,7 +47,9 @@ class Kurikulum extends BaseConfig
 		'issued'   		=> ['label' => 'Tgl Mulai Berlaku', 'rules' =>'required'],
         'l_duration'   	=> ['label' => 'Lama Belajar', 'rules' =>'required'],
 		'curr_system'  	=> ['label' => 'Sistem Kurikulum', 'rules' =>'required'],
+		'has_project'  	=> ['label' => 'Komponen Project', 'rules' =>'required'],
 		'instance_rpt' 	=> ['label' => 'Akronim Kurikulum', 'rules' =>'required|max_length[6]|min_length[6]'],
+		'action_class' 	=> ['label' => 'Class Action', 'rules' =>'required|max_length[6]|min_length[6]'],
 	];  
 
 	public string $primarykey = 'id';

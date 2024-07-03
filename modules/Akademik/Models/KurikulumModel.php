@@ -14,7 +14,7 @@ class KurikulumModel extends Model
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = ['id', 'id_prodi', 'curr_name', 'curr_desc', 'issued', 'l_duration', 
-                                   'curr_system', 'instance_rpt', 'ch_level', 'state'];
+                                   'curr_system', 'instance_rpt', 'ch_level', 'has_project', 'action_class','state'];
 
     // Dates
     protected $useTimestamps = false;
