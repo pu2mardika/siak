@@ -177,6 +177,13 @@ class Kurikulum extends BaseController
 		$vcall = view_cell('\Modules\Akademik\Controllers\Raports::showList', ['currId'=>$id]); 
 		$TABS['raports']  = ['title'=>'Komponen Raport','active'=>0, 'vcell'=>$vcall];
 		
+		//KOMPONEN
+		if($rs['has_project']==1)
+		{
+			$vcall = view_cell('\Modules\Akademik\Controllers\Raports::showList', ['currId'=>$id]); 
+			$TABS['project']  = ['title'=>'Setting Project','active'=>0, 'vcell'=>$vcall];
+		}
+
 		$data['tabs']	 = $TABS;
 		$data['resume']  = $RESUME;
 		$data['opsi'] 	 = $this->dconfig->opsi;

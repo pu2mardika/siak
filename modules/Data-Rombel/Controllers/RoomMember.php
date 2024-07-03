@@ -68,7 +68,6 @@ class RoomMember extends BaseController
 		$data['resume']['subtitle'] = "Manajemen Anggota Rombel ";//.$addTitle;
 		$data['addOnACt'] = $this->dconfig->detAddOnACt;
 		$dtmember = $this->model->getAll(['a.roomid'=>$id]);
-		//$data['title']	= "Manajemen Anggota Rombel ".$addTitle;
 		$data['rsdata']	= $dtmember;
 		$data['msg'] 	= "";
 		$data['isplainText'] = false;

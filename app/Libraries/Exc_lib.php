@@ -152,4 +152,43 @@ Class Exc_lib
 		}
 		return $baris;
 	}
+
+	public function readXlsx($inputFileName)
+	{
+		$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+		$reader->setReadDataOnly(TRUE);
+		$spreadsheet = $reader->load($inputFileName);
+
+		$worksheet = $spreadsheet->getActiveSheet();
+		$maxDataRow = $worksheet->getHighestDataRow();
+		$maxDataColumn = $worksheet->getHighestDataColumn();
+
+		$rowIterator = $worksheet->getRowIterator(1, $maxDataRow);
+		$rowData=[]; $r = 0;
+		foreach ($rowIterator as $row) {
+			if ($row->isEmpty()) { // Ignore empty rows
+				continue;
+			}
+			$r++;
+			$columnIterator = $row->getCellIterator('A', $maxDataColumn);
+			$colData=[]; $i=0;
+			foreach ($columnIterator as $cell) {
+				// Do something with the cell here.
+				$i++;
+				$colData[$i]=$cell->getValue();
+			}
+			$rowData[$r]=$colData;
+		}
+		return $rowData;
+	}
+
+	public function getXlsxSheet($inputFileName)
+	{
+		$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+		$reader->setReadDataOnly(TRUE);
+		$spreadsheet = $reader->load($inputFileName);
+
+		$worksheet = $spreadsheet->getActiveSheet();
+		return $worksheet;
+	}
 }

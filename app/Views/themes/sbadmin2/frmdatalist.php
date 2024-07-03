@@ -136,8 +136,8 @@
 			$Adact="";
 		?>
 			<div class="card" id="History">
-				<div class="card-header">
-					<button class="btn btn-link text-left" data-toggle="collapse" href="#dtHistory" role="button" aria-expanded="true" aria-controls="dtHistory">
+				<h5 class="card-header">
+					<button class="btn btn-outline-primary" data-toggle="collapse" href="#dtHistory" role="button" aria-expanded="true" aria-controls="dtHistory">
 						Show\Hide Detail
 					</button>
 					<span class="float-right dropdown">
@@ -171,7 +171,7 @@
 							?>
 						</div>
 					</span>
-				</div>
+				</h5>
 				
 				<div id="dtHistory" class="card-body text-dark bg-transparent">
 					<?php $hfield=[]; ?>

@@ -13,9 +13,6 @@
         foreach ($resData as $data){
         $no++;
         $idpd=$data[$keys];   
-        $tr = '<tr class="bordered">';
-        
-        echo $tr;
     ?>
             <td align="center" valign="top">
             <input type="checkbox" name="pd[]" id="<?php echo $idpd;?> " class="chkbox" value="<?php echo $idpd;?>">

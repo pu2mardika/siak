@@ -53,6 +53,11 @@ class Rating extends Migration
             	'constraint' => 1,
             	'default'    => 0,
             ],
+            'has_descript' => [
+            	'type' => 'tinyint', 
+            	'constraint' => 1,
+            	'default'    => 0,
+            ],
         ];
         
         $this->forge->addField($fields);
