@@ -105,10 +105,6 @@ class LogNilai extends BaseController
 			$act= 1;	
 			$keyField = "roomid";
 		}
-
-		//AMBIL KOMPONEN PENILAIAN SELAIN NILAI RAPORT
-		$other_cr = $ratingModel->asarray()->where(['curr_id'=>$currID, 'type_nilai !='=>"NR"])->findAll();
-		//test_result($other_cr);
 		//TAMPILKAN MAPEL BERDASARKAN PEMBAGIAN TUGAS MENGAJAR SESUAI SKL
 		//test_result($room);
 		//tetapkan parameter pengambilan data mapel berdasarkan currID, grade dan sub grade

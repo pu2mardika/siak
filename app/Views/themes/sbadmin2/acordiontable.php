@@ -45,12 +45,6 @@
 				"' title='".$aksi['label']."'><i class='fa fa-".$aksi['icon']."'></i>&nbsp;".$aksi['label']."</a> ";
 		}
 	}
-	echo btn_label([
-		'attr' => ['class' => 'btn btn-light btn-xs'],
-		'url' => $Acction,
-		'icon' => 'fa fa-arrow-circle-left',
-		'label' => 'List Data'
-	]);
 	?>
 	<hr/>
 	<div id="accordion">
