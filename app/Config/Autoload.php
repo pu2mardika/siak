@@ -53,7 +53,9 @@ class Autoload extends AutoloadConfig
         'Modules\Assessment'  => ROOTPATH. 'modules/Assessment',
         'Modules\Project'     => ROOTPATH. 'modules/Project',
         'Modules\Raport'      => ROOTPATH. 'modules/Raport',
+        'Modules\Satker'      => ROOTPATH. 'modules/Satker',
         'Theme'   	  		  => ROOTPATH. 'template',
+        'Raport'   	  		  => ROOTPATH. 'template/data-raport',
     ];
 
     /**

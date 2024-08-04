@@ -60,6 +60,11 @@ class Lognilai extends Migration
 		        'constraint' => 50,
 		        'null'    	 => false,
 		    ],
+			'aspek' => [
+		        'type'       => 'tinyint', 
+		        'constraint' => 3,
+		        'null'    	 => false,
+		    ],
 		];         
         $this->forge->addField($fields);
         $this->forge->addPrimaryKey(['id_mengajar', 'rating_id', 'idx'], 'id');

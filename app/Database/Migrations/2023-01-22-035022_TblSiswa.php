@@ -247,7 +247,6 @@ class TblSiswa extends Migration
       //  $this->forge->addForeignKey('kode_ta', 'tbl_tp', 'thid','CASCADE', 'CASCADE');
 		$this->forge->processIndexes('tbl_rombel');
 		
-        */
         $fields = [
 		    'member_id' => [
 		        'type'           => 'varchar',

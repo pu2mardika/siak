@@ -61,7 +61,9 @@ class MyApp extends BaseConfig
 	
 	public $pdfPath_Dir = ROOTPATH.'public/tmp/pdf/';
 	public $pdftmpDir = 'tmp/pdf/';
-	
+
+	public string $arrDelimeter = '++VHV++';
+
 	public function pdftmp_dir():string
 	{
 		return base_url('tmp/pdf/');

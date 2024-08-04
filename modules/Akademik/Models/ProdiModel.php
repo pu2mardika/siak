@@ -49,4 +49,13 @@ class ProdiModel extends Model
     	}
     	return $dd;
     }
+
+    function gets($param)
+    {
+        $builder = $this->db->table($this->table.' a');
+		$builder->select('a.nm_prodi, a.jenjang, a.jurusan, a.skl, b.nm_program, b.unit_kerja')
+				->join('jurusan b', 'a.jurusan = b.id');
+		$builder->where($param);
+		return $builder->get()->getResultArray();
+    }
 }

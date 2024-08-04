@@ -97,7 +97,7 @@ class Ptm extends BaseController
 	{
 		$this->cekHakAkses('create_data');
 		$data = $this->data;
-		$data['title']	= "Tambah Data Pembagian Tugas";
+		$data['title']	= "Tambah Data Raport";
 		$fields = $this->dconfig->Addfields;
 		$data['error'] = [];
 		$data['fields'] = $fields;

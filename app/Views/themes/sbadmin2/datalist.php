@@ -6,7 +6,7 @@
 			<?= $title ?>
 			<?php if(isset($dtfilter)){ ?>
 				<span class="float-right dropdown">
-					<a type="button" title="<?=$dtfilter['title']?>" data-toggle="dropdown" aria-expanded="false">
+					<a role="button" class="btn btn-light border-light rounded-pill" title="<?=$dtfilter['title']?>" data-toggle="dropdown" aria-expanded="false">
 						<i class="fa fa-ellipsis-v"></i>
 					</a>
 					<div class="dropdown-menu">
@@ -55,12 +55,6 @@
 					'label' => 'Import dari Excel'
 				]);
 			}
-			echo btn_label([
-				'attr' => ['class' => 'btn btn-light btn-xs'],
-				'url' => $Acction,
-				'icon' => 'fa fa-arrow-circle-left',
-				'label' => 'List Data'
-			]);
 		?>
 		<hr/>
 		  

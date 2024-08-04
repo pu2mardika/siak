@@ -65,6 +65,7 @@ abstract class BaseController extends Controller
 	
 	private $controllerName;
 	private $methodName;
+	private $strdelimeter;
 	
     /**
      * Constructor.
@@ -151,7 +152,7 @@ abstract class BaseController extends Controller
 		$this->data['styles'] = [];
 		$this->data['module_url'] = $this->moduleURL;
 		$this->data['inputype'] = $myconfig->inputtype;
-		
+		$this->data['strdelimeter']=setting('MyApp.arrDelimeter');
 		/**
 		* 
 		* DIHAPUS

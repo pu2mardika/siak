@@ -13,3 +13,9 @@
 .custom-table a{color: #0033cc;}
 .custom-table a:hover{color: #f00;}
 .page-header{background-color: #eee;}
+ul.boldlist{
+     padding-left: 15px !important;
+}
+ul.boldlist li{
+     margin-left: 0 !important;
+}

@@ -6,7 +6,9 @@ use CodeIgniter\Config\BaseConfig;
 
 class AtpConfig extends BaseConfig
 {
-    public $opsi = [];
+    public $opsi = [
+		'aspek' => [""=>"[--PILIH ASPEK--]", 1 => "Kemampuan", "Pemahaman", "Penguasaan"]
+	];
 
     /**
 	* ---------------------------------------------------------------------
@@ -15,24 +17,28 @@ class AtpConfig extends BaseConfig
 	* 
 	*/
 	public array $fields = [
-		'rating_id'   => ['label' => 'Komponen Nilai','width'=>25,'extra'=>['id' => 'ratingID','class' => '', 'required' => true], 'type'=>'dropdown'], 
+		'rating_id'   => ['label' => 'Komponen Nilai','width'=>20,'extra'=>['id' => 'ratingID','class' => '', 'required' => true], 'type'=>'dropdown'], 
 		'idx'   	  => ['label' => 'No','width'=>10,'extra'=>['id' => 'jIDX','class' => '', 'required' => true],'type'=>'text',],
-		'atp'   	  => ['label' => 'Tujuan','width'=>60,'extra'=>['id' => 'cpAtp','class' => '', 'required' => true],'type'=>'textarea',],
+		'atp'   	  => ['label' => 'Tujuan','width'=>40,'extra'=>['id' => 'cpAtp','class' => '', 'required' => true],'type'=>'textarea',],
+		'aspek'   	  => ['label' => 'Aspek Nilai','width'=>15,'extra'=>['id' => 'aspek','class' => '', 'required' => true],'type'=>'dropdown',],
 	];
 
 	public array $Editfields = [
 		'rating_id'   => ['label' => 'Komponen Nilai','width'=>25,'extra'=>['id' => 'ratingID','class' => '', 'disabled' => true], 'type'=>'dropdown'], 
 		'atp'   	  => ['label' => 'Tujuan','width'=>60,'extra'=>['id' => 'cpAtp','class' => '', 'required' => true],'type'=>'textarea',],
+		'aspek'   	  => ['label' => 'Aspek Nilai','width'=>15,'extra'=>['id' => 'aspek','class' => '', 'required' => true],'type'=>'dropdown',],
 	];
 
 	public array $roles = [
 		'rating_id'   => ['label' => 'Komponen Nilai', 'rules' =>'required'],
 		'idx'		  => ['label' => 'No', 'rules' =>'required'],
 		'atp'		  => ['label' => 'Tujuan', 'rules' =>'required'],
+		'aspek'		  => ['label' => 'Aspek Penilaian', 'rules' =>'required'],
 	];  
 
 	public array $rolesEdit = [
 		'atp'		  => ['label' => 'Tujuan', 'rules' =>'required'],
+		'aspek'		  => ['label' => 'Aspek Penilaian', 'rules' =>'required'],
 	];  
 
 	public string $primarykey = 'id';

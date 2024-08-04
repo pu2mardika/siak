@@ -58,4 +58,24 @@ class MappingModel extends Model
     {
         return $this->db->table($this->table)->where($param)->countAllResults();
     }
+
+    public function getsAll($parm=[])
+    {
+        return $this->getsData($parm)->getResultArray();
+    }
+
+    private function getsData($param)
+    {
+        //dimensi_project : 'id', 'curr_id', 'nama_dimensi'
+        //elemen_project: id, 'dimensi_id', 'deskripsi'
+        
+        $builder = $this->db->table('mapproject a');
+        $builder->select('a.*, b.deskripsi, b.tujuan, b.elemen_id, c.deskripsi as elemen,c.dimensi_id, d.nama_dimensi, d.curr_id')
+            ->join('subelemen_project b', 'a.subelemen_id = b.id')
+            ->join('elemen_project c', 'b.elemen_id = c.id')
+            ->join('dimensi_project d', 'c.dimensi_id = d.id');
+        $builder->where($param);
+        $query = $builder->get();
+        return $query;
+    }
 }

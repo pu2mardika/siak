@@ -133,7 +133,8 @@ class LogNilai extends BaseConfig
 	];
 
 	public array $footNav = [
-		'nav' => 'n'
+		'presensi' => ['icon'=>'user-times','src'=>'presensi', 'label'=>'Presensi', 'extra'=>'', 'btn_type'=>''],
+		'pesanwali'=> ['icon'=>'comments','src'=>'pesanwali', 'label'=>'Pesan Wali', 'extra'=>'', 'btn_type'=>''],
 	];
 
 	public string $arrDelimeter = '++VHV++';

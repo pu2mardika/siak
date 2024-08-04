@@ -84,7 +84,8 @@ class LogNilai extends BaseController
 		}
 		//test_result($mp);
 
-		$roomID = decrypt($mp['ids']);
+		$ids=$mp['ids'];
+		$roomID = decrypt($ids);
 		//echo $roomID;
 		$room = $this->rombelModel->find($roomID);
 		$currID = $room->curr_id;
@@ -105,6 +106,13 @@ class LogNilai extends BaseController
 			$act= 1;	
 			$keyField = "roomid";
 		}
+		//AMBIL KOMPONEN PENILAIAN SELAIN NILAI RAPORT
+		$other_cr = $ratingModel->asarray()->where(['curr_id'=>$currID, 'type_nilai !='=>"NR"])->findAll();
+		$fnAct = $this->dconfig->footNav;
+		foreach($other_cr as $ocr)
+		{
+			$fnAct[$ocr['curr_id']] = ['icon'=>'','src'=>strtolower($ocr['nm_komponen']), 'label'=>$ocr['nm_komponen'], 'extra'=>'', 'btn_type'=>''];
+		}
 		//TAMPILKAN MAPEL BERDASARKAN PEMBAGIAN TUGAS MENGAJAR SESUAI SKL
 		//test_result($room);
 		//tetapkan parameter pengambilan data mapel berdasarkan currID, grade dan sub grade
@@ -120,14 +128,16 @@ class LogNilai extends BaseController
 	//	show_result($subject);
 		foreach($subject as $mp)
 		{
-			$mapel[$mp['subgrade']][0]['gtitle']="Rincian mapel subgrade-".$mp['subgrade'];
+		//	$mapel[$mp['subgrade']][0]['gtitle']="Rincian mapel subgrade-".$mp['subgrade'];
 			$mp['idx']=$mp['roomid'].$strdelimeter.$mp['id'];
 			$mapel[$mp['subgrade']][0]['detail'][]=$mp;
-
-			//tambahkan subfootnote
-
+			$subfootnote['title']= "INPUT NILAI LAINNYA: ";
+			$subfootnote['aksi'] = $fnAct;
+			$subfootnote['param']= "?ids=".encrypt($roomID.$this->dconfig->arrDelimeter.$mp['subgrade']);
+			$mapel[$mp['subgrade']][0]['subfootnote']=$subfootnote;
 		}
-	//	test_result($mapel);
+		//test_result($mapel);
+		
 		$data=$this->data;
 		$actions = $this->dconfig->actions;
 		$data['fields'] = $this->dconfig->fields2;
@@ -136,6 +146,7 @@ class LogNilai extends BaseController
 		$data['key'] 	= "id"; //$keyField;
 		$data['isplainText'] = TRUE;
 		$data['subtitle'] = "Sub Grade-";
+		$data['subPenelAct'] = ['add'];
 		$data['actions']  = $actions[$act];
 		echo view($this->theme.'acordiontable',$data);
 	}

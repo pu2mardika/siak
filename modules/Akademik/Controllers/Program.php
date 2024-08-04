@@ -22,6 +22,7 @@ class Program extends BaseController
 		$this->data['fields'] 	  = $this->dconfig->fields;
 		$this->data['key']		  = $this->dconfig->primarykey;
         $this->addStyle (base_url().'/css/personal.css');
+		$this->dconfig->opsi = $this->getSatkerList();
 		helper(['cookie', 'form']);
     }
 	
@@ -152,4 +153,15 @@ class Program extends BaseController
 		return redirect()->to(base_url('program'));
 	}
 	
+	private function getSatkerList()
+	{
+		//$conf = config('Satker');
+		$config = config(\Config\Satker::class);
+		$UO = $config->unit; $satker=[];
+		foreach($UO as $k=>$v)
+		{
+			$satker['unit_kerja'][$k]=$v['nm_satker'];
+		}
+		return $satker;
+	}
 }

@@ -141,12 +141,13 @@
 						Show\Hide Detail
 					</button>
 					<span class="float-right dropdown">
-						<a type="button" title="menu" data-toggle="dropdown" aria-expanded="false">
+						<a role="button" class="btn btn-outline-secondary border-light rounded-pill" title="menu" data-toggle="dropdown" aria-expanded="false">
 							<i class="fa fa-ellipsis-v"></i>
 						</a>
 						<div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
 							<?php
-							$ids = $RData[$keys]; $n=1;
+							$ids = (isset($keys) && array_key_exists($keys,$RData))?encrypt($RData[$keys]):"";
+							$n=1;
 							if(isset($isplainText) && $isplainText){$ids = encrypt($ids) ;}
 							if(isset($addOnACt)){
 								$n++;
@@ -159,12 +160,13 @@
 							} //END ADDONACT
 							
 							if(isset($condAddOnAct)){
-								$ids = encrypt($RData[$keys]);
+								
 								$caddOnACt = $condAddOnAct[$dataStated];
 								
 								foreach($caddOnACt as $aksi)
 								{
-									echo "<a class='dropdown-item'  href='".base_url().$aksi['src'].$ids.
+									$ACT = (strlen($ids)>0)?$aksi['src'].$ids:$aksi['src'];
+									echo "<a class='dropdown-item'  href='".base_url().$ACT.
 										"' ".$aksi['extra']."  title='".$aksi['label']."'><i class='fa fa-".$aksi['icon']."'></i>&nbsp;".$aksi['label']."</a> ";
 								}
 							}
@@ -195,7 +197,7 @@
 								
 								//CEK IS CONDITIONAL ACTION DETAIL IS PRESENT
 					
-								if(isset($detAction) || isset($ddOnActDet) || isset($condActDet))
+								if(isset($detAction)|| isset($addOnActDet) || isset($ddOnActDet) || isset($condActDet))
 								{
 									echo '<th width="4%"><div align="center">Aksi</div></th>';
 								}	
@@ -231,20 +233,22 @@
 								$ids= encrypt($data[$key]);
 								if(isset($detAction) || isset($addOnActDet) ||isset($condActDet)){
 									echo '<td align="center">';
-									foreach($detAction as $aksi)
+									if(isset($detAction))
 									{
-										if($aksi['extra']=="")
+										foreach($detAction as $aksi)
 										{
-											$act = 'onclick = "show(\''.$aksi["src"].$ids.'\',\'#xcontent\')"';
-											$href = "javascript:";
-										}else{
-											$act  = $aksi['extra'];
-											$href = base_url().$aksi['src'].$ids;
+											if($aksi['extra']=="")
+											{
+												$act = 'onclick = "show(\''.$aksi["src"].$ids.'\',\'#xcontent\')"';
+												$href = "javascript:";
+											}else{
+												$act  = $aksi['extra'];
+												$href = base_url().$aksi['src'].$ids;
+											}
+											//$act="show('".$aksi['src'].$ids."','#xcontent')";
+											echo '<a href="'.$href.'" '.$act.' title="'.$aksi['label'].'"><i class="fa fa-'.$aksi['icon'].'"></i></a> ';
 										}
-										//$act="show('".$aksi['src'].$ids."','#xcontent')";
-										echo '<a href="'.$href.'" '.$act.' title="'.$aksi['label'].'"><i class="fa fa-'.$aksi['icon'].'"></i></a> ';
 									}
-
 									if(isset($addOnActDet)){										
 										foreach($addOnActDet as $act)
 										{

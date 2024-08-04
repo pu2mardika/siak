@@ -26,12 +26,12 @@ class Atp extends BaseController
 		$this->data['fields'] 	  = $this->dconfig->fields;
 		$this->data['key']		  = $this->dconfig->primarykey;
 		$this->data['allowimport']= $this->dconfig->importallowed;
+		$this->data['opsi']= $this->dconfig->opsi;
 		//HAPUS DATA breadcrumb
 		$breadcrumb = $this->data['breadcrumb'];
 		$modul = $this->data['current_module'];
 		unset($breadcrumb[$modul['judul_module']]);
 		$breadcrumb['Nilai']=base_url('lognilai');
-		$breadcrumb['Capaian Pembelajaran'] = "";
 		$this->data['breadcrumb']=$breadcrumb;
 		//show_result($breadcrumb);
 		helper(['cookie', 'form', 'util']);
@@ -67,8 +67,13 @@ class Atp extends BaseController
 		$data['addOnACt'] = $this->dconfig->cpActions;
 		$data['condAddOnAct'] = $this->dconfig->condActions;
 		
-	//	test_result($resume);
-		
+	//	breadcrumb
+		$ACT = setting('LogNilai.panelAct');
+		$ACT = $ACT['detail']['src'].encrypt($subject['roomid']);
+		$breadcrumb = $this->data['breadcrumb'];
+		$breadcrumb[$subject['nama_rombel']] = base_url($ACT);
+		$breadcrumb['Capaian Pembelajaran'] = "";
+		$data['breadcrumb']=$breadcrumb;
 		//Menampilkan Data ATP sesuai dengan ?
 		//'id_mengajar', 'rating_id', 'idx', 'atp'
 		$RS = $this->model->where('id_mengajar', $idm)->asArray()->findAll();

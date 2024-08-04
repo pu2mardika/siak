@@ -12,7 +12,7 @@ class ModelAtp extends Model
     protected $returnType       = \Modules\Assessment\Entities\Atps::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id_mengajar', 'rating_id', 'idx', 'atp'];
+    protected $allowedFields    = ['id_mengajar', 'rating_id', 'idx', 'atp', 'aspek'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -88,7 +88,17 @@ class ModelAtp extends Model
     {
       return $this->getsData($parm)->getResultArray();
     }
-  
+    
+    public function getAtp($param=[])
+    {
+        $builder = $this->db->table('tblatps a');
+        $builder->select('a.*, b.id_mapel')
+            ->join('ptm b', 'a.id_mengajar = b.id');
+        $builder->where($param);
+        $query = $builder->get();
+        return $query->getResultArray();
+    }
+
     private function getsData($param=[])
     {
         $builder = $this->db->table('tblatps a');

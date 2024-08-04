@@ -39,11 +39,11 @@ class RombelModel extends Model
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
     
-    public function getAll($tp=array())
+    public function getAll($parm=array())
     {
-    	$builder = $this->db->table('rombel a');
-		$builder->select('a.*, b.nama as wali')->join('tbl_ptk b', 'b.nik = a.walikelas')->where($tp);
-	    $query = $builder->get();
+    //	$builder = $this->db->table('rombel a');
+	//	$builder->select('a.*, b.nama as wali')->join('tbl_ptk b', 'b.nik = a.walikelas')->where($parm);
+	    $query = $this->getsData($parm);
 	//	$rs = $builder->getCompiledSelect();
 	
 	//	test_result($rs);
@@ -56,6 +56,12 @@ class RombelModel extends Model
         return $result;
     }
     
+    public function get($parm)
+    {
+        $query = $this->getsData($parm);
+        return $query->getRowArray();
+    }
+
     public function getDropdown($param=[])
     {
     	$data = $this->where($param)->findAll();
@@ -77,5 +83,12 @@ class RombelModel extends Model
             $dd[$id]=$val->nama_rombel;
     	}
     	return $dd;
+    }
+
+    private function getsData($parm=[])
+    {
+        $builder = $this->db->table('rombel a');
+		$builder->select('a.*, b.nama as wali')->join('tbl_ptk b', 'b.nik = a.walikelas')->where($parm);
+	    return $builder->get();
     }
 }

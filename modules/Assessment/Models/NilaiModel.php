@@ -56,4 +56,18 @@ class NilaiModel extends Model
         $builder = $this->db->table($this->table);
         return $builder->updateBatch($data,['id_mapel', 'roomid', 'subgrade']);
     }
+
+    private function getData($param=[]){
+        $builder = $this->db->table($this->table.' a');
+		$builder->select('a.*, b.id_mapel')
+				->join('ptm b', 'a.id_mengajar = b.id');
+		$builder->where($param);
+		$query = $builder->get();
+		return $query;
+    }
+
+    public function getsNilai($parm)
+	{
+		return $this->getData($parm)->getResultArray();
+	}
 }

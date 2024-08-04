@@ -47,7 +47,7 @@ class SkenModel extends Model
     function getsAll($param=[])
     {
         $builder = $this->db->table('skenproject a');
-		$builder->select('a.*, b.deskripsi')->join('dataproject b', 'a.project_id = b.id')->where($param);
+		$builder->select('a.*, b.nama_project, b.deskripsi')->join('dataproject b', 'a.project_id = b.id')->where($param);
 	    return $builder->get()->getResultArray();
     }
 

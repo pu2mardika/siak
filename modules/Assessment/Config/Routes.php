@@ -37,3 +37,24 @@ $routes->group("atp", ["namespace" => "\Modules\Assessment\Controllers"], functi
 	$routes->get("konfirm/(:any)", "Atp::simpanmasal/$1");
 	$routes->get("reset/(:any)", "Atp::resetData/$1");
 });
+
+$routes->group("propela", ["namespace" => "\Modules\Assessment\Controllers"], function ($routes) {
+	$routes->get("/", "Propela::index");
+	$routes->get("show", "Propela::showPD");
+	
+	$routes->get("add", "Propela::addView");
+	$routes->post("add", "Propela::addAction");
+	$routes->get("getID", "Propela::GetID");
+	$routes->get("edit/(:any)", "Propela::editView/$1");
+	$routes->post("edit/(:any)", "Propela::updateAction/$1");
+	$routes->get("hapus/(:any)", "Propela::delete/$1");
+	$routes->get("import", "Propela::fromxlsx");
+	$routes->post("import", "Propela::importAction");
+	$routes->get("update", "Propela::updatexlsx");
+	$routes->post("update", "Propela::importAction");
+	$routes->get("tempxls", "Propela::tmpobyek");
+	$routes->get("temp", "Propela::tmpobyek");
+	$routes->get("konfirm", "Propela::simpanmasal");
+	$routes->get("konfirm/(:any)", "Propela::simpanmasal/$1");
+	$routes->get("reset", "Propela::resetData");
+});
