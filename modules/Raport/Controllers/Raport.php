@@ -46,7 +46,7 @@ class Raport extends BaseController
     public function index()
     {
         $this->cekHakAkses('read_data');
-		
+		 
 		//echo $this->theme;die();	
 		if (isset($_GET['tp'])) 
 		{

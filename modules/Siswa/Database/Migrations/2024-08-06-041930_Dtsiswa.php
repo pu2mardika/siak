@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Database\Migrations;
+namespace Modules\Siswa\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
-use CodeIgniter\Database\RawSql;
 
-class Tbregister extends Migration
+class Dtsiswa extends Migration
 {
     public function up()
     {
+          
         $attributes = ['ENGINE' => 'InnoDB', 'CHARSET'=>'utf8mb4', 'COLLATE' => 'utf8mb4_general_ci'];
         $this->db->disableForeignKeyChecks();
-		/**
-         * module_status table.
-         */
+		
         $fields = [
 		    'nik' => [
 		        'type'       => 'varchar',
@@ -22,7 +20,7 @@ class Tbregister extends Migration
 		    ],
 		    'idreg' => [
 		        'type'       => 'varchar',
-		        'constraint' => 15,
+		        'constraint' => 15, 
 		    ],
 		    'nama' => [
 		        'type'       => 'varchar',
@@ -39,7 +37,7 @@ class Tbregister extends Migration
 		        'null'    	 => true,
 		    ],
 		    'tgllahir' => [
-		        'type'       => 'date',
+		        'type'       => 'timestamp',
 		        'null'    	 => true,
 		    ],
 		    'jk' => [
@@ -86,10 +84,6 @@ class Tbregister extends Migration
 		        'constraint' => 50,
 		        'null'    	 => true,
 		    ],
-			'id_prodi'	=> [
-            	'type' 		=> 'int', 
-            	'constraint'=> 11, 
-            ],
 			'created_at' => [
 		        'type'    => 'TIMESTAMP',
 		        'default' => new RawSql('CURRENT_TIMESTAMP'),
@@ -104,7 +98,7 @@ class Tbregister extends Migration
 		    ],
 		    'status' => [
 		        'type'       => 'ENUM',
-		        'constraint' => ['0', '1', '2'], //0 = pindah, 1 = aproved, 2 = rejected
+		        'constraint' => ['0', '1', '2'], //0 = pindah, 1 = aktif, 2 = tamat
 		        'default'    => '1',
 		    ],
 		];
@@ -112,12 +106,73 @@ class Tbregister extends Migration
         $this->forge->addField($fields);
         $this->forge->addPrimaryKey('nik');
 		$this->forge->addKey('idreg');
-        $this->forge->createTable('tbl_register', true, $attributes);
+        $this->forge->createTable('tbl_datadik', true, $attributes);
+        
+		/**
+		 * Tabel Data Siswa (tbl_siswa) Merupakan turunan tabel master data siswa 
+		 * yang teregister dengan program studi
+		 */
+
+		 $fields = [
+		    'noinduk' => [
+		        'type'       => 'varchar',
+		        'constraint' => 15,
+		        'unique'     => true,
+		    ],
+		    'nik' => [
+		        'type'       => 'varchar',
+		        'constraint' => 16,
+		    ],
+			'prodi' => [
+		        'type'       => 'int',
+		        'constraint' => 11,
+		    ],
+			'no_ijazah' => [
+		        'type'       => 'varchar',
+		        'constraint' => 50,
+		        'null'    	 => true,
+		    ],
+			'tgl_ijazah' => [
+		        'type'       => 'date',
+		        'null'    	 => true,
+		    ],
+			'tgl_diterima' => [
+		        'type'       => 'date',
+		        'null'    	 => true,
+		    ],
+			'tgl_reg' => [
+		        'type'       => 'int',
+		        'constraint' => 11,
+		        'null'    	 => true,
+		    ],
+			'no_urt' => [
+		        'type'       => 'int',
+		        'constraint' => 11,
+		        'null'    	 => true,
+		    ],
+			'created_at' => [
+		        'type'    => 'TIMESTAMP',
+		        'default' => new RawSql('CURRENT_TIMESTAMP'),
+		    ],
+		    'updated_at' => [
+		        'type'   => 'TIMESTAMP',
+		        'null' 	 => true,
+		    ],
+		    'deleted_at' => [
+		        'type'   => 'TIMESTAMP',
+		        'null' 	 => true,
+		    ],
+		];
+         
+        $this->forge->addField($fields);
+        $this->forge->addPrimaryKey('noinduk');
+		$this->forge->addUniqueKey(['nik', 'prodi'], 'program');
+        $this->forge->addForeignKey('nik', 'tbl_datadik', 'nik','CASCADE', 'CASCADE');
+        $this->forge->createTable('siswa', true, $attributes);
     }
 
     public function down()
     {
         //
-        $this->forge->dropTable('tbl_register', true);
     }
 }
