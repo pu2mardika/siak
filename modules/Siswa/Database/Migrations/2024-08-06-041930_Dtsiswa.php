@@ -174,6 +174,7 @@ class Dtsiswa extends Migration
     public function down()
     {
         //
-		$this->forge->dropTable('ptm', true);
+		$this->forge->dropTable('siswa', true, $attributes);
+		$this->forge->dropTable('tbl_datadik', true);
     }
 }
