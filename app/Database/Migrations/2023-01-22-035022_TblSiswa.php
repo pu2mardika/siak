@@ -198,102 +198,10 @@ class TblSiswa extends Migration
         $this->forge->addField($fields);
         $this->forge->addPrimaryKey('thid');
         $this->forge->createTable('tbl_tp', true, $attributes);
-        		
-        //table rombel
-        $fields = [
-		    'roomid' => [
-		        'type'           => 'INT',
-		        'constraint'     => 5,
-		        'unsigned'       => true,
-		        'auto_increment' => true,
-		    ],
-		    'nama_rombel' => [
-		        'type'       => 'varchar',
-		        'constraint' => 100,
-		    ],
-		    'walikelas' => [
-		        'type'       => 'varchar',
-		        'constraint' => 15,
-		        'null'    	 => true,
-		    ],
-		    'kode_ta' => [
-		        'type'       => 'int',
-		        'constraint' => 5,
-		        'null'       => false,
-		    ],
-		    'grade' => [
-		        'type'       => 'int',
-		        'constraint' => 11,
-		        'null'    	 => true,
-		    ],
-			'created_at' => [
-		        'type'    => 'TIMESTAMP',
-		        'default' => new RawSql('CURRENT_TIMESTAMP'),
-		    ],
-		    'updated_at' => [
-		        'type'   => 'TIMESTAMP',
-		        'null' 	 => true,
-		    ],
-		    'deleted_at' => [
-		        'type'   => 'TIMESTAMP',
-		        'null' 	 => true,
-		    ],
-		];
-         
-        $this->forge->addField($fields);
-        $this->forge->addPrimaryKey('roomid');
-        $this->forge->addKey('kode_ta');
-        $this->forge->createTable('tbl_rombel', true, $attributes);
-      //  $this->forge->addForeignKey('kode_ta', 'tbl_tp', 'thid','CASCADE', 'CASCADE');
-		$this->forge->processIndexes('tbl_rombel');
-		
-        $fields = [
-		    'member_id' => [
-		        'type'           => 'varchar',
-		        'constraint'     => 15,
-		    ],
-		    'roomid' => [
-		        'type'       => 'int',
-		        'constraint' => 5,
-		    ],
-		    'noinduk' => [
-		        'type'       => 'varchar',
-		        'constraint' => 15,
-		    ],
-		    'no_absen' => [
-		        'type'       => 'int',
-		        'constraint' => 11,
-		        'unique'     => true,
-		    ],
-		    'created_at' => [
-		        'type'    => 'TIMESTAMP',
-		        'default' => new RawSql('CURRENT_TIMESTAMP'),
-		    ],
-		    'updated_at' => [
-		        'type'   => 'TIMESTAMP',
-		        'null' 	 => true,
-		    ],
-		    'deleted_at' => [
-		        'type'   => 'TIMESTAMP',
-		        'null' 	 => true,
-		    ],
-		];
-         
-        $this->forge->addField($fields);
-        $this->forge->addPrimaryKey('member_id');
-        $this->forge->addKey('roomid');
-        $this->forge->addKey('noinduk');
-        $this->forge->createTable('tbl_rombel_memb', true, $attributes);
-     //   $this->forge->addForeignKey('roomid', 'tbl_rombel', 'roomid','CASCADE', 'CASCADE');
-     //   $this->forge->addForeignKey('nik', 'tbl_siswa', 'nik','CASCADE', 'CASCADE');
-    //    $this->forge->processIndexes('tbl_rombel_memb');
-        
-        $this->db->enableForeignKeyChecks();
     }
 
     public function down()
     {
-        $this->forge->dropTable('siswa', true);
         $this->forge->dropTable('tbl_tp', true);
         $this->forge->dropTable('tbl_datadik', true);        
     }
