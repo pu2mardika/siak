@@ -57,7 +57,6 @@ class Akademik extends Migration
             'id_prodi'=> [
             	'type' => 'int', 
             	'constraint' => 11, 
-            	'unsigned' => true,   
             	'auto_increment' => true,
             ],
             'nm_prodi' => [
@@ -125,7 +124,7 @@ class Akademik extends Migration
             	'constraint' => 20, 
             	'unique'     => true,
             ],
-			'id_prodi '=> [
+			'id_prodi'=> [
             	'type' => 'int', 
             	'constraint' => 11, 
             ],

@@ -3,6 +3,7 @@
 namespace Modules\Register\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class TblRegister extends Migration
 {

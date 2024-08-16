@@ -61,7 +61,7 @@ class TugasMengajar extends Migration
         $this->forge->addKey('roomid');
         $this->forge->addUniqueKey(['id_mapel', 'roomid', 'subgrade'], 'mengajar_id');
         $this->forge->addForeignKey('ptk_id', 'tbl_ptk', 'nik','CASCADE', 'CASCADE', 'fk_pengajar');
-        $this->forge->addForeignKey('id_mapel', 'mapel', 'id_mapel','CASCADE', 'CASCADE', 'fk_diajarkan');
+        $this->forge->addForeignKey('id_mapel', 'mapel', 'id','CASCADE', 'CASCADE', 'fk_diajarkan');
         $this->forge->addForeignKey('roomid', 'rombel', 'id','CASCADE', 'CASCADE', 'fk_dikelas');
 		$this->forge->createTable('ptm', true, $attributes);
     }

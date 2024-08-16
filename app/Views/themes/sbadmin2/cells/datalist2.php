@@ -22,7 +22,7 @@ $Adact_title  = $aksi['addOn']['title'];
 		<?php 
 		$i = 0; $NO=0;
 		foreach($dtview as $A => $dimensi){
-			$SL = $dimensi['SubLevel'];
+			$SL = (array_key_exists("SubLevel",$dimensi))? $dimensi['SubLevel']:"";
 			$idg =  encrypt($A.$strdelimeter.$id);
 			$NO++;
 			$dt_parent = "accordion".$Mact.$id.$A; 
@@ -45,6 +45,7 @@ $Adact_title  = $aksi['addOn']['title'];
 				<?php
 				//SUB 
 				$i=1;
+				if(is_array($SL) || is_object($SL)){
 				foreach($SL as $K => $dt)
 				{ 
 					$rsdata = $dt['rsdata'];
@@ -194,7 +195,8 @@ $Adact_title  = $aksi['addOn']['title'];
 							</div>
 						</div>
 					</div>
-				<?php } ?>
+				<?php } 
+				}?>
 			</div>
 			<br>
 		<?php } ?>
