@@ -56,6 +56,7 @@ class Autoload extends AutoloadConfig
         'Modules\Satker'      => ROOTPATH. 'modules/Satker',
         'Theme'   	  		  => ROOTPATH. 'template',
         'Raport'   	  		  => ROOTPATH. 'template/data-raport',
+        'Auth'                => ROOTPATH. 'modules/Auth',
     ];
 
     /**

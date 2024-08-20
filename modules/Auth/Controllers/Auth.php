@@ -1,7 +1,10 @@
-<?php namespace Modules\Auth\Controllers;
+<?php 
+declare(strict_types=1);
+namespace Modules\Auth\Controllers;
 
 //use App\Controllers\BaseController;
 use Modules\Auth\Models\Auth_model;
+use CodeIgniter\API\ResponseTrait;
 use \Jwt\JWT;
 use CodeIgniter\RESTful\ResourceController;
  

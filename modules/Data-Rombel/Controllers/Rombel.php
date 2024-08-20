@@ -54,12 +54,18 @@ class Rombel extends BaseController
 		{
 			$ctp = $_GET['tp'];
 			$tp = $this->TpModel->find($ctp);
+			$desc = $tp->deskripsi;
 		}else{
 			$tp = $this->TpModel->getcurTP();
-			//test_result($tp);
-			$ctp = $tp->thid;
+		    if(isset($tp->thid)){
+		        $ctp  = $tp->thid;
+		        $desc = $tp->deskripsi;
+		    }else{
+		        $ctp  = "";
+		        $desc = "[Belum Ada Data]";
+		    }
 		}
-		$addTitle = "Tahun ".$tp->deskripsi;
+		$addTitle = "Tahun ".$desc;
 		$parm=['kode_ta'=>$ctp];
 		$dtrombel = $this->model->where('kode_ta', $ctp)->findAll();
 		//$dtrombel = $this->model->getAll(['kode_ta'=>$ctp]);
@@ -112,7 +118,7 @@ class Rombel extends BaseController
 			unset($data['prodi']); //hapus field prodi karena tidak maskuk ekda tabse
 			unset($data['wali']); //hapus field wali  karena yang dipakai adalah field wii
 		//	test_result($data);
-			$rombel= new \Modules\Room\Entities\rombel();
+			$rombel= new \Modules\Room\Entities\Rombel();
 			$rombel->fill($data);
 			$simpan = $rombelmodel->insert($rombel,false);
 			if($simpan){
@@ -162,7 +168,7 @@ class Rombel extends BaseController
 			unset($data['wali']); //hapus field wali  karena yang dipakai adalah field wii
 			$model = new RombelModel();
 
-			$rsdata = new \Modules\Room\Entities\rombel();
+			$rsdata = new \Modules\Room\Entities\Rombel();
 			$rsdata->fill($data);
 			$simpan = $model->update($id, $rsdata);
 			

@@ -24,5 +24,8 @@ $routes->group("rombel", ["namespace" => "\Modules\Room\Controllers"], function 
 	$routes->get("del/(:any)", "RoomMember::delete/$1");
 	$routes->get("mutasi/(:any)", "RoomMember::editView/$1");
 	$routes->post("mutasi/(:any)", "RoomMember::editAction/$1");
+	$routes->get("doPost", "RoomMember::cekTuton");
+	
 });
 $routes->addRedirect('roommember', 'rombel');
+//$routes->resource('rfsiswa');

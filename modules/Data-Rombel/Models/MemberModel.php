@@ -76,7 +76,7 @@ class MemberModel extends Model
      */
     public function getParticipan($prodi, $ta, $grade)
     {
-        $sql = 'SELECT a.noinduk, a.nik, b.nama, a.prodi, b.idreg, b.jk
+        $sql = 'SELECT a.noinduk, a.noinduk as nipd, a.nik, b.nama, a.prodi, b.idreg, b.jk
         FROM siswa a JOIN tbl_datadik b ON a.nik = b.nik
         WHERE a.prodi = '.$prodi.' AND NOT EXISTS
         ((SELECT y.nik, x.id, z.kode_ta, z.grade   

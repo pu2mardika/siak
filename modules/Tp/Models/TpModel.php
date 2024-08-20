@@ -48,12 +48,12 @@ class TpModel extends Model
     
     public function getcurTP()
     {
-    	$param = ['awal <=' => date('Y-m-d H:i:s'), 'akhir >=' => date('Y-m-d H:i:s')];
+    	$param = ['awal <=' => date('Y-m-d'), 'akhir >=' => date('Y-m-d')];
+    	//test_result($param);
     	$builder = $this->db->table($this->table);
-    	//$builder->where('akhir <=', now());
-    	//$builder->where('awal >=', now());
-    	$builder->where($param);
+    //	$builder->where($param);
         $builder->orderBy('thid', 'DESC');
+        $builder->limit(1);
     	//echo $builder->getCompiledSelect();//->getRow();	
     	return $builder->get()->getRow();
     }
@@ -67,6 +67,5 @@ class TpModel extends Model
     		$dd[$val->thid]=$val->deskripsi;
     	}
     	return $dd;
-    }
-    
+    }   
 }

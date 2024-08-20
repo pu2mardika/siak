@@ -130,11 +130,27 @@ class Tendik extends BaseController
 		$rules = $this->dconfig->roles;
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
+			//test_result($data);
+			if(strlen($data['noid'])<10){
+    			$cd=preg_split("/(\.|-)/i",$data['tmt']);
+    			$thn=$cd[0]; $day=$cd[2];
+    			if(strlen($cd[2])===4){
+    			    $thn = $cd[2];
+    			    $day = $cd[0];
+    			}
+    			$cid[]=substr($thn,2,2);
+    			$cid[]=$cd[1];
+    			$cid[]=$day.date("his");
+    			$cid[]=($data["jk"]=="L")?1:2;
+    			$cid[]=random_string('numeric',3);
+    			$data['noid']=implode($cid);
+			}
+		//	test_result($data);
 			$tendikmodel = new TendikModel();
-
-			$tendik= new \Modules\Tendik\Entities\tendik();
+            
+			$tendik= new \Modules\Tendik\Entities\Tendik();
 			$tendik->fill($data);
-			$simpan = $tendikmodel->insert($tendik);
+			$simpan = $tendikmodel->insert($tendik,false);
 			if($simpan){
 				$this->session->setFlashdata('sukses','Data telah berhasil disimpan');
 			}else{
@@ -177,7 +193,7 @@ class Tendik extends BaseController
 			$data = $this->request->getPost();
 			$model = new TendikModel();
 
-			$rsdata = new \Modules\Tendik\Entities\tendik();
+			$rsdata = new \Modules\Tendik\Entities\Tendik();
 			$rsdata->fill($data);
 			$simpan = $model->update($id, $rsdata);
 			

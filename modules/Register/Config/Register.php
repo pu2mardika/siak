@@ -23,6 +23,16 @@ class Register extends BaseConfig
 				'iklan'=>'Iklan Radio', 'other' => 'Lain-lain',
 			],
 		'status' => [1 => 'approved', 2 => 'rejected',],
+		//Agama Islam, Agama Kristen, Agama Katolik, Agama Hindu, Agama Buddha dan Agama Khonghucu
+		'agama' => [
+			''			=>"[--PILIH AGAMA--]",
+			'Islam'		=>"Agama Islam",
+			'Kristen'	=>"Agama Kristen",
+			'Katolik'	=>"Agama Katolik",
+			'Hindu'		=>"Agama Hindu",
+			'Buddha'	=>"Agama Buddha",
+			'Khonghucu'	=>"Agama Khonghucu",
+		],
 	];
 
 	/**
@@ -40,6 +50,8 @@ class Register extends BaseConfig
 		'tempatlahir'	=> ['label' => 'Tempat Lahir','width'=>0,'extra'=>['id'=>'tplhr','class' => '', 'required' => true],'type'=>'text'], 
 		'tgllahir'		=> ['label' => 'Tanggal Lahir','width'=>0,'extra'=>['id'=>'tglh','class' => '', 'required' => true],'type'=>'date'], 
 		'jk'			=> ['label' => 'Jenis Kelamin','width'=>0, 'extra'=>['id'=>'sex','class' => '', 'required' => true],'type'=>'dropdown'], 
+		'agama'			=> ['label' => 'Agama','width'=>0, 'extra'=>['id'=>'religy','class' => '', 'required' => true],'type'=>'dropdown'], 
+		'email'			=> ['label' => 'Email','width'=>0, 'extra'=>['id'=>'demail','class' => '', 'required' => true],'type'=>'email'],
 		'alamat'		=> ['label' => 'ALamat','width'=>0,'extra'=>['id'=>'addr','class' => '', 'style' => 'height: 100px','required' => true],'type'=>'textarea'], 
 		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['id'=>'phone','class' => '', 'required' => true, 'minlength'=>10, 'maxlength'=>12],'type'=>'tel'], 
 		'nama_ayah'		=> ['label' => 'Nama Ayah','width'=>12, 'extra'=>['id'=>'father','class' => '', 'required' => true],'type'=>'text'], 
@@ -69,6 +81,8 @@ class Register extends BaseConfig
 		'nisn'			=> ['label' => 'NISN','width'=>0,'extra'=>['id'=>'nis','class' => '', 'disabled'],'type'=>'text'], 
 		'tempatlahir'	=> ['label' => 'Tempat Lahir','width'=>0,'extra'=>['id'=>'tmplhr','class' => '', 'disabled'],'type'=>'text'], 
 		'tgllahir'		=> ['label' => 'Tanggal Lahir','width'=>0,'extra'=>['id'=>'tgllhr','class' => '', 'disabled'],'type'=>'date'], 
+		'agama'			=> ['label' => 'Agama','width'=>0, 'extra'=>['id'=>'religy','class' => '', 'disabled'],'type'=>'dropdown'], 
+		'email'			=> ['label' => 'Email','width'=>0, 'extra'=>['id'=>'demail','class' => '', 'required' => true],'type'=>'email'],
 		'jk'			=> ['label' => 'Jenis Kelamin','width'=>0, 'extra'=>['id'=>'sex','class' => '', 'disabled'],'type'=>'dropdown'], 
 		'alamat'		=> ['label' => 'ALamat','width'=>0,'extra'=>['id'=>'addrs','class' => '', 'style' => 'height: 100px', 'disabled'],'type'=>'textarea'], 
 		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['id'=>'phone','class' => '', 'disabled'],'type'=>'tel'], 

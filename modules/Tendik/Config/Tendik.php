@@ -37,6 +37,7 @@ class Tendik extends BaseConfig
 		'sts_kepeg'		=> ['label' => 'Status Kepegawaian','width'=>0, 'extra'=>['id' => 'stskp','class' => '', 'required' => true],'type'=>'dropdown'], 
 		'alamat'		=> ['label' => 'ALamat','width'=>0,'extra'=>['id' => 'addrs','class' => '', 'style' => 'height: 100px','required' => true],'type'=>'textarea'], 
 		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['id' => 'hp','class' => '', 'required' => true],'type'=>'tel'], 
+		'email'			=> ['label' => 'email','width'=>12, 'extra'=>['id' => 'emailx','class' => '', 'required' => false],'type'=>'email'], 
 		'npwp'			=> ['label' => 'NPWP','width'=>12, 'extra'=>['id' => 'npwpx','class' => '', 'required' => false],'type'=>'text'], 
 		'rekeningbank'	=> ['label' => 'No. Rekening','width'=>0, 'extra'=>['id' => 'accbank','class' => '', 'required' => true],'type'=>'text'], 
 		'namabank'		=> ['label' => 'Nama Bank','width'=>0, 'extra'=>['id' => 'namabank','class' => '', 'required' => true],'type'=>'text'], 

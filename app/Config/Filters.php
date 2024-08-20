@@ -41,7 +41,7 @@ class Filters extends BaseConfig
             // 'honeypot',
             // 'csrf',
             // 'invalidchars',
-            'session' => ['except' => ['login*', 'register', 'auth/a/*']],
+            'session' => ['except' => ['login*', 'register', 'auth/a/*','api*','tuton','tuton/*']],
           //  'login'=>['except'=>'login/*'],
         ],
         'after' => [
@@ -71,5 +71,8 @@ class Filters extends BaseConfig
      * Example:
      * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
      */
-    public array $filters = [];
+   // public array $filters = [];
+   public $filters = [
+        'jwt' => ['before' => ['api', 'api/*']],
+   ];
 }

@@ -11,7 +11,7 @@ class TendikModel extends Model
 
     //protected $useAutoIncrement = true;
     //protected $returnType    =  'Modules\Tendik\Entities\Tendik'; // configure entity to use'array';
-    protected $allowedFields = ['nik', 'noid', 'nama', 'tempatlahir', 'tgllahir', 'jk', 'status', 'sts_kepeg', 'alamat', 'nohp', 'npwp', 'rekeningbank', 'namabank', 'holdname', 'tmt', 'state'];
+    protected $allowedFields = ['nik', 'noid', 'nama', 'tempatlahir', 'tgllahir', 'jk', 'status', 'sts_kepeg', 'alamat', 'nohp', 'email', 'npwp', 'rekeningbank', 'namabank', 'holdname', 'tmt', 'state'];
     
     protected $returnType    =  \Modules\Tendik\Entities\Tendik::class;
     protected $useSoftDeletes = true;

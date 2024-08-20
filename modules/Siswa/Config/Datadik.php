@@ -32,6 +32,8 @@ class Datadik extends BaseConfig
 		'tempatlahir'	=> ['label' => 'Tempat Lahir','width'=>0,'extra'=>['id'=>'tmptlhr','class' => '', 'required' => true],'type'=>'text'], 
 		'tgllahir'		=> ['label' => 'Tanggal Lahir','width'=>0,'extra'=>['id'=>'tgllhr','class' => '', 'required' => true],'type'=>'date'], 
 		'jk'			=> ['label' => 'Jenis Kelamin','width'=>0, 'extra'=>['id'=>'jks','class' => '', 'required' => true],'type'=>'dropdown'], 
+		'agama'			=> ['label' => 'Agama','width'=>0, 'extra'=>['id'=>'religi','class' => '', 'required' => true],'type'=>'dropdown'], 
+		'email'			=> ['label' => 'Email','width'=>0, 'extra'=>['id'=>'demail','class' => '', 'required' => true],'type'=>'email'],
 		'alamat'		=> ['label' => 'ALamat','width'=>0,'extra'=>['id'=>'adrs','class' => '', 'style' => 'height: 100px','required' => true],'type'=>'textarea'], 
 		'nohp'			=> ['label' => 'No. HP','width'=>10, 'extra'=>['id'=>'noph','class' => '', 'required' => true],'type'=>'tel'], 
 		'nama_ayah'		=> ['label' => 'Nama Ayah','width'=>12, 'extra'=>['id'=>'nm','class' => '', 'required' => true],'type'=>'text'], 

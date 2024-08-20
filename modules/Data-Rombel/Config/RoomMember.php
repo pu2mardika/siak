@@ -111,8 +111,15 @@ class RoomMember extends BaseConfig
 	* @var array
 	*/
 
-	public $addOnAct = [
+	public $panelAct = [
 		'add' => ['icon'=>'plus-square','src'=>'rombel/enroll/', 'label'=>'Enroll Siswa', 'btn_type'=>'success'],
+	];
+
+	public $addOnPanelAct = [
+		1=>[
+			'tuton' => ['icon'=>'file-code-o','src'=>'rombel/genakun/', 'label'=>'Generate Data Daring', 'extra'=>'', 'btn_type'=>'success'],
+		],
+		2=>[]
 	];
 
 	public $actions = [

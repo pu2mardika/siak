@@ -311,11 +311,11 @@ function register($tgl)
 {
 	$T=['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 	$B=[
-		['0','0'], ['H','U'], ['I','V'], ['J','W'], ['K','X'], 
+		['O','O'], ['H','U'], ['I','V'], ['J','W'], ['K','X'], 
 		['L','Y'], ['M','Z'], ['N','A'], ['P','B'], 
 		['Q','C'], ['R','D'], ['S','E'], ['T','F'],
 	];
-	
+
 	$J=['N', 'Y','U','Q','V','A','B','Z','H','G','J','M','P','R','W','E','C','L','D','S','T','X','F','K'];
 	$tg=preg_split("/(\/|-)/i",$tgl);
 	
@@ -327,8 +327,8 @@ function register($tgl)
 	if(strlen($tg[0])===4){
 		$d = $tg[2]; $y = $tg[0];
 	}
-	$t=date("Y") - $y;
-	return $t.$B[$m][rand(0,1)].$d.$J[date('G')].strtoupper(random_string('alnum',2)); //format: TT[M]DD[J]XX
+	$t= $y % 26; 
+	return $T[$t].random_string('nozero',1).$B[$m][rand(0,1)].$J[date('G')].strtoupper(random_string('nozero',3)).strtoupper(random_string('alpha',1)); //format: TT[M]DD[J]XX
 }
 
 function regID($tgl)

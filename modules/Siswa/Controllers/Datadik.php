@@ -234,7 +234,17 @@ class Datadik extends BaseController
 				
 				$inputFileName = $filepath.$newName;
 				$excel = new \App\Libraries\Exc_lib();
-				$rsdata = $excel->read_data_xlsx($inputFileName);
+				$rxdata = $excel->read_data_xlsx($inputFileName);
+				$rsdata=[];
+				foreach($rxdata as $xdt)
+				{
+				    $rs=$xdt;
+				    $tgl = explode ('-', $rs['tgllahir']);
+				    $tgl_lahir = $tgl[2]."-".$tgl[1]."-".$tgl[0];
+				    $xdt['tgllahir']=$tgl_lahir;
+				    $xdt['idreg']=(strlen($rs['idreg'])<1)?register($tgl_lahir):$rs['idreg'];
+				    $rsdata[]=$xdt;
+				}
 				helper('text');
 				$Data['actY'] = random_string('md5',32);
 				$Data['actN'] = random_string('alnum',12);

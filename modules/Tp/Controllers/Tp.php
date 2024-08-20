@@ -131,7 +131,7 @@ class Tp extends BaseController
 			$data = $this->request->getPost();
 			$tpmodel = new TpModel();
 
-			$tp= new \Modules\Tp\Entities\tp();
+			$tp= new \Modules\Tp\Entities\Tp();
 			$tp->fill($data);
 			$simpan = $tpmodel->insert($tp);
 			if($simpan){
@@ -174,7 +174,7 @@ class Tp extends BaseController
 			$data = $this->request->getPost();
 			$model = new TpModel();
 
-			$rsdata = new \Modules\Tp\Entities\tp();
+			$rsdata = new \Modules\Tp\Entities\Tp();
 			$rsdata->fill($data);
 			$simpan = $model->update($id, $rsdata);
 			

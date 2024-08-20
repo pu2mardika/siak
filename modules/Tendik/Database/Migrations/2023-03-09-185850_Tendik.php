@@ -64,6 +64,11 @@ class Tendik extends Migration
 		        'constraint' => 15,
 		        'null'    	 => true,
 		    ],
+			'email' => [
+		        'type'       => 'varchar',
+		        'constraint' => 30,
+		        'null'    	 => true,
+		    ],
 		    'rekeningbank' => [
 		        'type'       => 'varchar',
 		        'constraint' => 100,

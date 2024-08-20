@@ -35,8 +35,18 @@ use CodeIgniter\Router\RouteCollection;
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+//routes->get('tuton/(:any)', 'RoomMember::cekTuton/$1');
 
 service('auth')->routes($routes);
+
+$routes->group('api', ['filter' => 'jwt'], static function ($routes) {
+   $routes->resource('rfsiswa');
+});
+
+$routes->group('tuton', static function ($routes) {
+    $routes->get('cek', "RoomMember::cekTuton");
+    $routes->get("doPost", "RoomMember::cekTuton");
+});
 
 $routes->group('menu', static function ($routes) {
     $routes->get('/', 'Menu::index');
