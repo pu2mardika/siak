@@ -40,17 +40,19 @@
 		$hfield=[];
 		helper ('html');
 			if($allowAdd){
+				$addAct = (isset($panelAct['add']))?$panelAct['add']:$Acction.'/add';
 				echo btn_label([
 					'attr' => ['class' => 'btn btn-success btn-xs'],
-					'url' => $Acction . '/add',
+					'url' => $addAct,
 					'icon' => 'fa fa-plus',
 					'label' => 'Tambah Data'
 				]);
 			}
 			if($allowimport){
+				$ImportAct = (isset($panelAct['import']))?$panelAct['import']:$Acction.'/import';
 				echo btn_label([
 					'attr' => ['class' => 'btn btn-primary btn-xs'],
-					'url' => $Acction . '/import',
+					'url' => $ImportAct,
 					'icon' => 'fa fa-file-excel-o',
 					'label' => 'Import dari Excel'
 				]);
@@ -84,13 +86,13 @@
 			<tbody>
 		 <?php
 			//$encrypter = \Config\Services::encrypter();
-			
+			$plain =(isset($isplainText))?$isplainText:false;
 			$no=0;
 			foreach ($rsdata as $data){
 			$no++;
 			$ids=  $data->$key;
 		
-			if(isset($isplainText)){$ids = encrypt($ids) ;}
+			if($plain){$ids = encrypt($ids) ;}
 		?>
 				<tr>
 					<?php 

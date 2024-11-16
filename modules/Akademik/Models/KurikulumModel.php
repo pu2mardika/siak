@@ -73,4 +73,19 @@ class KurikulumModel extends Model
     	}
 		return $level;
 	}
+
+    //AMBIL DATA KURIKULUM YANG MENGGUNAKAN RAPORT
+    public function DropDown($param)
+    {
+        $builder = $this->db->table($this->table.' a');
+        $builder->select('a.id, a.curr_name, b.jns_lhb')
+            ->join('prodi b', 'a.id_prodi = b.id_prodi');
+        $builder->where($param);
+        $query = $builder->get();
+        $dd=[];
+        foreach ($query->getResultArray() as $row) {
+            $dd[$row['id']]=$row['curr_name'];
+        }
+        return $dd;
+    }
 }

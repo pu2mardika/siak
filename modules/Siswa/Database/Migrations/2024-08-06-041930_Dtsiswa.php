@@ -3,6 +3,7 @@
 namespace Modules\Siswa\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 class Dtsiswa extends Migration
 {

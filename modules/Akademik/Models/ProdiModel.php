@@ -13,7 +13,7 @@ class ProdiModel extends Model
     protected $returnType       = \Modules\Akademik\Entities\Prodi::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['nm_prodi', 'skl', 'jurusan', 'jenjang'];
+    protected $allowedFields    = ['nm_prodi', 'skl', 'jurusan', 'jenjang','jns_lhb'];
 
     // Dates
     protected $useTimestamps = false;

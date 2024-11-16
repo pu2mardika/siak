@@ -17,12 +17,19 @@ class Prodi extends BaseConfig
             5 => "Pendidikan Setara D2",
             6 => "Pendidikan Setara D3",
             7 => "Pendidikan Setara D4",
-        ]
+		],
+
+		'jns_lhb'=>[
+			""=> "Pilih Jenis LHB",
+			1 => "Raport",
+			2 => "Sertifikat/STSB",
+			3 => "Raport & STSB",
+		]
     ];
 
     /**
 	* ---------------------------------------------------------------------
-	* FIELD NAME : 'nm_prodi', 'skl', 'jurusan', 'jenjang'
+	* FIELD NAME : 'nm_prodi', 'skl', 'jurusan', 'jenjang', 'jns_lhd'
 	* ---------------------------------------------------------------------
 	* @var array
 	* 
@@ -32,6 +39,7 @@ class Prodi extends BaseConfig
 		'skl'		=> ['label' => 'Deskripsi/SKL','width'=>40,'extra'=>['id' => 'editor','class' => ''],'type'=>'textarea', ], 
 		'jurusan'	=> ['label' => 'Jenis Program','width'=>20,'extra'=>['id' => 'program','class' => '', 'required' => true],'type'=>'dropdown', ], 
         'jenjang'	=> ['label' => 'Jenjang','width'=>10,'extra'=>['id' => 'grades','class' => '', 'required' => true],'type'=>'dropdown', ], 
+        'jns_lhb'	=> ['label' => 'Jns Lap Hasil Belajar','width'=>0,'extra'=>['id' => 'grades','class' => '', 'required' => true],'type'=>'dropdown', ], 
 	];
     
 	public array $roles = [
@@ -39,6 +47,7 @@ class Prodi extends BaseConfig
 		'skl'   		=> ['label' => 'Deskripsi/SKL', 'rules' =>'required'],
 		'jurusan'   	=> ['label' => 'Jenis Program', 'rules' =>'required'],
         'jenjang'   	=> ['label' => 'Jenjang', 'rules' =>'required'],
+		'jns_lhb'   	=> ['label' => 'Jns Lap Hasil Belajar', 'rules' =>'required'],
 	];  
 
 	public string $primarykey = 'id_prodi';

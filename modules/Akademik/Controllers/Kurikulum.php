@@ -32,7 +32,7 @@ class Kurikulum extends BaseController
 		$this->data['allowimport']		  = $this->dconfig->importallowed;
         $this->addStyle (base_url().'/css/personal.css');
 		$this->addStyle ('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
-		helper(['cookie', 'form']);
+		helper(['cookie', 'form','filesystem']);
     }
 	
 	function index()
@@ -46,6 +46,7 @@ class Kurikulum extends BaseController
         $data['isplainText'] = TRUE;
 		$data['opsi'] 		= $this->dconfig->opsi;
         $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+        $data['opsi']['action_class'] = $this->_patdir();
 		$data['actions']	= $this->dconfig->actions;
 		$data['addOnACt']= $this->dconfig->addOnACt;
 		echo view($this->theme.'datalist',$data);
@@ -63,6 +64,7 @@ class Kurikulum extends BaseController
 		$data['fields'] = $fields;
 		$data['opsi'] 	= $this->dconfig->opsi;
         $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+        $data['opsi']['action_class'] = $this->_patdir();
 		$data['rsdata'] = [];
         $data['useCKeditor'] = true;
 		echo view($this->theme.'form',$data);
@@ -100,6 +102,7 @@ class Kurikulum extends BaseController
 		$data['fields'] = $this->dconfig->fields;
 		$data['opsi'] 	= $this->dconfig->opsi;
         $data['opsi']['id_prodi'] 	= $this->prodi_model->getDropdown();
+        $data['opsi']['action_class'] = $this->_patdir();
 		$rs =  $this->model->find($id)->toarray();
 		$data['rsdata'] = $rs;
         $data['useCKeditor'] = true;
@@ -190,5 +193,21 @@ class Kurikulum extends BaseController
         
 		$data['rsdata'] = $rs;
 		echo view($this->theme.'dataViewCell',$data);
+	}
+	
+	private function _patdir()
+	{
+		$dm=directory_map('../../siak/template/data-raport/Controllers');
+		
+		//test_result($dir);
+		$dir=[""=>"[--PILIH KELOMPOK KURIKULUM--]"];
+		foreach($dm as $D)
+		{
+			$dt=substr($D,0,strlen($D)-4);
+			$dir[$dt]= strtoupper($dt);
+		}
+		
+		return $dir;
+		
 	}
 }

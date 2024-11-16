@@ -1,6 +1,6 @@
-<div class="card" style="height: 200px; overflow: auto;">
+<div class="card" style="height: 400px;">
 <?php if(count($resData)>0){?>
-    <table class="table table-striped table-data small">
+    <table id="dtselect" class="table table-striped table-data small stripe row-border order-column nowrap">
         <thead>    
             <tr>
                 <?php foreach($fields as $key => $dt){ 
@@ -87,5 +87,27 @@ jQuery(document).ready(function($) {
             $("#chkAll").prop("checked",true);
         }
     });
+
+    $('#dtselect').DataTable({
+        columnDefs: [
+            {
+                orderable: false,
+                className: 'select-checkbox',
+                targets: 0
+            }
+        ],
+        fixedColumns: {
+            start: 2
+        },
+        order: [[1, 'asc']],
+        paging: false,
+        scrollCollapse: true,
+        scrollX: true,
+        scrollY: 300,
+        select: {
+            style: 'os',
+            selector: 'td:first-child'
+        }
+    }); 
 });
 </script>

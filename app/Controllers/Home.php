@@ -21,5 +21,10 @@ class Home extends BaseController
 		echo $this->_render('dashboard',$data);
 	}
 
+	public function pdchart()
+	{
+		
+	}
+
 	//--------------------------------------------------------------------
 }

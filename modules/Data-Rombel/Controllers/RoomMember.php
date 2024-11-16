@@ -86,19 +86,22 @@ class RoomMember extends BaseController
 			//menjadikan hasil rsproject sebagai string
 			$data['resume']['data']['projek'] = view_cell('\Modules\Project\Controllers\SkenProject::getProject', ['id'=>$id]);
 		}
-	
+	    
+	    $opsi1 = setting()->get('Siswa.opsi');
+	    $opsi2 = setting()->get('Rombel.opsi');
 	//	$data['addOnACt'] = $this->dconfig->detAddOnACt;
 		$dtmember = $this->model->getAll(['a.roomid'=>$id]);
 		$data['rsdata']	= $dtmember;
 		$data['msg'] 	= "";
 		$data['isplainText'] = false;
 		$data['keys'] 	= $this->dconfig->primarykey;
-		$data['opsi']   = setting()->get('Siswa.opsi');
+		$data['opsi']   = array_merge($opsi1, $opsi2);
 		$data['detAction']= $this->dconfig->actions;
 		$data['addOnActDet']= $this->dconfig->detAddOnACt;
 		$data['condAddOnAct']= $this->dconfig->addOnPanelAct;
 		$data['addOnACt']= $addOnAct;
 		$data['dataStated']= ($stated==1)?1:2;
+	//	test_result($data);
 		echo view($this->theme.'frmdatalist',$data);	
     }
 
@@ -232,8 +235,8 @@ class RoomMember extends BaseController
 		$data['resData'] = $partisipan;
 		$data['keys'] 	 = 'noinduk';
 		$data['fields']  = $this->dconfig->srcFields;
-		$data['has_ref'] = [];
-		$data['opsi']	 = [];
+		$data['has_ref'] = ['learn_metode'];
+		$data['opsi']    = setting()->get('Siswa.opsi');
 		echo view($this->theme.'cells/tablecheck',$data);
 	}
 	
@@ -244,14 +247,16 @@ class RoomMember extends BaseController
 		if ($this->validate($rules)) {
 			$data = $this->request->getPost();
 			$dt['roomid']=decrypt($data['roomid']);
-			
+		//	test_result($data);
 			//menyiapkan data member dari pd yang terpilih:
 			$induk = $data['pd'];
+			$LM = $data['learn_metode'];
 			$rowD=[]; $no=1;
 			foreach($induk as $key =>$val){
-				$dt['id']	=$dt['roomid'].sprintf("%02d",$no).random_string('numeric',1);
+				$dt['id']	=$dt['roomid'].sprintf("%03d",$no).random_string('numeric',1);
 				$dt['noinduk']=$val;
 				$dt['no_absen']=$no;
+				$dt['learn_metode']=$LM;
 				$rowD[]=$dt;
 				$no++;
 			}
@@ -372,9 +377,10 @@ class RoomMember extends BaseController
 		$data['keys'] 	 = 'noinduk';
 	//	$data['fhead']   = $this->dconfig->srcFields;
 		$data['fields']   = $this->dconfig->srcFields;
-		$data['has_ref'] = [];
-		$data['opsi']	 = [];
+		$data['has_ref'] = ['learn_metode'];
+		$data['opsi']    = setting()->get('Rombel.opsi');
 		$data['inputype'] = $DATA['inputype'];
+		test_result($data);
 		echo view($this->theme.'cells/tablecheck',$data);
 	}
 }

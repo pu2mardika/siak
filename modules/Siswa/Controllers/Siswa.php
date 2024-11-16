@@ -124,7 +124,7 @@ class Siswa extends BaseController
 			$data = $this->_setNoInduk($data);
 			$NOINDUK = $data['noinduk'];
 			$siswamodel = new SiswaModel();
-			$siswa= new \Modules\Siswa\Entities\siswa();
+			$siswa= new \Modules\Siswa\Entities\Siswa();
 			$siswa->fill($data);
 			$simpan = $siswamodel->insert($siswa, false);
 			if($simpan){

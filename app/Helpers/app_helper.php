@@ -694,3 +694,31 @@ function rateFlat($pokok,$rate,$tenor)
 	$hasil['total']	= $hasil['pokok'] + $hasil['bunga'];
 	return $hasil; 
 }
+
+function getCSVArray($query, string $delim = ',', string $newline = "\n", string $enclosure = '"')
+{
+	$out = '';
+
+	foreach ($query['header'] as $name) {
+		$out .= $enclosure . str_replace($enclosure, $enclosure . $enclosure, $name) . $enclosure . $delim;
+	}
+
+	$out = substr($out, 0, -strlen($delim)) . $newline;
+
+	// Next blast through the result array and build out the rows
+	while ($row = $query['dtrow']) {
+		$line = [];
+
+		foreach ($row as $item) {
+			$line[] = $enclosure . str_replace(
+				$enclosure,
+				$enclosure . $enclosure,
+				(string) $item
+			) . $enclosure;
+		}
+
+		$out .= implode($delim, $line) . $newline;
+	}
+
+	return $out;
+}

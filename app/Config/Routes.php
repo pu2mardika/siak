@@ -43,6 +43,10 @@ $routes->group('api', ['filter' => 'jwt'], static function ($routes) {
    $routes->resource('rfsiswa');
 });
 
+$routes->group('apix', ['filter' => 'tokens'], static function ($routes) {
+    $routes->resource('rfsiswa');
+ });
+
 $routes->group('tuton', static function ($routes) {
     $routes->get('cek', "RoomMember::cekTuton");
     $routes->get("doPost", "RoomMember::cekTuton");

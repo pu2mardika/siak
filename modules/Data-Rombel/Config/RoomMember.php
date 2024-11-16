@@ -15,9 +15,10 @@ class RoomMember extends BaseConfig
 	 */
 	public $opsi = [
 		'sumber' => [""=>'[--Pilih Sumber--]',"sb"=>"Siswa Baru","nk"=>'Naik Kelas'],
+		'learn_metode' => [''=>'[--Pilih Metode Belajar--]', 0 => 'Tatap Muka', 1 => 'Tutorial Online', 2 => 'Mandiri',],
 	];
 
-    public array $tofunc = [
+    public $tofunc = [
         'sb' => "newPartisipan",
         'nk' => 'prevGrade',
 		'vr' => 'viewRombel'
@@ -34,26 +35,28 @@ class RoomMember extends BaseConfig
 		'noinduk'		=> ['label' => 'No. Induk (NIPD)','width'=>12, 'extra'=>['id'=>'noktp', 'class' => '', 'required' => true],'type'=>'checkbox'], 
 		'nama'			=> ['label' => 'Nama Lengkap','width'=>25,'extra'=>['id'=>'namasiswa','class' => '', 'required' => true],'type'=>'text'], 
 		'nisn'			=> ['label' => 'N.I.S.N','width'=>10,'extra'=>['id'=>'nisnx','class' => '', 'required' => true],'type'=>'text'], 
-		'jk'			=> ['label' => 'Jenis Kelamin','width'=>8, 'extra'=>['id'=>'jks','class' => '', 'required' => true],'type'=>'dropdown'], 
+		'jk'			=> ['label' => 'Jenis Kelamin','width'=>6, 'extra'=>['id'=>'jks','class' => '', 'required' => true],'type'=>'dropdown'], 
+		'learn_metode'	=> ['label' => 'Metode Belajar','width'=>8, 'extra'=>['id'=>'lmtd','class' => '', 'required' => true],'type'=>'dropdown'],
 	];
 	
-	public array $ResumeFields = [
+	public $ResumeFields = [
 		'nama_rombel'=> ['label' => 'Nama Rombel', 'perataan'=>'left'], 
 		'curr_id'	 => ['label' => 'Kurikulum', 'perataan'=>'left'],
 		'grade'		 => ['label' => 'Grade/Tingkat', 'perataan'=>'left'],
 		'wali'	 	 => ['label' => 'Wali Kelas', 'perataan'=>'left'],  
-		'learn_metode' => ['label' => 'Metode Belajar', 'perataan'=>'left'],  
+	//	'learn_metode' => ['label' => 'Metode Belajar', 'perataan'=>'left'],  
 	];
 
 	public $Addfields = [
+		'learn_metode'	=> ['label' => 'Metode Belajar','extra'=>['id'=>'lmID', 'name'=>'LearMetode','class' => '', 'required' => true],'type'=>'dropdown'],  
 		'sumber'		=> ['label' => 'Sumber Data','extra'=>['id'=>'bsdrommb','class' => '', 'required' => true],'type'=>'dropdown'],  
 	];
 
 	public $srcFields = [
-		'nipd'		=> ['label' => 'No. Induk (NIPD)','width'=>10,'extra'=>['id'=>'bsdrommb', 'name'=>'pd[]'], 'type'=>'checkbox'], 
-		'noinduk'	=> ['label' => 'No. Induk (NIPD)','width'=>15, 'type'=>'display'], 
-		'nama'		=> ['label' => 'Nama Lengkap','width'=>50, 'type'=>'display'], 
-		'jk'		=> ['label' => 'JK','width'=>5,'type'=>'display'],
+		'nipd'		    => ['label' => 'No. Induk (NIPD)','width'=>5,'extra'=>['id'=>'bsdrommb', 'name'=>'pd[]'], 'type'=>'checkbox'], 
+		'noinduk'	    => ['label' => 'No. Induk','width'=>12, 'type'=>'display'], 
+		'nama'		    => ['label' => 'Nama Lengkap','width'=>30, 'type'=>'display'], 
+	//	'learn_metode'	=> ['label' => 'Metode Belajar','width'=>17, 'extra'=>['id'=>'lm', 'name'=>'lm[]'],'type'=>'dropdown'],
 	];
 
 	public $suportFields = [

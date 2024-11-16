@@ -29,7 +29,7 @@ class Kurikulum extends BaseConfig
 		'curr_system'	=> ['label' => 'Sistem Kurikulum','width'=>10,'extra'=>['id' => 'cursytem','class' => '', 'required' => true],'type'=>'dropdown', ],
 		'instance_rpt'	=> ['label' => 'Akronim Kurikulum','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true,'maxlength'=>"6",'minlength'=>"6"],'type'=>'text'],  
 		'has_project'	=> ['label' => 'Memiliki Project','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true],'type'=>'dropdown'],
-		'action_class'	=> ['label' => 'Kelompok Kurikulum','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true,'maxlength'=>"6",'minlength'=>"6"],'type'=>'text'],   
+		'action_class'	=> ['label' => 'Kelompok Kurikulum','width'=>0,'extra'=>['id' => 'instances','class' => '', 'required' => true,'maxlength'=>"6",'minlength'=>"6"],'type'=>'dropdown'],   
 	];
 
 	public string $resume_descrip_field = 'curr_desc';

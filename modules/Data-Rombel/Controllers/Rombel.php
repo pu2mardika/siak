@@ -67,8 +67,8 @@ class Rombel extends BaseController
 		}
 		$addTitle = "Tahun ".$desc;
 		$parm=['kode_ta'=>$ctp];
-		$dtrombel = $this->model->where('kode_ta', $ctp)->findAll();
-		//$dtrombel = $this->model->getAll(['kode_ta'=>$ctp]);
+		//$dtrombel = $this->model->where('kode_ta', $ctp)->findAll();
+		$dtrombel = $this->model->getAll(['kode_ta'=>$ctp]);
 		$data['title']	= "Manajemen Data Rombel ".$addTitle;
 		$data['rsdata']	= $dtrombel;
 		$data['msg'] 	= "";
@@ -138,12 +138,13 @@ class Rombel extends BaseController
 		$data=$this->data;
 		$currModel  = model(\Modules\Akademik\Models\KurikulumModel::class); 
 		$prodiModel = model(\Modules\Akademik\Models\ProdiModel::class); 
+		$tendik = $this->tendikModel->getDropdown();
 		$data['title']	= "Update Data Rombel";
 		$data['error']  = [];
 		$data['fields'] = $this->dconfig->fields;
 		$data['opsi'] 	= $this->dconfig->opsi;
 		$rs =  $this->model->find($id)->toarray();
-		$rs['wali']     = $rs['walikelas'];
+		$rs['wali']     = $tendik[$rs['walikelas']];
 		$data['rsdata'] = $rs;
 		$data['opsi'] 	= $this->dconfig->opsi;
 		$data['opsi']['kode_ta'] = $this->TpModel->getDropdown();
@@ -185,7 +186,8 @@ class Rombel extends BaseController
 	}
 	
 	function delete($ids){
-		$id = decrypt($ids); 
+		$id = decrypt($ids);
+		test_result($id);
 		$rombelmodel = new RombelModel();
 		$rombelmodel->delete($id);
 		// masuk database

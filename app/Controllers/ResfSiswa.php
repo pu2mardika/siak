@@ -29,6 +29,7 @@ class ResfSiswa extends ResourceController
     {
         $model = model(\Modules\Room\Models\MemberModell::class); 
         $data = $model->getAll(['b.nik'=>$id]);
+        $result = "SUKSES";
         if ($data) {
             return $this->respond($data);
         } else {

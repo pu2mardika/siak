@@ -23,6 +23,9 @@ class Raport extends BaseController
 	protected $footpdf;
 	protected $RaporID;
 
+	protected $LHB = 1;
+	protected $MHB = 3;
+
     function __construct() {
         parent::__construct();
         $this->dconfig = config(\Modules\Raport\Config\RaportConf::class);
@@ -36,7 +39,7 @@ class Raport extends BaseController
 		$this->data['opsi'] 	  = $this->dconfig->opsi;
 		$this->data['key']		  = $this->dconfig->primarykey;
 		$this->data['fields'] 	  = $this->dconfig->fields;
-		$this->data['opsi']['curr_id'] = $this->currModel->getDropdown();
+		$this->data['opsi']['curr_id'] = $this->currModel->Dropdown("b.jns_lhb='".$this->LHB."' OR b.jns_lhb='".$this->MHB."'");
 		$this->data['opsi']['walikelas'] 	= $this->tendikModel->getDropdown();
 		$this->data['allowimport']= $this->dconfig->importallowed;
 		//PERBAHARUI BREADCRUMB
@@ -93,7 +96,7 @@ class Raport extends BaseController
 		$data['actions']= $this->dconfig->actions;
 		$data['incUpActions']=['room'];
 		
-	//	test_result($data['panelAct']);
+//	//	show_result($rsdata);
 		echo view($this->theme.'acordiontable',$data);	
     }
 
@@ -217,7 +220,7 @@ class Raport extends BaseController
 		
 		//$rsData = $RoomModel->getAll($parm);
 		$rsData = $RoomModel->where($parm)->findAll();
-		//test_result($rsData);
+//		test_result($rsData);
 		
 		$data['title']		 = "DAFTAR ROMBEL";
 		$data['rsdata']		 = $rsData;

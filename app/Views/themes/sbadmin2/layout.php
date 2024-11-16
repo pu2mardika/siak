@@ -469,9 +469,7 @@
         </div>
     </div>
 	
-    <!-- Bootstrap core JavaScript 
-    <script src="<?=base_url('themes/sbadmin2/vendor/jquery/jquery.min.js')?>"></script>
-    -->
+   
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="<?=base_url('themes/sbadmin2/vendor/bootstrap/js/bootstrap.bundle.min.js')?>"></script>
 

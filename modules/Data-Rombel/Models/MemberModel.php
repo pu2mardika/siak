@@ -12,7 +12,7 @@ class MemberModel extends Model
     protected $returnType       = \Modules\Room\Entities\Member::class;
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['id', 'roomid', 'noinduk', 'no_absen'];
+    protected $allowedFields    = ['id', 'roomid', 'noinduk', 'no_absen', 'learn_metode'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -48,7 +48,7 @@ class MemberModel extends Model
     {
         $where = "a.deleted_at IS NULL";
         $builder = $this->db->table('rombel_memb a');
-		$builder->select('a.id, a.roomid, a.noinduk, c.idreg, c.nama, c.nisn, c.jk, b.no_ijazah, a.no_absen, a.created_at')
+		$builder->select('a.id, a.roomid, a.noinduk, a.learn_metode, c.idreg, c.nama, c.nisn, c.jk, b.no_ijazah, a.no_absen, a.created_at')
                 ->join('siswa b', 'a.noinduk = b.noinduk')
                 ->join('tbl_datadik c', 'b.nik = c.nik');	
 		$builder->orderBy('a.noinduk', 'ASC');
@@ -78,10 +78,10 @@ class MemberModel extends Model
     {
         $sql = 'SELECT a.noinduk, a.noinduk as nipd, a.nik, b.nama, a.prodi, b.idreg, b.jk
         FROM siswa a JOIN tbl_datadik b ON a.nik = b.nik
-        WHERE a.prodi = '.$prodi.' AND NOT EXISTS
+        WHERE a.prodi = '.$prodi.' AND a.state = 1 AND NOT EXISTS
         ((SELECT y.nik, x.id, z.kode_ta, z.grade   
            FROM  rombel_memb x JOIN siswa y ON x.noinduk = y.noinduk  JOIN rombel z ON x.roomid = z.id
-           WHERE z.kode_ta = '.$ta.' AND z.grade = '.$grade.' AND a.nik = y.nik));';
+           WHERE z.kode_ta = '.$ta.' AND a.nik = y.nik));';
         
         $query = $this->db->query($sql);
         return $query->getResultArray();

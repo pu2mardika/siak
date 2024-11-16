@@ -42,10 +42,12 @@ class MapelModel extends Model
 	private function getsData($param=[])
 	{
 		$builder = $this->db->table('mapel a');
-		$builder->select('a.id, a.id as id_mapel, a.id_subject, a.id_skl, a.skk, b.subject_name,  b.grup_id, b.akronim, c.grade, c.subgrade')
+		$builder->select('a.id, a.id as id_mapel, a.id_subject, a.id_skl, a.skk, b.subject_name,  b.grup_id, b.akronim, c.grade, c.subgrade, d.nm_grup')
 				->join('subjects b', 'a.id_subject = b.id')
-				->join('tblskl c', 'a.id_skl = c.id');
+				->join('tblskl c', 'a.id_skl = c.id')
+				->join('grup_mapel d', 'b.grup_id = d.grup_id');
 		$builder->orderBy('a.id_skl', 'ASC');
+		$builder->orderBy('b.grup_id', 'ASC');
 		$builder->orderBy('b.item_order', 'ASC');
 		$builder->where($param);
 		$query = $builder->get();

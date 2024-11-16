@@ -18,3 +18,23 @@ $routes->group("rapor", ["namespace" => "\Modules\Raport\Controllers"], function
 
 	$routes->get("project", "Raport::r_project");
 });
+
+$routes->group("cert", ["namespace" => "\Modules\Raport\Controllers"], function ($routes) {
+
+	$routes->get("/", "Cert::index");
+  
+	$routes->get("dtlist", "Cert::dtlist");
+	$routes->post("dtlist", "Cert::dtlist");
+	$routes->get("add/(:any)", "Cert::addView/$1");
+	$routes->post("add/(:any)", "Cert::addAction/$1");
+	$routes->get("rem/(:any)", "Cert::delete/$1");
+	$routes->get("edit/(:any)", "Cert::updateView/$1");
+	$routes->post("edit/(:any)", "Cert::editAction/$1");
+
+	$routes->get("addasesi/(:any)", "Cert::dataAsessi/$1");
+	$routes->get("addasesi", "Cert::dataAsessi");
+	$routes->post("addasesi/(:any)", "Cert::NewPartAction");
+	$routes->get("show/(:any)", "Cert::shwMembers/$1");
+	$routes->get("shwdet", "Cert::shwDetail");
+	$routes->get("vrept", "Cert::shwReport");
+});

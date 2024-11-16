@@ -28,4 +28,12 @@ $routes->group("rombel", ["namespace" => "\Modules\Room\Controllers"], function 
 	
 });
 $routes->addRedirect('roommember', 'rombel');
+
+$routes->group("tuton", ["namespace" => "\Modules\Kbm\Controllers"], function ($routes) {
+
+	// welcome page - URL: /student
+	$routes->get("/", "Tuton::index");
+	$routes->get("dtsiswa", "Tuton::getPD");
+	$routes->get("dtguru", "Tuton::getPD");
+});
 //$routes->resource('rfsiswa');
