@@ -12,12 +12,9 @@ class Sttb01 extends BaseController
     public function showRaport($rsData):string
     {
        // $compRaport = model(\Modules\Akademik\Models\RaportsModel::class);
-    //    test_result($rsData);
-    //    $KUR = $rsData['kurikulum'];
         $PS = $rsData['PS'];
         $nostsb = $rsData['PD']['id'];
        
-        //$CR = $compRaport->asarray()->where('curr_id',$KUR['id'])->findAll();
         $ID  = [];
         $JUR = setting()->get('Program.opsi');
         $UO  = $JUR['unit_kerja'];
@@ -35,7 +32,7 @@ class Sttb01 extends BaseController
         $ID['exam'] = format_date($rsData['dtRaport']['exam']);
         $ID['otorized_by'] = $rsData['dtRaport']['otorized_by'];
         $ID['issued'] = format_date($rsData['dtRaport']['issued']);
-        
+        $views = $rsData['dtRaport']['tmpview'];
         $dtbarcode =$rsData['PD']['id'];
 
         $NR = $rsData['NILAI'];
@@ -48,9 +45,8 @@ class Sttb01 extends BaseController
         foreach($Mapel as $MP)
         {
             $nilai = (array_key_exists($MP['id_mapel'], $NR))?$NR[$MP['id_mapel']]:[];
-          //  test_result($nilai);
-         //   $nilai = $NR[$MP['id_mapel']];
-
+        //    test_result($nilai);
+        
             //membaca nilai untuk setiap komponen nilai yang ada
             $desc1=""; $desc2="";
             if(count($nilai)>0)
@@ -119,7 +115,7 @@ class Sttb01 extends BaseController
         $AVGN = (count($Mapel)>0)?$JNA / count($Mapel):0;
         $ID['avgn'] = round($AVGN,2,PHP_ROUND_HALF_UP);
         $ID['predikat'] =$this->setPredikat($AVGN,$KKM);
-
+        $data['legality']=$rsData['legality'];
         $generator = new Picqer\Barcode\BarcodeGeneratorPNG();
         $data['qrcode'] = '<img src="'.(new QRCode)->render($dtbarcode).'" alt="QR Code" height="150" width="150" />';
         $barcode   = $generator->getBarcode($dtbarcode, $generator::TYPE_CODE_128_B);
@@ -128,9 +124,19 @@ class Sttb01 extends BaseController
         $data['mapel'] = $dtMP;
         $data['ID'] = $ID;
         $data['norpt'] = $nostsb;
+
+        $html="";
+        foreach($views as $V)
+        {
+            $tmp = "Raport\Views". DIRECTORY_SEPARATOR.$V;
+            $html .= view($tmp, $data);
+        }
+       /*
         $html = view('Raport\Views\sttb_fs',$data)
                .view('Raport\Views\sttb_bs',$data);
+       */
         return $html;
+        
     }
 
     private function setPredikat($nilai, $kkm=70, $nmax=100)

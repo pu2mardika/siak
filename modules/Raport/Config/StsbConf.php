@@ -11,6 +11,16 @@ class StsbConf extends BaseConfig
 		'jenis' => [1 =>'Surat Tanda Selesai Belajar', 'Sertifikat Kompetensi', 'Sertifikat Keterampilan Kerja']
 	];
 
+	public function viewtmp($jenis):array
+	{
+		$view = [
+			1=>['sttb_fs', 'sttb_bs'], 
+			2=>['sert_fs', 'sert_bs'],
+			3=>['skko_fs', 'skko_bs'],
+		];
+		return $view[$jenis];
+	}
+
 	public $dom = 'flrtip';
 
 	/**

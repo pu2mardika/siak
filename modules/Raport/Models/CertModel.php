@@ -43,29 +43,7 @@ class CertModel extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
-/*
-    public function getAll($parm)
-    {
-      return $this->getsData($parm)->getResult();
-    }
 
-    public function gets($parm)
-    {
-        return $this->getsData($parm)->getRowArray();
-    }
-  
-    private function getsData($param=[])
-    {
-        $builder = $this->db->table($this->table.' a');
-        $builder->select('a.id, a.curr_id, a.exam, a.issued, a.otorized_by, 
-            b.curr_name, b.curr_system, b.instance_rpt, b.has_project, b.action_class, c.deskripsi as tapel')
-            ->join('curriculum b', 'a.curr_id = b.id')
-            ->join('tbl_tp c', 'a.kode_ta = c.thid');
-        $builder->where($param);
-        $query = $builder->get();
-        return $query;
-    }
-*/
     /**
      * menampilkan data rombel yang memiliki field RoomID, kode_ta, jns_lhb dan jml_member yang belum sert.
      * `walikelas`, `kode_ta`, `curr_id`, `grade`

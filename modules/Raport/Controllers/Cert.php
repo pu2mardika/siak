@@ -321,70 +321,6 @@ class Cert extends BaseController
 		}
 	}
 	
-	/*
-	function shwRoomMembers()
-	{
-		$this->cekHakAkses('read_data');
-		$data=$this->data;		
-		if (isset($_GET['ids'])) 
-		{
-			$ids= $_GET['ids'];
-			$id = decrypt($ids);
-		}else{
-			$this->session->setFlashdata('warning','Data gagal ditampilkan');
-			return redirect()->to(base_url('cert'));
-		}
-				
-		//Ambil detail Rombel
-		$RoomModel = model(\Modules\Room\Models\RombelModel::class);
-	//	$KUR = $data['opsi']['curr_id'];
-	//	$LM = setting()->get('Rombel.opsi');
-		$R = $RoomModel->getAll(['id'=>$id]);
-		
-		$room = (array) $R[0];
-		$addTitle = $room['nama_rombel'];
-		$currID = $room['curr_id'];
-		$room['curr_id']=$KUR[$currID];
-		$roomID = decrypt($room['id']);
-		
-		//RESUME DATA
-		$data['resume']['field'] = $this->dconfig->ResumeFields;
-		$data['resume']['data']  = $room;
-		$data['resume']['subtitle'] = "SERTIFIKAT";//.$addTitle;
-		//MENU DROPDOWN		
-		$data['condAddOnAct'] = $this->dconfig->condAddOnACt;
-		$data['dataStated'] = 1;
-
-		//AMBIL DATA KURIKULUM MEMILIKI PROJEK ATAU TIDAK
-		$KUR = $this->currModel->find($currID);
-		$detAction = $this->dconfig->condDetActions; 
-		$STATE = 0;
-		if($KUR->has_project==1)
-		{
-			$STATE = 1;
-		}
-		
-		//Modifikasi variabel uri
-		foreach($detAction[$STATE] as $k =>$A)
-		{
-			//cert/vrept?ids=
-			$src = $A['src'];
-			$A['src']=$src.'ids=';
-			$ActDet[$k]=$A;
-		}
-
-		//AMBIL DATA MEMBER
-		$memberModel 	  = model(\Modules\Room\Models\MemberModel::class);
-		$dtmember 		  = $memberModel->getAll(['a.roomid'=>$id]);
-		$data['rsdata']	  = $dtmember;
-		$data['fields']   = $this->dconfig->fields3;
-		$data['isplainText'] = false;
-		$data['keys'] 	  = $this->dconfig->primarykey;
-		$data['opsi']     = setting()->get('Siswa.opsi');
-		$data['addOnActDet']= $ActDet;
-		echo view($this->theme.'frmdatalist',$data);
-	} */
-
 	function shwReport()
 	{
 		$this->cekHakAkses('read_data');
@@ -401,8 +337,6 @@ class Cert extends BaseController
 		$dtReport = $this->_dtreport($id);
 		$dtReport['glevel'] = $opsi['grade'];
 
-	//	test_result($dtReport);
-
 		$ACTION = ucwords(strtolower($dtReport['PD']['action_class']));
 
 		$this->RaporID = $dtReport['PD']['id'];
@@ -410,14 +344,14 @@ class Cert extends BaseController
 		$html =view_cell('\Raport\Controllers\\'.$ACTION.'::showRaport', $dtReport);
 	
 		//echo $html; die();
-		$hsl = $this->makePdf($html, FALSE);
+		$fname = $dtReport['PD']['action_class']."_".$this->RaporID.".pdf";
+		$hsl = $this->makePdf($html, $fname, FALSE);
 		
         $Data=$this->data;
 	//	$Data['addOnAct'] = $this->dconfig->AddOnAct2;
         $Data['file_pdf'] = $hsl;
         $Data['ids'] = $ids;
         echo view($this->theme.'viewfile',$Data);
-		
 	}
 
 	private function _dtreport($id)
@@ -434,15 +368,6 @@ class Cert extends BaseController
 		unset($Siswa['updated_at']);
 		unset($Siswa['deleted_at']);
 
-	//	$RoomModel = model(\Modules\Room\Models\RombelModel::class);
-	//	$KUR = $data['opsi']['curr_id'];
-	//	$LM = setting()->get('Rombel.opsi');
-	//	$R = $RoomModel->getAll(['id'=>$PD['roomid']]);
-	//	$Room = (array) $R[0];
-	//	unset($Room['created_at']);
-	//	unset($Room['updated_at']);
-	//	unset($Room['deleted_at']);
-
 		//KURIKULUM
 		$KUR = $this->currModel->find($PD['curr_id'])->toarray();
 		unset($KUR['curr_desc']);
@@ -453,7 +378,9 @@ class Cert extends BaseController
 		//PRODI
 		$ProdiModel = model(\Modules\Akademik\Models\ProdiModel::class);
 		$PS = $ProdiModel->gets(['a.id_prodi'=>$PD['id_prodi']]);
-
+	
+		//LEGELITY 
+		$legality = $this->myconfig->legality($PS[0]['unit_kerja']);
 		//SKL
 		$NilaiModel = model(\Modules\Assessment\Models\NilaiModel::class);
 		$Nilai = $NilaiModel->getsNilai(['a.member_id'=>$PD['memberId']]);
@@ -496,14 +423,14 @@ class Cert extends BaseController
 			}
 		}
 
-		//$dtRapor = $this->model->asarray()->where(['curr_id'=>$KUR['id'],'kode_ta'=>$Room['kode_ta'], 'subgrade'=>$sgrade])->findAll();
 		$dtRapor = $this->model->find($PD['certId'])->toarray();//$this->model->gets(['a.id'=>$PD['id']]);
 		unset($dtRapor['created_at']);
 		unset($dtRapor['updated_at']);
 		unset($dtRapor['deleted_at']);
-		
+		$dtRapor['tmpview'] = $this->dconfig->viewtmp($dtRapor['jenis']);
+
 		$RESULT['PS'] = $PS[0];
-	//	$RESULT['kurikulum'] = $KUR;
+		$RESULT['legality'] = $legality;
 	//	$RESULT['rombel'] = $Room;
 		$RESULT['PD'] = $PD;
 		$RESULT['siswa'] = $Siswa;
@@ -518,7 +445,7 @@ class Cert extends BaseController
 		return $RESULT;
 	}
 
-	private function makePdf($html, $usefooter=TRUE)
+	private function makePdf($html, $fname, $usefooter=TRUE)
 	{
 		$options = new \Dompdf\Options();
         $options->set('isRemoteEnabled', TRUE);
@@ -528,7 +455,7 @@ class Cert extends BaseController
         $dompdf->setPaper("A4", "landscape");
         $dompdf->render();
                   
-		$fname 	 	 = 'RAPORT.pdf';
+	//	$fname 	 	 = 'RAPORT.pdf';
 		$dirf 		 = setting()->get('MyApp.pdftmpDir');
 		$path 		 = setting()->get('MyApp.pdfPath_Dir');
 		$companyName = setting()->get('MyApp.companyName');
@@ -561,9 +488,6 @@ class Cert extends BaseController
 	private function _roomDD()
 	{
 		$param = "AND (c.jns_lhb = ".$this->LHB." OR c.jns_lhb = ".$this->MHB.")";
-		//ambil data rombel berdasarkan kode_ta dan CURR_ID
-	//	$parm = ['kode_ta'=>$rs['kode_ta'], 'curr_id'=>$rs['curr_id']];
-	
 		$rsData = $this->model->getRombel($param);
 		
 		$dd[""]="[--PILIH ROMBEL--]";

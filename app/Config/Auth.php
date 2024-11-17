@@ -460,7 +460,6 @@ class Auth extends ShieldAuth
     public function registerRedirect(): string
     {
         $url = setting('Auth.redirects')['register'];
-
         return $this->getUrl($url);
     }
 

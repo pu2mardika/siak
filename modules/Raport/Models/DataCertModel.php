@@ -61,6 +61,7 @@ class DataCertModel extends Model
   
     private function getsData($param=[])
     {
+        $where = "d.deleted_at IS NULL";
         $builder = $this->db->table($this->table.' a');
         $builder->select('a.id, a.certId, b.roomid, a.memberId, b.noinduk, 
                           e.nama, e.tempatlahir, e.tgllahir, e.idreg, e.nik, e.nisn,
@@ -72,6 +73,7 @@ class DataCertModel extends Model
             ->join('rombel x', 'b.roomid = x.id')
             ->join('curriculum y', 'x.curr_id = y.id')
             ->join('prodi z', 'y.id_prodi = z.id_prodi');
+        $builder->where($where);
         $builder->where($param);
         $query = $builder->get();
         return $query;
@@ -82,7 +84,7 @@ class DataCertModel extends Model
         $sql = "SELECT a.id as memberId, a.roomid, a.noinduk, a.learn_metode, c.idreg, c.nama, c.nisn, c.jk  
         FROM rombel_memb a JOIN siswa b ON a.noinduk = b.noinduk  
         JOIN tbl_datadik c ON b.nik = c.nik 
-        WHERE id NOT IN (SELECT memberId FROM cert_detail) AND a.roomid = '".$roomID."'";
+        WHERE b.deleted_at IS NULL AND a.id NOT IN (SELECT memberId FROM cert_detail) AND a.roomid = '".$roomID."'";
         $query = $this->db->query($sql);
         return $query->getResultArray();
     }

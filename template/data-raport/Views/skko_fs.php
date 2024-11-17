@@ -52,8 +52,8 @@
 	}
 
 	.isitext{
-		margin-top: 20px; 
-		text-align: justify;
+		margin-top: 40px; 
+		text-align: center;
 		line-height: 160%;
 	}
 
@@ -92,7 +92,7 @@
 		text-align: center; 
 		width: 320px; 
 		display: block; 
-		margin-top: 40px;
+		margin-top: 60px;
 	}
 
 	.barcode { 
@@ -101,7 +101,7 @@
 		width: 270px; 
 		height:160px;
 		display: block; 
-		margin-top: 40px;
+		margin-top: 60px;
 	}
 
 	.barcode-text {
@@ -137,7 +137,7 @@
 <body>
 <div id="container">
 	<div class="noseri">
-		No. Seri: <?php echo $norpt;?>
+		No. Reg: <?php echo $ID['NIPD'];?>
 	</div>
 	<div style="clear: both;"></div>
 
@@ -146,30 +146,22 @@
         <div style="font-size: 14px; font-weight: bold;">TERAKREDITASI B</div>
 	</div>
 	<div class="fcontent">
-		<div style="font-size: 16px;">
-			Pimpinan Lembaga Pendidikan dan Pelatihan Mandiri Bina Cipta [MBC] menerangkan bahwa:
+		<div style="font-size: 16px; text-align: center">
+        Berdasarkan Undang-undang Nomor 20 Tahun 2003 tentang Sistem Pendidikan Nasional, Pimpinan <strong>Mandiri Bina Cipta [MBC]</strong><br>
+        dengan ini menerangkan bahwa:
 		</div>
 		<div class="fnama">
 			<?php echo strtoupper($ID['nama']); ?>
 		</div>
-		<div style="margin-top:4px;font-size: 14px; text-align: center">
-			No. Induk: <?php echo strtoupper($ID['NIPD']); ?>
+		<div style="margin-top:10px; text-align: center">
+            <span>Lahir di <span class="dfield"><?=$ID['tmp_lahir'];?></span></span> 
+			<span> pada tanggal <span class="dfield"><?=$ID['tgl_lahir'];?></span></span>
 		</div> 
 		<div class="isitext">
-			<span>Lahir di 
-			<span class="dfield" style="width: 240px; padding: 0 30px;"><?=$ID['tmp_lahir'];?></span></span> 
-			<span> pada tanggal
-			<span class="dfield" style="width: 316px;padding: 0 30px;"><?=$ID['tgl_lahir'];?></span></span>
-			<span>telah mengikuti pendidikan dan pelatihan untuk program </span>
+			<span>dinyatakan <strong>TERAMPIL</strong> dalam bidang keterampilan</span>
 			<span class="dfield"><?=$ID['program'];?></span> 
-			<span>
-			dengan baik dan memenuhi semua persyaratan yang ditentukan untuk menyelesaikan 
-			program pendidikan dan pelatihan dimaksud, kepadanya dinyatakan <strong>LULUS</strong> berdasarkan evaluasi akhir 
-			yang dilaksanakan pada tanggal
-			</span>
-			<span class="dfield"><?=$ID['exam'];?></span>
-			dengan predikat 
-			<span class="dfield"><?=$ID['predikat'];?></span>
+			<span>berdasarkan evaluasi yang dilaksanakan pada tanggal</span>
+			<span class="dfield"><?=$ID['exam'];?></span> dengan predikat <span class="dfield"><?=$ID['predikat'];?></span>
 		</div>
 
 		<div class="footgrid">

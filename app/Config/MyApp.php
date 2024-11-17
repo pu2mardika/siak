@@ -64,6 +64,12 @@ class MyApp extends BaseConfig
 
 	public string $arrDelimeter = '++VHV++';
 
+	public string $noIjin_LKP = '05/DPMPTSP/2023';
+	public string $tglIjin_LKP = '23 Maret 2023';
+
+	public string $noIjin_PKBM = '02/DPMPTSP/2023';
+	public string $tglIjin_PKBM = '23 Maret 2023';
+
 	public function pdftmp_dir():string
 	{
 		return base_url('tmp/pdf/');
@@ -84,5 +90,13 @@ class MyApp extends BaseConfig
 		$base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
 		//return $type;
 		return $base64;
+	}
+
+	public function legality($unit):array
+	{
+		$unit = strtoupper($unit);
+		$legal['nomor'] = setting('MyApp.noIjin_'.$unit);
+		$legal['tgl'] = setting('MyApp.tglIjin_'.$unit);
+		return $legal;
 	}
 }
