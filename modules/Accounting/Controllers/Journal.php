@@ -105,7 +105,7 @@ class Journal extends BaseController
 		$data['rsdata'] = $rdata;
 		$data['addOnACt'] = $this->dconfig->addOnACt;
 		$data['dataTable'] = FALSE;
-		
+		test_result($data);
 		echo view($this->theme.'frmdatalist',$data);
     }
     

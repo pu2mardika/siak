@@ -13,7 +13,7 @@
 	@page { margin: 2px; }
 	#container{
         /* The image used */
-        background-image: url(<?=base_url()?>images/f_sttb.png);
+        background-image: url(<?=base_url()?>images/f_sttk.png);
 
         /* Full height */
         height: 99%;

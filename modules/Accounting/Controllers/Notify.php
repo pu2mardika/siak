@@ -51,7 +51,7 @@ class Notify extends BaseController
 			}
 		}
 		
-		$data['title']	= "Manajemen Data Akungrup";
+		$data['title']	= "Manajemen Notifikasi";
 		$data['rsdata']	= $rsdata;
 	//	$data['total']	= $total;
 		$data['allowADD'] 	= FALSE;

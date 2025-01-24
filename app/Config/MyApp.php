@@ -31,9 +31,10 @@ class MyApp extends BaseConfig
 	public $siteName 	= 'Sistem Informasi Administrasi Akademik';
 	public $appVerison  = '4.0.1';
 	public $appName 	= 'SIAK';
-	public $theme 	 	= 'sbadmin2';
-	public $themeDir 	= 'themes/';
+	public $theme 	 	= 'adminLTE';
+	public $themeDir 	= 'ThemeViews';
 	public $logo 		= 'logofinal.png';
+	public $footer 		= '© {{YEAR}} <a href="https://mbc.or.id" target="_blank">MANDIRI BINA CIPTA</a>';
 	
 	public $inputtype = [
 		'checkbox'	=>	'form_checkbox',

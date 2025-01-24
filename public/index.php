@@ -20,6 +20,12 @@ if (version_compare(PHP_VERSION, $minPhpVersion, '<')) {
     exit(1);
 }
 
+/**
+ * --------------------------------------------------------------
+ * TAMBAH PATH BARU
+ * -------------------------------------------------------------
+*/
+define('ROOTDIR', __DIR__ . DIRECTORY_SEPARATOR);
 /*
  *---------------------------------------------------------------
  * SET THE CURRENT DIRECTORY

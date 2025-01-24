@@ -82,8 +82,7 @@ class Account extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> false,
-		'edit'		=> true,
-		'delete'	=> true,
+		'edit' 		=> ['icon'=>'edit','src'=>'akun/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'akun/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 }

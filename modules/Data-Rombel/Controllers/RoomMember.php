@@ -380,7 +380,7 @@ class RoomMember extends BaseController
 		$data['has_ref'] = ['learn_metode'];
 		$data['opsi']    = setting()->get('Rombel.opsi');
 		$data['inputype'] = $DATA['inputype'];
-		test_result($data);
+	//	test_result($data);
 		echo view($this->theme.'cells/tablecheck',$data);
 	}
 }

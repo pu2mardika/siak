@@ -175,11 +175,12 @@ abstract class BaseController extends Controller
 		
 		$this->data['site_title'] = setting('MyApp.siteName');
 		$this->data['site_desc'] = setting('MyApp.siteDescription');
-		 
+		$this->data['appDesc'] = setting('MyApp.appName')." Ver. ".setting('MyApp.appVerison');
+
 		$this->data['settingApp'] = $this->model->getSettingApp();
 		//test_result($this->data['settingApp']);
 		
-		$this->theme	=$myconfig->themeDir .setting()->get('MyApp.theme').'/';
+		$this->theme	=$myconfig->themeDir.DIRECTORY_SEPARATOR.'Views'.DIRECTORY_SEPARATOR.setting()->get('MyApp.theme').DIRECTORY_SEPARATOR;
 		$this->layout   = $this->theme.'layout';
 		
 		$this->data['theme'] = $this->theme;

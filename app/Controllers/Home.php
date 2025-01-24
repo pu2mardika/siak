@@ -12,6 +12,7 @@ class Home extends BaseController
 		$jmDataDik = count($DataDik->asArray()->findAll());
 		$jmPD = count($PD->asArray()->findAll());
 		$data = $this->data;
+		$data['title']="Dashb0ard";
 		$data['Resume'] = [
 			'room' => ['title'=>"Data Rombel", 'icon'=>'book-reader', 'rdata'=>$jmRombel, 'class'=>'primary'],
 			'ptk' => ['title'=>"Data PTK", 'icon'=>'user-tie', 'rdata'=>$jmPTK, 'class'=>'success'],

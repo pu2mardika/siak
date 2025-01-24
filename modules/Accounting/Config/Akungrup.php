@@ -64,8 +64,8 @@ class Akungrup extends BaseConfig
 	* 
 	*/
 	public $fields = [
-		'grupId'		=> ['label' => 'Kode Grup','width'=>10,'extra'=>['id' => 'nama','class' => '', 'required' => true],'type'=>'text', ],
-		'grupName'		=> ['label' => 'Nama Grup','width'=>45,'extra'=>['id' => 'nama','class' => '', 'required' => true],'type'=>'text', ],
+		'grupId'		=> ['label' => 'Kode Grup','width'=>15,'extra'=>['id' => 'nama','class' => '', 'required' => true],'type'=>'text', ],
+		'grupName'		=> ['label' => 'Nama Grup','width'=>40,'extra'=>['id' => 'nama','class' => '', 'required' => true],'type'=>'text', ],
 		'gtype'			=> ['label' => 'Jenis Akun','width'=>30,'extra'=>['id' => 'jk','class' => '', 'required' => true],'type'=>'dropdown'],
 	];
 	
@@ -115,8 +115,7 @@ class Akungrup extends BaseConfig
 	* @var array
 	*/
 	public $actions = [
-		'detail'	=> false,
-		'edit'		=> true,
-		'delete'	=> true,
+		'edit' 		=> ['icon'=>'edit','src'=>'akungrup/edit/', 'label'=>'Detail', 'extra'=>''],
+		'delete'	=> ['icon'=>'trash','src'=>'akungrup/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
 }

@@ -66,9 +66,5 @@ class Notify extends BaseConfig
 	* 
 	* @var array
 	*/
-	public $actions = [
-		'detail'	=> false,
-		'edit'		=> false,
-		'delete'	=> false,
-	];
+	public $actions = [];
 }
