@@ -140,6 +140,7 @@
 					<button class="btn btn-outline-primary btn-sm" role="button" data-bs-toggle="collapse" data-bs-target="#dtHistory" aria-expanded="true" aria-controls="dtHistory">
 						Show\Hide Detail
 					</button>
+					<?php if(isset($addOnACt)||isset($condAddOnAct)){?>
 					<span class="float-end dropdown">
 						<a role="button" class="btn btn-outline-secondary border-light rounded-pill" title="menu" data-bs-toggle="dropdown" aria-expanded="false">
 							<i class="fa fa-ellipsis-v"></i>
@@ -173,6 +174,7 @@
 							?>
 						</div>
 					</span>
+					<?php }?>
 				</h5>
 				
 				<div id="dtHistory" class="width card-body text-dark bg-transparent overflow-auto">

@@ -13,7 +13,8 @@ class Raport extends Entity
     function setId(string $subgrid)
     {
         $currID = $this->attributes['curr_id'];
-        $idx = $currID.sprintf("%02d",$subgrid);
+        $tp = $this->attributes['curr_id'];
+        $idx = sprintf("%02d",$tp).$currID.sprintf("%02d",$subgrid);
         $this->attributes["id"] = md5($idx);
         return $this;
     } 

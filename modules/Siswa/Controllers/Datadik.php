@@ -111,7 +111,8 @@ class Datadik extends BaseController
 		$data['title']	= "Update Data Siswa";
 		$data['error'] = validation_list_errors();
 		$data['fields'] = $this->dconfig->fields;
-		$data['opsi'] 	= $this->dconfig->opsi;
+	//	$data['opsi'] 	= $this->dconfig->opsi;
+		$data['opsi'] 	= service('settings')->get('Register.opsi');
 		$rsdata =  $this->model->find($id)->toarray();
 	//	$tglLahir = $rs->tgllahir;
 		//$rsdata = $rs->toarray();

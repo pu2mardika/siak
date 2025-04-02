@@ -3,6 +3,7 @@ namespace Modules\Siswa\Models;;
 
 use CodeIgniter\Model;
 use App\Models\BaseModel;
+use CodeIgniter\Database\Exceptions\DatabaseException;
 
 class SiswaModel extends Model
 {
@@ -65,10 +66,10 @@ class SiswaModel extends Model
         return $query;
     }
 
-    public function getAll($parm=[])
+    public function getAll($parm=[], $asObj=TRUE)
     {
-    //    $parm[deleted_at]=null;
-        return $this->getData($parm)->getResult();
+        $query = $this->getData($parm);
+        return ($asObj)?$query->getResult():$query->getResultArray();
     }
 
     public function get($id)
@@ -81,6 +82,17 @@ class SiswaModel extends Model
     {
     	$sql = "SELECT nik, nama FROM tbl_datadik
     	WHERE `nik` LIKE '%{$key}%' ESCAPE '!' OR  `nama` LIKE '%{$key}%' ESCAPE '!'  OR  `idreg` LIKE '%{$key}%' ESCAPE '!'";	
+    	$result = $this->db->query($sql)->getResultArray();
+		return $result;
+    }
+
+    public function getPDlike($key)
+    {
+    	$sql = "SELECT a.noinduk, a.nik, b.nama, a.prodi, c.nm_prodi, d.nm_program, d.unit_kerja as uker FROM siswa a 
+                JOIN tbl_datadik b ON a.nik=b.nik JOIN prodi c ON a.prodi=c.id_prodi JOIN jurusan d ON c.jurusan=d.id
+    	        WHERE a.nik LIKE '%{$key}%' ESCAPE '!' 
+                OR  b.nama LIKE '%{$key}%' ESCAPE '!'  
+                OR  b.idreg LIKE '%{$key}%' ESCAPE '!'";	
     	$result = $this->db->query($sql)->getResultArray();
 		return $result;
     }
@@ -120,5 +132,51 @@ class SiswaModel extends Model
             return false;
         }
         return true;
+    }
+
+    function batchSaving($data)
+    {
+        try {
+    //        $this->db->transException(true)->transStart();
+            //sisipkan data ke tabel datadik
+            $datadik = $this->db->table('tbl_datadik');
+            $dtreg = $this->db->table($this->table);
+            foreach($data as $rs)
+            {
+                $datadik->insert($rs['datadik']);
+                //sisipkan data ke table siswa
+                $dtreg->insert($rs['dtreg']);
+            }
+            $this->db->transComplete();
+        }catch (DatabaseException $e) {
+            // Automatically rolled back already.
+        }
+       // if ($this->db->transStatus() === false) {
+            // generate an error... or use the log_message() function to log your error
+            
+        //    return false;
+       // }
+        return $this->db->transStatus();
+    }
+
+    function getSpecial($parm=[],$reg)
+    {
+        $subQuery = $this->db->table('price')->select('MAX(tmt)', false)->where('tmt <=', $reg);
+        $where = "a.deleted_at IS NULL";
+        $builder = $this->db->table($this->table." a");
+        $builder->select('a.prodi, c.nm_prodi, e.nm_program, count(a.noinduk) as qty, d.amount as harga, e.unit_kerja as unit, d.jns_bayar')
+                ->join('tbl_datadik b', 'a.nik = b.nik')
+				->join('prodi c', 'a.prodi = c.id_prodi')
+				->join('price d', 'c.id_prodi = d.id_prodi')
+				->join('jurusan e', 'd.id_prodi = e.id');
+		$builder->orderBy('c.id_prodi', 'ASC');
+		$builder->orderBy('a.noinduk', 'ASC');
+		$builder->where($where);
+		$builder->where($parm);
+		$builder->where('d.tmt', $subQuery);
+        $builder->groupBy('a.prodi');
+        $builder->groupBy('d.komponen');
+		$query = $builder->get();
+        return $query->getResultArray();
     }
 }

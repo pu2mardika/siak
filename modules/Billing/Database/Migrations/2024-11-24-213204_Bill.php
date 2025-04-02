@@ -32,9 +32,13 @@ class Bill extends Migration
                 'constraint' => 35,
                 'unique'     => true,
             ],
-            'nik'=> [
+            'nipd'=> [
                 'type'       => 'varchar',
-                'constraint' => 16,
+                'constraint' => 15,
+            ],
+            'deskripsi'=> [
+                'type'       => 'varchar',
+                'constraint' => 250,
             ],
             'issued' => [
                 'type'       => 'date',
@@ -48,10 +52,23 @@ class Bill extends Migration
                 'type'       => 'double',
                 'default'    => 0,
             ],
-            'coupon' => [
+            'diskon' => [
+                'type'       => 'float',
+                'default'    => 0,
+            ],
+            'biltype' => [
+                'type'       => 'ENUM',
+		        'constraint' => ['p', 'c'],
+		        'default'    => 'p',
+            ],
+            'status' => [
+                'type'       => 'tinyint',
+		        'default'    => 0,
+            ],
+            'unit'=> [
                 'type'       => 'varchar',
-                'constraint' => 10,
-                'null' 	     => true,
+                'constraint' => 32,
+                'null'       => false,
             ],
             'created_at' => [
                 'type'       => 'TIMESTAMP',
@@ -69,7 +86,7 @@ class Bill extends Migration
          
         $this->forge->addField($fields);
         $this->forge->addPrimaryKey('id');
-        $this->forge->addForeignKey('nik', 'tbl_datadik', 'nik','CASCADE', 'CASCADE', 'fk_billed');
+        $this->forge->addKey('nipd');
         $this->createTable($this->tables['bill']);
 
         /** TABEL PAYMENT */

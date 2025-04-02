@@ -36,16 +36,20 @@ use CodeIgniter\Router\RouteCollection;
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
 //routes->get('tuton/(:any)', 'RoomMember::cekTuton/$1');
-
-service('auth')->routes($routes);
-
+$routes->post('user-login', 'Api\AuthController::userLogin', ['filter' => 'tokens']);
 $routes->group('api', ['filter' => 'jwt'], static function ($routes) {
-   $routes->resource('rfsiswa');
-});
-
-$routes->group('apix', ['filter' => 'tokens'], static function ($routes) {
-    $routes->resource('rfsiswa');
+    $routes->resource('ResfSiswa');
  });
+ 
+ $routes->group('apix', ['filter' => 'tokens'], static function ($routes) {
+     $routes->resource('ResfSiswa');
+ });
+
+service('auth')->routes($routes, ['except' => ['login','user-login', 'auth/a/*','api/*','apix/*','tuton','tuton/*']]);
+$routes->get('login', '\App\Controllers\LoginController::loginView');  // 
+$routes->post('login', '\CodeIgniter\Shield\Controllers\LoginController::loginAction');
+
+//$routes->get('register', '\App\Controllers\Auth\RegisterController::registerView');
 
 $routes->group('tuton', static function ($routes) {
     $routes->get('cek', "RoomMember::cekTuton");

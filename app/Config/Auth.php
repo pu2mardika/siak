@@ -46,7 +46,7 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      */
     public array $views = [
-        'login'                       => '\themes\sbadmin2\login',
+        'login'                       => 'login',
         'register'                    => '\CodeIgniter\Shield\Views\register',
         'layout'                      => '\CodeIgniter\Shield\Views\layout',
         'action_email_2fa'            => '\CodeIgniter\Shield\Views\email_2fa_show',
@@ -98,7 +98,8 @@ class Auth extends ShieldAuth
      * @var array<string, class-string<ActionInterface>|null>
      */
     public array $actions = [
-        'register' => null,
+       // 'register' => null,
+        'register' =>\CodeIgniter\Shield\Authentication\Actions\EmailActivator::class,
         'login'    => null,
     ];
 
@@ -152,7 +153,7 @@ class Auth extends ShieldAuth
      * --------------------------------------------------------------------
      * Determines whether users can register for the site.
      */
-    public bool $allowRegistration = false;
+    public bool $allowRegistration = true;
 
     /**
      * --------------------------------------------------------------------
@@ -428,8 +429,8 @@ class Auth extends ShieldAuth
      *
      * @var class-string<UserModel>
      */
-    public string $userProvider = UserModel::class;
-
+    //public string $userProvider = UserModel::class;
+    public string $userProvider = \App\Models\UserModel::class;
     /**
      * Returns the URL that a user should be redirected
      * to after a successful login.

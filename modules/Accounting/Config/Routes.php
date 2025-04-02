@@ -108,3 +108,13 @@ $routes->group("report", ["namespace" => "\Modules\Account\Controllers"], functi
 	$routes->get("equitas", "Journal::tmpobyek"); 
 	$routes->get("blsheet", "Journal::tmpobyek"); 
 });
+
+$routes->group("accsystem", ["namespace" => "\Modules\Account\Controllers"], function ($routes) {
+	$routes->get("/", "Accsys::index");
+	$routes->get("add", "Accsys::addView");
+	$routes->post("add", "Accsys::addAction");
+	$routes->get("rem/(:any)", "Accsys::delete/$1");
+	$routes->get("edit/(:any)", "Accsys::updateView/$1");
+	$routes->post("edit/(:any)", "Accsys::updateAction/$1");	
+});
+$routes->addRedirect('Accsys', 'accsystem');

@@ -85,4 +85,15 @@ class Account extends BaseConfig
 		'edit' 		=> ['icon'=>'edit','src'=>'akun/edit/', 'label'=>'Detail', 'extra'=>''],
 		'delete'	=> ['icon'=>'trash','src'=>'akun/hapus/', 'label'=>'Detail', 'extra'=>"onclick='confirmation(event)'"],
 	];
+
+	public function revAkunFields()
+	{
+		$akun = $this->fields;
+		$rev=[];
+		foreach($akun as $k=>$A)
+		{
+			$rev[$A['label']] = $k;
+		}
+        return $rev; 
+	}
 }

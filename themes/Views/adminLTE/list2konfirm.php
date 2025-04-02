@@ -6,7 +6,7 @@
 	</div>
 	
 	<div class="card-body"> 
-	    <table id="table-result" class="table table-bordered" width="100%" cellspacing="0">
+	    <table id="table-result" class="table table-bordered" cellspacing="0">
 	    	<thead>
 				<tr>
 				  	<th width="5%"><div align="center">No</div></th>
@@ -17,7 +17,7 @@
 						$l = $row['width'];
 						if($l > 0){
 							$hfield[]=$k;
-							echo '<th width="'.$l.'%"><div align="center">'.$row['label'].'</div></th>';
+							echo '<th ><div align="center">'.$row['label'].'</div></th>';
 						}
 					}		
 					?>

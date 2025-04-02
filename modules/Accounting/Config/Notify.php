@@ -23,9 +23,9 @@ class Notify extends BaseConfig
 	* 
 	*/
 	public $fields = [
-		'created_at'	=> ['label' => 'tanggal','width'=>20,'extra'=>['id' => 'nama','class' => '', 'required' => true],'type'=>'text', ],
+		'created_at'	=> ['label' => 'tanggal','width'=>15,'extra'=>['id' => 'nama','class' => '', 'required' => true],'type'=>'text', ],
 		'deskripsi'		=> ['label' => 'Deskripsi','width'=>60,'extra'=>['id' => 'nama','class' => '', 'required' => true],'type'=>'text', ],
-		'aksi'			=> ['label' => 'Aksi','width'=>20,'extra'=>['id' => 'aksi'],'type'=>'text', ],
+		'aksi'			=> ['label' => 'Aksi','width'=>10,'extra'=>['id' => 'aksi'],'type'=>'text', ],
 	];
 	
 	/**

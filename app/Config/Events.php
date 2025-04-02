@@ -46,3 +46,31 @@ Events::on('pre_system', static function () {
         Services::toolbar()->respond();
     }
 });
+
+//TAMBAHAN:
+// notice I am passing two variables from the controller $user and $tmpPass
+// I will force the user to change password on first login
+Events::on('newRegistration', static function ($user, $tmpPass) {
+
+    $userEmail = $user->email;
+    if ($userEmail === null) {
+        throw new LogicException(
+            'Email Activation needs user email address. user_id: ' . $user->id
+        );
+    }
+
+    $date      = Time::now()->toDateTimeString();
+
+    // Send the email
+    $email = emailer()->setFrom(setting('Email.fromEmail'), setting('Email.fromName') ?? '');
+    $email->setTo($userEmail);
+    $email->setSubject(lang('Auth.emailActivateSubject'));
+    $email->setMessage(view(setting('Auth.views')['email_manual_activate_email'], ['userEmail' => $userEmail,'tmpPass' => $tmpPass, 'date' => $date]));
+
+    if ($email->send(false) === false) {
+        throw new RuntimeException('Cannot send email for user: ' . $user->email . "\n" . $email->printDebugger(['headers']));
+    }
+
+    // Clear the email
+    $email->clear();
+});

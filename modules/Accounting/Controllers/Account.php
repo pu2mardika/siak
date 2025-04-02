@@ -41,6 +41,7 @@ class Account extends BaseController
 	{
 	//	$this->cekHakAkses('read_data');
 		$dtaccount = $this->model->orderBy('kode_akun', 'ASC')->findAll();
+//	$dtaccount=[];
 	//	test_result($dtaccount);
 	//	$dtaccount = $this->model->getall($parm);
 		$data = $this->data;
@@ -99,7 +100,7 @@ class Account extends BaseController
 			$data = $this->request->getPost();
 			$accountmodel = new AccountModel();
 			//test_result($data);
-			$account= new \Modules\Account\Entities\account();
+			$account= new \Modules\Account\Entities\Account();
 			$account->fill($data);
 			$simpan = $accountmodel->insert($account,false);
 			if($simpan){
@@ -138,7 +139,7 @@ class Account extends BaseController
 			$data = $this->request->getPost();
 			$accountmodel = new AccountModel();
 			$id = decrypt($ids); 
-			$account= new \Modules\Account\Entities\account();
+			$account= new \Modules\Account\Entities\Account();
 			$account->fill($data);
 			$simpan = $accountmodel->update($id, $account);
 			 
@@ -170,9 +171,11 @@ class Account extends BaseController
 		$data['u_ri']  = base_url('akun/tempxls');
 		echo view($this->theme.'frmImport',$data);
 	}
-	
-	function fromxlsx(){
+
+	function importAction(): RedirectResponse
+	{
 		$this->cekHakAkses('create_data');
+		helper('text');
 		$validationRule  =[
 			'userfile' => ['uploaded[userfile]'],
 		];
@@ -185,7 +188,6 @@ class Account extends BaseController
 				$newName = $xlsx->getRandomName();
 				// Store file in public/csvfile/ folder
 				
-				
 				$myconfig = new MyApp;
 				$dirf = $myconfig ->tmpfile_dir;
 				$filepath = $this->myconfig->tmpfile_dir;
@@ -194,19 +196,67 @@ class Account extends BaseController
 				$xlsx->move($filepath, $newName);
 				
 				$inputFileName = $filepath.$newName;
-				$excel = new \App\Libraries\Exc_lib();
-				$rsdata = $excel->read_data_xlsx($inputFileName);
-				helper('text');
+				
+				//MEMBUKA FILE EXCEL
+				$reader = \PhpOffice\PhpSpreadsheet\IOFactory::createReader('Xlsx');
+				$reader->setReadDataOnly(TRUE);
+				$spreadsheet = $reader->load($inputFileName);
+				//MEMBUKA WORKSHEET
+				$worksheet = $spreadsheet->getActiveSheet();
+				
+				//ambil data
+				$maxDataRow = $worksheet->getHighestDataRow();
+				$maxDataColumn = $worksheet->getHighestDataColumn();
+
+				//AMBIL BARIS PERTAMA TABEL NILAI
+				$head=$worksheet->rangeToArray("A10:".$maxDataColumn."10",NULL,TRUE,TRUE,TRUE);
+				$heads = $head[10];
+		 
+				//cek kesesuaan judul dengan kebutuhan
+				$rfields = $this->dconfig->revAkunFields();
+				$headName = array_keys($rfields);
+				$fields=[]; 
+				foreach($heads as $vh)
+				{
+					if(in_array($vh, $headName))
+					{
+						$fields[]=$rfields[$vh];
+					}
+				}
+
+				//ambil data 
+				$rowIterator = $worksheet->getRowIterator(11, $maxDataRow);
+				$rowData=[]; $r = 0; $rsData=[];
+				foreach ($rowIterator as $row) {
+					if ($row->isEmpty()) { // Ignore empty rows
+						continue;
+					}
+					$r++;
+					$columnIterator = $row->getCellIterator('A', $maxDataColumn);
+					$cellData=[]; $i=0; $data['id_mengajar']=$idm;
+					foreach ($columnIterator as $cell) {
+						// Do something with the cell here.
+						$cellValue = $cell->getValue();
+						$fd = $fields[$i];
+						$cellData[$fields[$i]]=$cellValue;
+						$i++;
+					}
+					$rsData[$r]=$cellData;
+				}
+			//	test_result($rowData);
 				$Data['actY'] = random_string('md5',32);
 				$Data['actN'] = random_string('alnum',12);
-				$Data['rsdata'] = $rsdata;
+				$Data['fields'] = $mfields;
+				$Data['rsdata'] = $rsData;
+				$Data['rowData'] = $rsData;
+				
 				//Konfirmasi data
 				$this->session->setTempdata('dtaccount',$Data,120);
 				return redirect()->to(base_url('akun/konfirm'));
-	         }
-
-	         $data = ['errors' => 'The file has already been moved.'];
-			
+	         }else{
+				$this->session->setFlashdata('warning','The file has already been moved.');
+				return redirect()->to(base_url('nilai'));
+			 }
 		}else{
 			return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
 		}
@@ -248,24 +298,84 @@ class Account extends BaseController
 	
 	function tmpobyek()
 	{
-		$excel = new \App\Libraries\Exc_lib();
+		$exc= new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+
 		$myconfig = new MyApp;
+		$exc->getProperties()
+			->setCreator(setting('MyApp.appName'))
+			->setLastModifiedBy(setting('MyApp.appName')." Ver ".setting('MyApp.appVerison'))
+			->setDescription(setting('MyApp.siteName'));
+		
+		$styleArray = [
+			'borders' => [
+				'allBorders' => [
+					'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+					'color' => ['argb' => '0000'],
+				],
+			],
+		];
+		
+		$exc->getDefaultStyle()->getFont()->setName('Arial');
+		$exc->getDefaultStyle()->getFont()->setSize(10);
+	 	//membuat sheet;
+		$worksheet = $exc->setActiveSheetIndex(0);
+		//$worksheet->setTitle($filename);
+		
+		$worksheet->getColumnDimension('A')->setWidth(16);
+		$worksheet->getColumnDimension('B')->setWidth(270, 'px');
+		$worksheet->getColumnDimension('C')->setWidth(120, 'px');
+		$worksheet->getColumnDimension('D')->setWidth(120, 'px');
+		$worksheet->setCellValue('A1', 'DAFTAR PERKIRAAN BUKU BESAR (ACCOUNT LIST)');
+		$worksheet->getStyle('A1')->getFont()->setBold(true);
+		
 		$dirf = $myconfig ->tmpfile_dir;
 		
 		$filepath = $this->myconfig->tmpfile_dir;
 		$headf = [];
-		$fields= $this->dconfig->fields;
-		foreach ($fields as $k => $v){
-			$headf[]=$k;
-			$rowdata[$k]=$v['label'];
-		}
-		$data[] = $rowdata;
-		$nama_file = 'temp_dataAccount';
-		$fn = $excel->write_data($nama_file,$headf,$data);
-				
-		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($fn);
-	    $writer->save($dirf.$nama_file.'.xlsx');;
-       // header("Content-Type: application/vnd.ms-excel");
+		
+		//show_result($ids);
+		$judul = [
+			['Company Name', setting('MyApp.companyName')],
+			['Alamat', setting('MyApp.address1')],
+			['Website', setting('MyApp.website')],
+		];
+		
+		$worksheet->fromArray($judul, null, 'A3');
+		$worksheet->getStyle('B3:B5')
+				  ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT);
+		
+		//TAMBAHKAN PETUNJUK PENGISIAN:
+		$Notes = [
+		    ["Petunjuk Pengisian :"],
+		    ["1. Isikan Kolom Kelompok Akun sesuai dengan data pada Group Account"],
+		    ["2. Isikan Saldo Normal dengan : Db untuk Saldo Normal di Sisi Debet, atau Kr untuk Saldo Normal di Sisi Kredit"]
+		];
+			$worksheet->fromArray($Notes, null, 'A7');
+		$worksheet->getStyle('A7:A9')->getFont()->setBold(true)
+				  ->getColor()->setARGB('000080');
+		
+			
+		//INPUT JUDUL TABEL
+		$rfields = $this->dconfig->revAkunFields();
+		$headName = array_keys($rfields);
+		$worksheet->fromArray($headName, null, 'A10');
+		$ncol = count($headName);
+	
+		$endCol = colExcel()[$ncol-1];
+		$hedRange = 'A10:'.$endCol.'10';
+		$worksheet->getStyle($hedRange)->applyFromArray($styleArray)
+				  ->getFont()->setBold(true);
+		$worksheet->getStyle($hedRange)
+				  ->getAlignment()->setVertical(\PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_TOP);
+		$worksheet->getStyle($hedRange)
+				  ->getAlignment()->setHorizontal(\PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER);
+		$worksheet->getStyle($hedRange)->getFill()
+				  ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+				  ->getStartColor()->setARGB('C0C0C0');
+	
+		$nama_file = 'TMPAKUN_LIST';		
+		$writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($exc);
+	    $writer->save($dirf.$nama_file.'.xlsx');
         return $this->response->download($dirf.$nama_file.'.xlsx', null);
 	}
 }

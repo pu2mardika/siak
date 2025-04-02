@@ -140,11 +140,6 @@ function prepare_datadb($data) {
 	return $result;
 }
 
-function theme_url() {
-	
-	return $config['base_url'] . 'themes/modern' ;
-}
-
 function module_url($action = false) {
 	
 	$config = new \Config\App();
@@ -507,7 +502,23 @@ function menu_list($result)
 		}
 	}
 	set_depth($list);	
-	return $list;
+	return let_menu($list);
+}
+
+function let_menu($arrMenu){
+	$menu=[];
+	//test_result($arrMenu);
+	foreach($arrMenu as $k => $mn)
+	{
+		if(key_exists("children", $mn))
+		{
+			if(count($mn['children'])>0)
+			{
+				$menu[] = $mn;
+			}
+		}
+	}
+	return $menu;
 }
 
 function build_menu( $current_module, $arr_menu, $submenu = false, $endMenu = "</ul>\n")

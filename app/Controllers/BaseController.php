@@ -66,6 +66,7 @@ abstract class BaseController extends Controller
 	private $controllerName;
 	private $methodName;
 	private $strdelimeter;
+	private $dom = 'Bfrtip';
 	
     /**
      * Constructor.
@@ -93,14 +94,11 @@ abstract class BaseController extends Controller
 		$this->auth = new Auth;
 		$user = auth()->user();
 		
-		//test_result($this->auth);
-		
 		$this->model = new BaseModel;
 		
 		$config = config('App');
 		$myconfig = config('MyApp');
 		
-		//$web = $this->session->get('web');
 		//modifikasi dimulai dari sini
 		$web = $this->session->get('redirect_url');
 		
@@ -123,8 +121,8 @@ abstract class BaseController extends Controller
 		$web= ['module_url' => $module_url, 'nama_module' => $nama_module, 'method_name' => $router->methodName()];
 		$this->methodName = $web['method_name'];
 		//Batas Modifikasi 
-		//test_result($web);
-
+		$loct = $myconfig->pdfPath_Dir;
+	
 		$nama_module = $web['nama_module'];
 		$module = $this->model->getModule($nama_module);
 		 
@@ -142,49 +140,27 @@ abstract class BaseController extends Controller
 		$this->isLoggedIn = auth()->loggedIn();
 						
 		$this->data['current_module'] = $this->currentModule;
-	//	$this->data['config'] = $this->config;
-//		$this->data['request'] = $this->request;
-	//	$this->data['isloggedin'] = $this->isLoggedIn;
 		$this->data['session'] = $this->session;
-		
-		
+	
 		$this->data['scripts'] = [];
 		$this->data['styles'] = [];
 		$this->data['module_url'] = $this->moduleURL;
 		$this->data['inputype'] = $myconfig->inputtype;
 		$this->data['strdelimeter']=setting('MyApp.arrDelimeter');
-		/**
-		* 
-		* DIHAPUS
-		* 
-		
-		if ($this->isLoggedIn) {
-			$user_setting = $this->model->getUserSetting();
-			if ($user_setting) {
-				$this->data['app_layout'] = json_decode($user_setting->param, true);
-				$this->theme=$myconfig->themeDir .$this->data['app_layout']['theme'];	
-			}
-		} else {
-			$query = $this->model->getAppLayoutSetting();
-			foreach ($query as $val) {
-				$app_layout[$val['param']] = $val['value'];
-			}
-			$this->data['app_layout'] = $app_layout;
-		}
-		*/
 		
 		$this->data['site_title'] = setting('MyApp.siteName');
 		$this->data['site_desc'] = setting('MyApp.siteDescription');
-		$this->data['appDesc'] = setting('MyApp.appName')." Ver. ".setting('MyApp.appVerison');
-
 		$this->data['settingApp'] = $this->model->getSettingApp();
-		//test_result($this->data['settingApp']);
-		
-		$this->theme	=$myconfig->themeDir.DIRECTORY_SEPARATOR.'Views'.DIRECTORY_SEPARATOR.setting()->get('MyApp.theme').DIRECTORY_SEPARATOR;
+		$this->data['appDesc'] = setting('MyApp.appName')." Ver. ".setting('MyApp.appVerison');
+	 
+	//	$this->theme	=$myconfig->themeDir.setting()->get('MyApp.theme').'/';
+	    $theme = setting()->get('MyApp.theme');
+		$this->theme	= 'ThemeViews\Views'.DIRECTORY_SEPARATOR.$theme.DIRECTORY_SEPARATOR;
 		$this->layout   = $this->theme.'layout';
 		
 		$this->data['theme'] = $this->theme;
 		$this->data['layout'] = $this->layout;
+		$this->data['dom'] = $this->dom;
 		
 		// Login? Yes, No, Restrict
 		if ($this->currentModule['login'] == 'Y' && $nama_module != 'login') {
@@ -192,7 +168,7 @@ abstract class BaseController extends Controller
 		} else if ($this->currentModule['login'] == 'R') {
 			$this->loginRestricted();
 		}
-				
+			
 		//if ($this->isLoggedIn) {
 		if (auth()->loggedIn()) {
 			//$user=user(); 
@@ -201,9 +177,17 @@ abstract class BaseController extends Controller
 			//ambil id role dari Database
 			$userRole = $this->model->getUserRole($usrgrup[0]);
 			$ID_role = $userRole['id_role'];
-						 
-			$this->user=['id'=>$user->id, 'fullname'=>$user->username, 'username'=>$user->username, 'role'=>$ID_role];
+			
+			$token = $user->generateAccessToken('WorkLaptop');
+
+			// Only available immediately after creation.
+			$userx = $user->getEmailIdentity();
+		//	test_result($usrgrup);
+			$this->user=['id'=>$user->id, 'fullname'=>$user->full_name, 'username'=>$user->username, 'role'=>$ID_role, 'usrgrup'=>$usrgrup[0]];
 			$this->data['user'] = $this->user;
+			$this->user = $user;  //mengembalikan nilai user ke user original
+			//$user->addPermission('users.create', 'users.edit');
+		//	test_result($user->getPermissions());
 			
 			$this->getModuleRole();
 			$this->getListAction($ID_role);
@@ -215,7 +199,7 @@ abstract class BaseController extends Controller
 			$this->data['action_user'] = $this->actionUser;
 			$this->data['menu'] = $this->model->getMenu('all',false, $this->currentModule['nama_module'],$ID_role);
 			
-		//	test_result($this->data['menu']);
+	//	test_result($this->data['menu']);
 			
 			$this->data['breadcrumb'] = ['Home' => $this->config->baseURL, $this->currentModule['judul_module'] => $this->moduleURL];
 			$this->data['module_role'] = $this->model->getDefaultUserModule($ID_role);
@@ -229,6 +213,7 @@ abstract class BaseController extends Controller
 	private function getModuleRole()
 	{
 		$query = $this->model->getModuleRole($this->currentModule['id_module']);
+		
 		$this->moduleRole = [];
 		foreach ($query as $val) {
 			$this->moduleRole[$val['id_role']] = $val;
@@ -249,8 +234,9 @@ abstract class BaseController extends Controller
 					if (!key_exists($id_role, $this->moduleRole)) {
 						$this->setCurrentModule('error');
 						$this->data['msg']['status'] = 'error';
+						$this->data['content']= 'Anda tidak berhak mengakses halaman ini <a class="button" href="'.base_url().'" title="Kembali ke Halaman Utama">KEMBALI</a>'; 
 						$this->data['msg']['message'] = 'Anda tidak berhak mengakses halaman ini';
-						$this->_render('error.php', $this->data);
+						echo view('app_error', $this->data);
 						exit();
 					}
 				}
@@ -305,16 +291,17 @@ abstract class BaseController extends Controller
 			echo view('main/footer.php');
 		}
 	}
-	
+	*/
 	protected function view(string $view, array $data = [], array $options = []): string
     {
         return View($view, $data, $options);
     }
-	*/
+	
 	
 	protected function _render(string $view, array $data = [], array $options = []): string
 	{
 		$view=$this->theme.$view;
+		$data['layout']=$this->layout;
 		return view($view, $data, $options);
 	}
 	
@@ -383,7 +370,7 @@ abstract class BaseController extends Controller
 			
 			if ($error) {
 				$this->data['msg'] = ['status' => 'error', 'message' => $error];
-				$this->view('error.php', $this->data);
+				$this->view('main/error.php', $this->data);
 			}
 		}
 		

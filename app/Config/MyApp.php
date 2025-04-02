@@ -54,6 +54,7 @@ class MyApp extends BaseConfig
 		'url'		=>	'form_input',
 		'week'		=>	'form_input',
 		'hidden'	=>	'form_hidden',
+		'display'	=>  "form_display"
 	];
 	
 	public $tmpfile_dir = WRITEPATH . 'tmp/';	
